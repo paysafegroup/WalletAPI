@@ -1,80 +1,3157 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://api2.test.paysafe.com/paymenthub/
 
-# WalletAPI
+# Paysafe Payments & Wallets API 
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+>**IMPORTANT:**  Because the Paysafe Payments & Wallets API uses its [own unique API keys for request authentication](#apikey) and provides its own [Test and Production accounts](#goinglive), you should never click the **SIGN UP** or **LOGIN** buttons at the top right of the 
+Developer Center navigation, as these are used strictly for the other APIs on the Developer Center. Please contact your business relationship manager or reach out to <integrations@paysafe.com> for API keys and Test/Production accounts.
 
-## Questions Collection [/questions]
+<a name="paymentsoverview" title="Payments & Wallets API Overview"></a>
+# Overview
 
-### List All Questions [GET]
+You can easily and securely process payments & wallet requests from your customers using one single API – The **Payments & Wallets API**.   
+
+Paysafe also enables you to access your transaction analytics and manage accounts with our all-in-one [Business Portal](https://merchant.paysafe.com/portal). 
+
+
+## Payment Methods
+
+Payment Methods represent your customer's payment instruments. They are used to collect payments or store instrument details for future payments.
+The Payments API currently supports the following payment methods: 
+
+- Card
+
+ > **Note:** For payment methods using cards, we support both 3DS 1.0 and 3DS 2.0 
+
+
+## Transaction Types Supported
+Payments API supports the following transaction types:
+
+  * [Payment Handles](#paymenthandlerequest)
+  * [Payments](#paymentrequest)
+  * [Standalone Credits](#standalonecreditrequest)
+
+# Before you begin
+## Get your Secret API Key
+<a name="apikeys" title="Get your API Keys"></a>
+The API uses a distinct API key:<br/>
+* The Secret Key – used for all server-to-server API requests.
+
+You can retrieve your Secret key for your account via the [Business Portal](https://merchant.paysafe.com/portal/login).
+
+<a name="secretapikey" title="Secret API Key"></a>
+#### Secret API Key
+You use the Secret API key in all your server-to-server API requests. 
+
+ > **Note:** You must Base64 Encode your Secret API key before using it in your API requests.
+
+To retrieve your Secret API key from the Business Portal: 
+ 1. Go to **Integrate>API Keys**.
+ 2. Under **Secret Key**, click **Authenticate Now**.
+ ![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/Secret_Key1.png)
+ 3. Enter your Business Portal password and click **Authenticate**.
+ 4. You can now access your Secret API key. 
+ ![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/Secret_Key2.png)
+ 
+ > **Note:** All your APIs will use the same API key.
+
+Your API key will have the following format:
+* Key Username – MerchantXYZKey 
+* Password – B-tst1-0-51ed39e4-312d02345d3f123120881dff9bb4020a89e8ac44cdfdcecd702151182fdc952272661d290ab2e5849e31bb03deede7e
+
+The API key is case-sensitive and sent using HTTP Basic Authentication.
+To use HTTP Basic Authentication, you must send the API key credentials using the Authorization header with every request. 
+
+You must construct the Authorization header as follows:
+1. Combine the Key Username and Key Password into a string separated by a colon, for example, “Key Username:Key Password”.
+2. The resulting string literal is then encoded using Base64.
+3. The authorization method and space (That is, “Basic”) are then put before the encoded string.
+
+For example, using the above Key Username and Password, the header is formed as follows:
+
+```Authorization: Basic TWVyY2hhbnRYWVo6Qi10c3QxLTAtNTFlZDM5ZTQtMzEyZDAyMzQ1ZDNmMTIzMTIwODgxZGZmOWJiNDAyMGE4OWU4YWM0NGNkZmRjZWNkNzAyMTUxMTgyZmRjOTU yMjcyNjYxZDI5MGFiMmU1ODQ5ZTMxYmIwM2RlZWRlN2U=```
+For additional details, please refer [Authentication](https://developer.paysafe.com/en/rest-apis/reference-information/important-integration-concepts/authentication/).
+
+## Testing
+
+Test accounts enable you to process API transactions that mirror the functionality of the Production environment. 
+
+Transactions processed in the Test environment are executed on a simulator. Depending on the information provided with the transaction request, the simulator returns either a successful (approved) or failed (declined) response.
+
+With the API, you can:
+
+* Verify support for all the operation types that you require.
+* Review all common errors as well as unique errors that may occur for each operation.
+* Verify the length and format for all attributes you send.
+
+For access to Test accounts and credentials, contact your account manager or reach out to <integrations@paysafe.com>. 
+Your Test account has access to the Test version of the Paysafe [Business Portal](https://merchant.test.paysafe.com/portal#/login), where you can view the status of your Test transactions. 
+
+###  Test URL
+To test your integration with Paysafe, use the following Test URL:
+
+`https://api2.test.paysafe.com/paymenthub/v1/`
+
+For example:
+
+`https://api2.test.paysafe.com/paymenthub/v1/payments/{payment_id}`
+
+Paysafe offers multiple payment methods to process your transaction. You can obtain detailed testing information on each payment method by clicking the corresponding link below:
+* [Card]()
+
+
+## Going Live
+ 
+Once you are satisfied with your integration to the Test environment, you must repeat the configuration changes made to your Test account on your Production account.
+
+> **Note:** You cannot use your Test credentials to process transaction requests in the Production environment.
+
+### Go Live Checklist
+1. You must have a production account and access to Business Portal.
+2. You must have a Secret API Key for the production environment.
+3. You must have Webhooks configured for all the events.
+4. You must use the Production URL for your API calls.
+
+### Production URL
+To process live requests with Paysafe, use the following Production URL:
+
+`https://api2.paysafe.com/paymenthub/v1/`
+`https://api2.paysafe.com/digitalwallets/v1/`
+
+For example:
+
+`https://api2.paysafe.com/paymenthub/v1/payments/{payment_id}`
+`https://api2.paysafe.com/digitalwallets/v1/customers`
+
+# API
+The API is constructed around REST and has following features:
+* Definite resource-oriented URLs
+* Receives form-encoded request bodies
+* Returns JSON-encoded responses 
+* Communicates using standard HTTP response codes, authentication, and verbs.
+
+* **Message body**: This must contain valid Paysafe JSON objects as required for the type of request. Not all API calls require a message-body; for example, GET requests do not require a body.
+* **Resource ID**: Identifies the unique ID of a resource.
+![Structure of a Typical API Request](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/user_upload/authentication_example_payments.png)
+* **Payment Simulator**: While testing your integration, you can choose whether you want to simulate the actual end customer experience or you want to use a page, which lets you simulate all payment handle statuses.
+You must use "**Simulator**" in the HTTP header of your request, which has the following possible values:
+   * **"INTERNAL" (default)** – which redirects you to the **status** simulator page.
+   * **"EXTERNAL"** – which redirects/connects you to the downstream payment method website (For Example: Skrill authentication page)
+
+<a name="apiendpoints" title="API Endpoints"></a>
+## API Endpoints
+
+### Resource Patterns
+
+|Endpoint URL                                   |Description                            |Action |
+|---                                            |---                                    |---    |
+|/paymenthandles                                |Create a Customer Payment Handle       |POST   |
+|/paymenthandles/{payment_handle_id}            |Look Up a Payment Handle               |GET    |
+|/payments                                      |Submit a Payment Request               |POST   |
+|/payments/{payment_id}                         |Look Up a Payment                      |GET    |
+|/settlements/{settlement_id}                   |Look Up a Settlement                   |GET    |
+|/standalonecredits                             |Submit a Standalone Credit             |POST   |
+|/standalonecredits/{standalone_credit_id}      |Look Up a Standalone Credit            |GET    |
+
+
+<a name="paymentswebhooks" title="Payments Webhooks"></a>
+# Webhooks
+
+A Webhook is an HTTP callback that is triggered when an event takes place. 
+To configure webhooks, you need to [open a service request](https://merchant.paysafe.com/portal/login) with Paysafe in the Business Portal.
+
+For more information on Webhooks, click [here](https://developer.paysafe.com/en/rest-apis/paysafe-payments-api/payments-api/webhooks/).
+
+> **Note:** To receive webhooks from Paysafe, you must create a callback URL to receive the webhook that is triggered. 
+You are responsible for ensuring its continued availability.
+
+## Some Notes on Webhooks
+
++ When the status of one of your transaction request changes, Paysafe immediately sends a callback to your webhook's endpoint URL to inform you of the status change. 
++ To acknowledge the receipt of the webhook, Paysafe expects an HTTP status of 200 OK or 202 ACCEPTED from your endpoint. In case we receive any other HTTP status code, we assume that you have not received the webhook, and we attempt to resend it.
++ If Paysafe does not get an acknowledgment of receipt with an HTTP Status Code of 200 or 202, it makes a maximum of 2 additional attempts (total 3 attempts) to send a callback to that URL.
++ As Paysafe does not have a notification method to alert you when callbacks are not reaching your endpoint URL, you should make sure that there is continued availability of your endpoint.
++ All endpoint URLs should use HTTPS/SSL to ensure security. Please note that only the default **HTTPS port 443** is supported.
++ In case you have received the same notification multiple times for an already processed event, we request you to ignore the duplicate notification. It is recommended to make the notification URL endpoints idempotent.
+
+
+# Pagination
+
+In the case where an API GET request returns multiple results, Paysafe returns the first 10 records by default and uses HATEOAS links to provide page navigation. In addition to the default behavior, it is also possible to control the number of results and starting point by passing in query parameters  as described in this [section](https://developer.paysafe.com/en/resources-and-support/pagination/).
+
+<a name="globalinvalidcharacters" title="Global Invalid Characters"></a>
+# Global Invalid Characters
+
+You must not include any of the characters in this [table](https://developer.paysafe.com/en/resources-and-support/global-invalid-characters/) as values in any of your request parameters. Object. If you do, your request will result in an error.
+
+<a name="isostandards" title="ISO Standards"></a>
+# ISO Standards
+
+ISO standards add value by providing the common business process data semantics to be used in the API based exchanges. This [section](https://developer.paysafe.com/en/resources-and-support/iso-standards/) presents you codes for four areas - Currency, Province, State, and Country. 
+
+
+Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-payments-api/payments-api/miscellaneous/) for Global Invalid Characters, ISO Standards, Currency Codes, Province Codes, State Codes, Country Codes.
+
+# Common Objects
+
+
+
+<a name="authenticationobject" title="Authentications Object"></a>
+## authentication
+
+|Element                |Type                           |Required|Description|
+|---                    |---                            |---|---       |
+|id                     |string<br/>`length<=36`        |Read Only|This is the ID returned in the response. |
+|eci                    |number                         |Read Only|This is the E-Commerce Indicator (ECI). This value is returned only on payer authentication transactions or for enrollments where the issuer is non-participating, and the card scheme supports it. You must append this value to the authorization request, where it enables the interchange benefits granted to merchants who are processing payer Authentication transactions.<br/>**Visa**<br/><ul><li>5 &ndash; Identifies a successfully authenticated transaction. </li><li>6 &ndash; Identifies an attempt to authenticate the transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**Mastercard**<br/><br/><ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul>|
+|cavv                   |string<br/>`length<=80`        |Read Only|This is the Cardholder Authentication Verification Value, indicating that the transaction is authenticated. You should append this value to the authorization request signifying that the transaction is successfully authenticated.|
+|xid                    |string<br/>`length<=40`        |Read Only|This is the transaction identifier returned by the card issuer.|
+|status                 |enum                           |Read Only|This is the status of the Enrollment Lookup request. Possible values are:<br/><ul><li>COMPLETED - The transaction is completed.</li><li>FAILED - The authentication request failed. Check the error code for details.</li></ul>|
+|merchantRefNum         |string<br/>`length<=255`       |Read Only|This is the merchant reference number created by the merchant and submitted as part of the request. This number must be unique for each request. Paysafe recommends using a unique merchant reference number for every transaction. The merchant reference number must not be the same for multiple transactions.  |
+|threeDEnrollment       |enum                           |Read Only|This indicates whether or not the cardholder is enrolled in 3D Secure. Possible values are:<br/><ul><li>Y &ndash; Cardholder authentication available</li><li>N &ndash; Cardholder not enrolled in authentication</li><li>U &ndash; Cardholder authentication unavailable</li></ul>|
+|threeDResult           |enum                           |Read Only|This indicates the outcome of the Authentication.<br/><ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li><li>N &ndash; The cardholder failed to successfully authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li></ul>|
+|signatureStatus        |enum                           |Read Only|This is the 3D Secure signature verification result value.<br/><ul><li>Y &ndash; All transactions and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>|
+|error                  |[complex](#errorobject)        |Read Only|This is the error details of the authentication. |
+
+```apib
+  {
+  "authentication":{
+    "eci":5,
+    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
+    "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+    "threeDEnrollment":"Y",
+    "threeDResult":"Y",
+    "signatureStatus":"Y"
+  }
+  }
+```
+
+<a name="billingdetailsobject" title="Billing Details Object"></a>
+## billingDetails
+
+|Element            |Type                       |Required|Description                        |
+|---                |---                        |---|---       |
+|id                 |string<br/>`length<=36`    |Read Only|This is the ID of the billing address, returned in the response. |
+|nickName           |string<br/>`length<=50`    |Optional|This is the nickname the merchant has for the billing address. |
+|street             |string<br/>`length<=50`    |Mandatory|This is the first line of the customer's street address.|
+|street2            |string<br/>`length<=50`    |Optional|This is the second line of the customer's street address, if required (for example, apartment number).|
+|city               |string<br/>`length<=40`    |Mandatory|This is the city where the address is located.|
+|state              |string<br/>`length<=40`    |Optional|This is the state/province/region in which the customer lives. For Canada, see [Province Codes](#provincecodes). For the United States, see [State Codes](#statecodes). Other countries have no restrictions.|
+|zip                |string<br/>`length<=10`    |Mandatory|This is the zip, postal, or postcode of the customer's address.|
+|country            |string<br/>`length=2`      |Mandatory|This is the country where the address is located. See [Country Codes](#countrycodes).|
+
+```apib
+{
+    "billingDetails": {
+        "nickName": "home",
+        "street": "100 Queen Street West",
+        "street2": "Unit 201",
+        "city": "Toronto",
+        "state": "ON",
+        "zip": "M5H 2N2",
+        "country": "CA"
+    }
+}
+```
+
+<a name="posting" title="Posting Object"></a>
+## posting
+
+|Element            |Type                       |Required|Description|
+|---                |---                        |---|---                                |
+|type        |string <br/>     |Read Only|This is the type of the transactions posted in the wallet account. Valid values are GROSS_AMPOUNT, TRANSACTION_FEE|
+|direction        |string <br/>     |Read Only|This is the direction of the transactions applied on wallet account. Valid values are CREDIT. DEBIT|
+|amount        |BigInteger <br/>     |Read Only|This is the amount for the posting.|
+
+```apib
+    {
+    "posting": {
+        "type": "GROSS_AMOUNT",
+        "direction": "CREDIT",
+        "amount": 600,
+    }
+    }
+```
+
+
+<a name="customerAccount" title="Customer Account Object"></a>
+## customerAccount
+
+|Element            |Type                       |Required|Description|
+|---                |---                        |---|---                                |
+|id        |string <br/>     |Read Only|The wallet customer account to  deposit the funds in.|
+|fee        |BigInteger <br/>     |Read Only|This is the fee appied on this transaction. |
+|fx        |BigInteger <br/>     |Read Only|Fx rate applied on this transaction. |
+|currencyCode           |string <br/>`length=3`     |Read Only  |This is the currency of the wallet account, for example, USD or CAD. See [Currency Codes](#currencycodes). |
+|posting         |[posting](#postingObject)|Ready Only|The transaction postings on the wallet account.|
+
+```apib
+    {
+    "customerAccount" : {
+       "id" : "123456",
+       "fee" : 600,
+       "currencyCode" : "EUR",
+       "postings": [{
+        "type": "GROSS_AMOUNT",
+        "direction": "CREDIT",
+        "amount": 600,
+       }]
+    }
+    }
+```
+
+<a name="merchantAccount" title="Merchant Account Object"></a>
+## merchantAccount
+
+|Element            |Type                       |Required|Description|
+|---                |---                        |---|---                                |
+|fx        |BigInteger <br/>     |Read Only|Fx rate applied on this transaction. |
+|currencyCode           |string <br/>`length=3`     |Read Only  |This is the currency of the wallet account, for example, USD or CAD. See [Currency Codes](#currencycodes). |
+|posting         |[posting](#postingObject)|Ready Only|The transaction postings on the wallet account.|
+
+```apib
+    {
+    "merchantAccount" : {
+       "fee" : 600,
+       "currencyCode" : "EUR",
+       "postings": [{
+        "type": "GROSS_AMOUNT",
+        "direction": "CREDIT",
+        "amount": 600,
+       }]
+    }
+    }
+```
+
+
+<a name="wallet" title="Wallet Object"></a>
+## wallet
+
+|Element            |Type                       |Required|Description|
+|---                |---                        |---|---                                |
+|customerId        |string <br/>     ||The wallet customer id.|
+|slipId        |string <br/>     |Read Only|The transaction id at wallet.|
+|fee                |BigInteger<br/>    |Fee to be applied on this wallet account transaction.|
+|customerAccount         |[customerAccount](#customerAccountObject)|Ready Only|Customer account.|
+|merchantAccount         |[customerAccount](#customerAccountObject)|Ready Only|Merchant account.|
+
+```apib
+    {
+    "wallet":{
+       "customerId" : "abc",
+       "slipId" : "100753",
+       "fee": 400",
+       "customerAccount" : {
+         "id":"abc",
+         "currencyCode" : "EUR",
+         "fx" : 1,
+         "postings" : [
+           {
+              "type" : "GROSS_AMOUNT",
+              "direction" : "CREDIT",
+              "amount" : 1000
+           },
+           {
+              "type" : "TRANSACTION_FEE",
+              "direction" : "DEBIT",
+              "amount" : 400
+           }
+         ]
+        },
+        "merchantAccount" : {
+           "id": "def",
+           "currencyCode" : "EUR",
+           "fx" : 1,
+           "postings" : [
+           {
+             "type" : "GROSS_AMOUNT",
+             "direction" : "CREDIT",
+             "amount" : 1000
+           },
+           {
+             "type" : "TRANSACTION_FEE",
+             "direction" : "DEBIT",
+             "amount" : 400
+           }
+          ]
+       }
+  }
+```
+
+
+<a name="cardobject" title="card Object"></a>
+## card
+
+|Element            |Type                       |Required|Description|
+|---                |---                        |---|---                                |
+|cardNum            |string <br/>`length=8-20`  |Mandatory|This is the card number used for the request. |
+|lastDigits         |string<br/>`length=4`      |Read Only|This is the last four digits of the card used for the request, returned in the response.|
+|cardExpiry         |[cardExpiry](#cardexpiryobject)|Mandatory|This is the card's expiry date.|
+|cvv                |string<br/>`length=3-4`    |Conditional|This is the 3- or 4-digit security code that appears on the card following the card number.|
+|holderName         |string<br/>`length<=160`   |Optional|This is the name of the card holder. |
+|nickName           |string<br/>`length<=50`    |Optional|This is the nickname the merchant has for the card holder. |
+|cardType           |enum                       |Read Only|This is the type of card used for the request, returned in the response. Possible values are:<br/><ul><li>AM &ndash; American Express</li><li>DI &ndash; Discover</li><li>JC &ndash; JCB</li><li>MC &ndash; Mastercard</li><li>MD &ndash; Maestro</li><li>SO &ndash; Solo</li><li>VI &ndash; Visa</li><li>VD &ndash; Visa Debit</li><li>VE &ndash; Visa Electron</li></ul>
+|cardBin            |string<br/>`length=6`      |Read Only|This is the card BIN (typically the first 6 digits).|
+
+```apib
+    {
+    "card": {
+        "cardNum": "4111111111111111",
+        "cardExpiry": {
+            "month": 2,
+            "year": 2019
+        }
+    }
+    }
+```
+
+
+<a name="cardexpiryobject" title="cardExpiry Object"></a>
+## cardExpiry
+
+|Element                 |Type                   |Required|Description|
+|---                     |---                    |----|---|
+|month                   |number<br/>`length=2`  |Mandatory|This is the card expiry month. |
+|year                    |number<br/>`length=4`  |Mandatory|This is the card expiry year.|
+
+```apib
+    {
+    "cardExpiry":{
+        "month": "12",
+        "year": "2020"
+    }
+    }
+```
+
+<a name="dateofbirthobject" title="Date of Birth Object"></a>
+## dateOfBirth
+|Element            |Type                           |Required|Description    |
+|---                |---                            |---|---            |
+|year               |number<br/>`length=4 min=1900` |Mandatory|This is the year of birth.|
+|month              |number<br/>`length=2 max=12`   |Mandatory|This is the month of birth.|
+|day                |number<br/>`length=2 max=31`   |Mandatory|This is the day of birth.|
+
+```apib
+            { 
+               "dateOfBirth": {
+                  "year": 1980,
+                  "month": 12,
+                  "day": 25
+                }
+            }
+```
+
+<a name="errorobject" title="error Object"></a>
+## error
+|Element            |Type       |Required|Description                        |
+|---                |---        |---|---                                |
+|code               |string     |Read Only|The error code. Also shown in the X-Application-Status-Code response header.            |
+|message            |string     |Read Only|A description of the error.                 |
+|details            |array      |Read Only|Details of any parameter value errors.       |
+|fieldErrors        |array      |Read Only|If applicable, this is a list of fields that have issues.|
+
+```apib
+   {
+   "error":{  
+      "code":"5270",
+      "message":"The credentials provided with the request do not have permission to access the data requested.",
+      "details":[  
+         "access to {stpAccount:1001076700} denied"
+      ],
+      "fieldErrors":[  
+         {  
+            "field":"street",
+            "error":"Unexpected characters"
+         }
+      ]
+   }
+   }
+```
+
+<a name="fieldErrorobject" title= "Field Error Object"></a>
+## fieldError
+
+| Element            | Type   |Required| Description                 |
+|--------------------|--------|--------|-----------------------------|
+|field             |string  |Read Only|Identifies the JSON request field.|
+|error            |string  |Read Only|The problem associated with the field.|
+
+```apib
+        {
+            "field": "transaction.accountProfile.email",
+            "error": "Required field"
+        }
+```
+
+<a name="gatewayresponseobject" title= "Gateway Response Object"></a>
+## gatewayResponse
+
+This is a read-only raw response returned by an acquirer. 
+
+| Element            | Type   |Required| Description                                                                                         |
+|--------------------|--------|---------|-----------------------------------------------------------------------------------------------------|
+| code               | string |Read Only| This is the acquirer identification code, such as DJN, CRX, etc.                                    |
+| responseCode       | string |Read Only| This is the raw response returned by the acquirer.                                                  |
+| avsResponse        | enum   |Read Only| This is the AVS response returned from the card issuer. Possible values are:<ul><li>MATCH</li><li>MATCH_ADDRESS_ONLY</li><li>MATCH_ZIP_ONLY</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul> |
+| avsCode            | string |Read Only| This is the raw AVS code returned by the acquirer.                                                  |
+| mid                | string |Read Only| This is the acquirer MID that was sent to the clearing house.                                       |
+| authCode           | string |Read Only| This is the authorization code.                                                                     |
+| txnDateTime        | string |Read Only| This is the transaction date and time.                                                              |
+| cvvVerification    | enum   |Read Only| This is the response to the cvv submitted with the transaction request. Possible values are:<ul><li>MATCH</li><li>NO_MATCH</li><li>NO_MATCH</li><li>NOT_PROCESSED</li><li>UNKNOWN</li></ul> |
+| cvv2Result         | string |Read Only| This is the raw cvv2 result code.                                                                   |
+
+
+<a name="linksobject" title="links Object"></a>
+## links
+
+|Element    |Type           |Description|
+|---        |---            |---|
+|rel        |enum           |This is the link type that allows different endpoints to be targeted depending on the end state of the transaction. Possible values are:<ul><li>redirect_payment</li><li>default</li><li>first</li><li>prev</li><li>next</li><li>last</li></ul>|
+|href       |string         |This is the URI of the resource.|
+|method     |string         |This is the HTTP method. |
+
+```apib
+{
+    "links": [{
+            "rel": "on_completed",
+            "href": "https://US_commerce_site/payment/return/success",
+        },
+        {
+            "rel": "on_failed",
+            "href": "https://US_commerce_site/payment/return/failed",
+        }
+    ]
+}
+```
+
+<a name="metaobject" title="meta Object"></a>
+## meta
+
+|Element    |Type           |Required|Description|
+|---        |---            |---|---|
+|numberOfRecords|number|Read Only|This is the number of records returned in the lookup.|
+|limit |number         |Read Only|This is the number of records returned per page.|
+|page  |number         |Read Only|This is the page of records on which the lookup starts.|
+
+```apib
+{
+    "meta": {
+               "numberOfRecords": 1,
+               "limit": 10,
+               "page": 1
+            }
+}
+```
+
+
+<a name="metadataobject" title="metadata Object"></a>
+## metadata
+
+|Element            |Type                       |Required|Description                        |
+|---                |---                        |---|---                            |
+|key                |string <br/>`length<=50`   |Read Only| This is a description of the data added to the order.|
+|value              |string <br/>`length<=100`  |Read Only| This is the value for the key/value pair.|
+
+
+<a name="paymenthandleobject" title="Payment Handle Object"></a>
+## Payment Handle
+
+|Element                |Type                       |Required    |Description                        |
+|---                    |---                        |---         |---                                |
+|id                     |string<br/>`length<=36`    |Read Only   |This is the ID returned in the response. This ID can be used to retrieve the Payment Handle.|
+|accountId              |string<br/>`length<=10`    |Conditional |This is the merchant account number used for the request. Include this parameter if you have more than one merchant account for the currency/payment type combination you are specifying. |
+|paymentHandleTokenFrom |string<br/>`length<=50`    |Optional    |This is the merchant account number used for the request. Include this parameter if you have more than one merchant account for the currency/payment type combination you are specifying. |
+|paymentHandleToken     |string<br/>`length<=50`    |Read Only   |The Payment Handle Token generated by our system which should be used for subsequent Payment/Credit transaction. |
+|merchantRefNum         |string<br/>`length<=255`   |Mandatory   |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|transactionType        |Enumeration                |Either customerOperation or transactionType is Mandatory.|This specifies the transaction type for which the Payment Handle is created. Possible values are: <ul><li>PAYMENT - Payment Handle is created to continue the Payment.</li><li> STANDALONE_CREDIT - Payment Handle is created to continue the standalone credit.</li><li>ORIGINAL_CREDIT - Payment Handle is created to continue the original credit.</li><li>VERIFICATION - Payment Handle is created to continue the verification request.</li></ul>|
+|status                 |Enumeration                |Read Only   |This is the status of the request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>INITIATED &ndash; The request was initiated with the downstream provider.</li><li>PAYABLE &ndash; The merchant can use the Payment Handle for a Payment request.</li><li>PROCESSING &ndash; The Payment Handle was authorized by customer, awaiting PSP response.</li><li>FAILED &ndash; The transaction failed due to an error or got declined.</li><li>EXPIRED &ndash; The Payment Handle expired because the merchant did not proceed with the Payment transaction.</li><li>COMPLETED &ndash; The Payment request was initiated successfully using the Payment Handle.</li><li>ERROR &ndash; The Payment Handle has errored. The reason for this state might be because of some system or environmental issues. </li></ul> By default, PaymentHandles will EXPIRE after 15 mins unless in a PROCESSING status.  Once the transaction flow has been initiated by the customer, the time permitted for the customer to complete authorization is dependent upon the payment type. PaymentHandles that lapse the permitted processing will be marked EXPIRED.If the customer is required to complete authorization as part of a redirect flow, the PaymentHandle is updated to have a PROCESSING status and the expiration time is extended to allow this additional time for the customer to complete these activities.For payment types where there is automatic settlement (settleWithAuth=true), if the PAYABLE Payment Handle has EXPIRED,  the corresponding Payment/Settlement resources will be auto created.  IF the PSP supports refunds, they will be auto refunded to the customer.|
+|statusReason           |Enumeration                |Read Only   |<ul><li>AUTH_VOIDED - Authorization was cancelled (voided).</li><li> USER_CANCELLED - User cancelled the transaction </li><li>AUTH_EXPIRED - Authorization has expired and no settlements were completed.</ul>|
+|usage                  |Enumeration                |Read Only   |This specifies how the Payment Handle will be used for Payments. Possible values are:<ul><li>SINGLE_USE &ndash; The Payment Handle can be used for only one transaction and expires if not used.</li><li>MULTI_USE &ndash; The Payment Handle can be used multiple times.</li></ul>|
+|paymentType            |Enumeration                |Mandatory   |This is the payment type associated with this Payment Handle. Possible values are:<ul><li>CARD</li>|
+|action                 |Enumeration                |Read Only   |This specifies the next step of the user journey once they proceed to the Payment. Possible values are:<ul><li>NONE &ndash; No action is required, for example, for a standard credit card payment.</li><li>REDIRECT &ndash; The user must be redirected to complete a Payment, for example, when an alternate payment method like Paysafecard is used.</li></ul>|
+|executionMode          |Enumeration                |Read Only   |This specifies the action of the merchant server to complete the Payment. Possible values are:<ul><li>SYNCHRONOUS &ndash; The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.</li><li>ASYNCHRONOUS &ndash; The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.</li></ul>|
+|amount                 |number <br/>`max=99999999999` |Mandatory |This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process US $109.9, this value should be 10990.<br/>**Note:** This field is mandatory if *transactionType* is included. <br/>The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for. |
+|currencyCode           |string <br/>`length=3`     |Mandatory  |This is the currency of the merchant account, for example, USD or CAD. See [Currency Codes](#currencycodes). <br/>The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.|
+|paymentHandleToken     |string <br/>`length=50`     |Read Only  |This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.|
+|paymentObject, card or any relevant paymentInstrument object as per paymentType |Complex                    |Mandatory  |These are the details of the card or payment instrument used for the transaction.|
+[card](#cardobject) |Objects | Mandatory |These are details of the payment instrument used in the request. |
+|wallet     |[wallet](#walletobject) |Optional| Wallet object.|
+|billingDetails         |[billingDetails](#billingdetailsobject) |Conditional |These are billing details for the request.<br/>**Note:** For single-use Payment Handles, this address information is ignored if the *paymentHandleTokenFrom* parameter is included and there is already address information associated with that customer.|
+|profile                |[profile](#profileobject)  |Conditional| This is the customer's profile. Mandatory for VIP_PREFERRED and Sightline (Play+). Optional for all other payment methods. |
+|shippingDetails        |Complex                    |Conditional| These are the shipping details of the request.|
+|merchantDescriptor     |[merchantDescriptor](#merchantdescriptorobject) |Optional|This is the merchant descriptor that will be displayed on the customer's card or bank statement.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
+|returnLinks            |[returnLinks](#returnlinksobject) | Mandatory for redirect flows.|The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory. |
+|returnLinks.rel        |Enumeration | |This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. self will get details of the current call. Options:default - (required) The default return url, will be used if specific status return url is not defined.on_completed - Will be returned to this URL if the payment is completed.on_failed - Will be returned to this URL if the payment is failed.Future Options:on_cancelled,self, void_auths. Not all processing gateways support on_failed. Contact your account manager for more information. |
+|returnLinks.href       |String      | |The actual URL. |
+|returnLinks.method     |String      | |The HTTP method. |
+|customerIp             |string<br/>`length<=39`    |Optional|This is the customer's IP address. |
+|timeToLiveSeconds      |number<br/>`length<=899`   |Read Only|This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration.|
+|links                  |[links](#linksobject) Array of link objects     |Read Only| This provides the redirect details to which a merchant needs to redirect the customer to complete the authentication. Typically the case with 3DS Cards, PSCard, PSCash|
+|links.rel              |[links](#linksobject)  Enumeration   |Read Only| redirect_payment - Merchant needs to redirect consumer to this url to complete authentication.|
+|links.href             |String  |Read Only| The URL to redirect.|
+|links.method           |String  |Read Only| The HTTP method to be used, if needed.|
+|customerId             |String  Max = 36|Read Only| The HTTP method to be used, if needed.| 
+|txnTime                | UTC formatted date | Read Only | This is the date and time the request was processed. For example:<br/>2019-01-26T10:32:28Z |
+|gatewayResponse        |[gatewayResponse](#gatewayresponseobject)|Read Only| This is the read-only raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+|updatedTime |datetime  |Read Only  |ISO 8601 format (UTC) This is the date and time the resource was last updated, for example, `2014-01-26T10:32:28Z`  |
+|statusTime  |datetime  |Read Only  |ISO 8601 format (UTC) This is the date and time the resource was last updated, for example, `2014-01-26T10:32:28Z`  |
+|meta|[meta](#metaobject)|Read Only| This is the information of the response.| 
+|error| error Object |  | Represents the customer id, which is saved at Paysafe side. |
+|timeToLiveSeconds | Long | Read Only | This is the period of time the paymentHandleToken is valid before expiration, in seconds, returned in the response. |
+ 
+
+```apib
+{
+    "merchantRefNum": "merchantRefNum-101",
+    "transactionType": "PAYMENT",
+    "card": {
+        "cardNum": "5191330000004415",
+        "cardExpiry": {
+            "month": 10,
+            "year": 2021
+        },
+        "cvv": "111",
+        "holderName": "Chad"
+    },
+    "paymentType": "CARD",
+    "amount": 190,
+    "currencyCode": "GBP",
+    "customerIp": "172.0.0.1",
+    "billingDetails": {
+        "nickName": "Home",
+        "street": "100 Queen",
+        "street2": "Unit 201",
+        "city": "Toronto",
+        "zip": "M5H 2N2",
+        "country": "CA"
+    },
+    "returnLinks": [{
+            "rel": "on_completed",
+            "href": "https://US_commerce_site/payment/return/success",
+            "method": "GET"
+        },
+        {
+            "rel": "on_failed",
+            "href": "https://US_commerce_site/payment/return/failed",
+            "method": "GET"
+        }
+    ]
+}
+```
+
+<a name="paymentsobject" title="Payments Object"></a>
+## Payment
+
+|Element            |Type                                   |Required|Description                        |
+|---                |---                                    |---|---                                |
+|id                 |string <br/>`length<=36`               |Read Only|This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |Mandatory|This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount             |number<br/>`max=99999999999`           |Mandatory|This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. <br/>**Note:** The *amount* specified in the Payment request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.|
+|settleWithAuth     |boolean                                |Optional|This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><ul><li>false &ndash; The request is not settled</li><li>true &ndash; The request is settled</li></ul><br/>**Note:** Defaults to *true*.|
+|paymentHandleToken |string<br/>`length<=36`                |Mandatory|This is the Payment Handle token that represents the payment instrument to be used in the Payment request. |
+|availableToSettle  |number                                 |Read Only|This is the amount of the Authorization remaining to settle, in minor units.|
+|customerIp         |string<br/>`length<=39`                |Optional|This is the customer's IP address.|
+|description        |string<br/>`length<=255`               |Optional|This is a description of the transaction, provided by the merchant.|
+|txnTime            |UTC formatted date                     |Read Only|This is the date and time the request was processed. For example:<br/>2019-01-26T10:32:28Z|
+|status             |enum                                   |Read Only|This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>HELD &ndash; The transaction has been placed on hold due to risk considerations.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li><li>PENDING &ndash; The request is pending.</li></ul>|
+|currencyCode       |string<br/>`length=3`                  |Mandatory|This is the currency of the merchant account, for example, USD or CAD, returned in the request response. See [Currency Codes](#currencycodes). <br/>**Note:** The *currencyCode* specified in the Payment request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.|
+|wallet     |[wallet](#walletobject) |Read Only| Wallet object.|
+|gatewayResponse    |[gatewayResponse](#gatewayresponseobject) |Read Only| This is the read-only raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+|riskReasonCode     |array                                  |Read Only|An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
+|storedCredentialDetails |[storedCredentialDetails](#storedcredentialobject) || This object is used to identify requests that use stored credentials that the merchant has on file for the consumer, in order to improve authorization rates and reduce fraud. |
+|settlements        |array                                  |Read Only|This is a read-only list of all Settlements. This will be returned only if *settleWithAuth* = *true* in the request. |
+|error              |[error](#errorobject)                  |Read Only| Details of the error.    |
+|statusReason       |string<br/>`length<=255`               |Read Only|This is reason for the status. This is present in the case where *status* is ERROR, FAILURE, or HELD. |
+|authentication     |[authentication](#authenticationobject)|Read Only|These are 3D Secure details.|
+|paymentType            |enum                       |Optional|This is the payment type associated with this Payment Handle. Possible values are:<ul><li>CARD</li>|
+|gatewayReconciliationId |string                 |Optional|Transaction identifier that can be used to reconcile this transaction with the provider gateway.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |Optional|ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, for example, `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |Optional|ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, for example, `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|availableToRefund  |number<br/>`max=99999999999`|Optional|This is the amount of this Settlement that is available to Refund, in minor units. For example, US $10.99 would be 1099.|
+
+```apib
+{
+    "merchantRefNum": "merchantRefNum-108",
+    "amount": 190,
+    "currencyCode": "GBP",
+    "dupCheck": true,
+    "settleWithAuth": false,
+    "paymentHandleToken": "SCZJg09GWSv36NLB",
+    "customerIp": "10.10.12.64",
+    "description": "Gaming Request"
+}
+```
+
+
+
+<a name="profileobject" title="Profile Object"></a>
+## profile
+
+|Element            |Type                               |Required           |Description    |
+|---                |---                                |---                |---            |
+|locale             |enum                               |Required           |This indicates the language of the profile. Possible values are:<ul><li>en_US</li><li>fr_CA</li><li>en_GB</li></ul>|
+|firstName          |string <br/>`length<=80`           |Required           |This is the customer’s first name. |
+|lastName           |string <br/>`length<=80`           |Required           |This is the customer’s last name. |
+|email              |string<br/>`length<=255`           |Required           |This is the customer's email address.|
+|phone              |string<br/>`length<=40`            |Required           |This is the customer's phone number.|
+|dateOfBirth        |[dateOfBirth](#dateofbirthobject)  |Required           |This is the customer's date of birth.|
+
+```apib
+            {
+              "locale" : "en_US",
+              "firstName" : "John",
+              "lastName" : "Smith",
+              "email" : "john.smith@somedomain.com",
+              "phone" : "713-444-5555"
+              "dateOfBirth" : "04-25-1987"
+             }
+```
+
+
+<a name="returnlinksobject" title="returnLinks Object"></a>
+## returnLinks
+
+|Element    |Type           |Required|Description|
+|---        |---            |---|---|
+|rel        |enum           |Mandatory|This is the link type that allows different endpoints to be targeted depending on the end state of the transaction. Possible values are:<ul><li>default - The default return URL that will be used if specific status return URL is not defined.</li><li>on_completed - Will be returned to this URL if the payment is completed.</li><li>on_failed - Will be returned to this URL if the payment fails.</li></ul>|
+|href       |string         |Mandatory|This is the URI of the resource.|
+|method     |string         |Mandatory|This is the HTTP method. |
+
+```apib
+{
+    "returnLinks": [{
+            "rel": "on_completed",
+            "href": "https://US_commerce_site/payment/return/success",
+            "method": "GET"
+        },
+        {
+            "rel": "on_failed",
+            "href": "https://US_commerce_site/payment/return/failed",
+            "method": "GET"
+        }
+    ]
+}
+```
+
+<a name="settlementsobject" title="settlements Object"></a>
+## settlement
+|Element            |Type                                   |Required|Description                        |
+|---                |---                                    |---|---                                |
+|id                 |string <br/>`length<=36`               |Read Only|This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |Mandatory|This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount             |number<br/>`max=99999999999`           |Optional|This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. |
+|dupCheck           |boolean                                |Optional|This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
+|availableToRefund  |number<br/>`max=99999999999`           |Read Only|This is the amount of this Settlement that is available to Refund, in minor units. For example, US $10.99 would be 1099.|
+|childAccountNum    |string<br/>`length<=10`                |Read Only|This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
+|txnTime            |UTC formatted date                     |Read Only|This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
+|status             |enum                                   |Read Only|This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>PROCESSING &ndash; The Settlement batch has started.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The transaction request has been cancelled.</li></ul>|
+|error              |[error](#errorobject)                  |Read Only|Details of the error.   |
+|splitpay           |[splitpay](#splitpayobject)            |Optional|This enables you to use the Split Payouts functionality when settleing an Authorization.|
+|riskReasonCode     |array                                  |Read Only|An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
+|gatewayResponse    |[gatewayResponse](#gatewayresponseobject) |Read Only| This is the read-only raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+
+
+```apib
+{
+    "merchantRefNum":"merchantRef_2019_04_11_05",
+    "amount":100
+}
+```
+
+
+<a name="standalonecreditsobject" title="standalonecredits Object"></a>
+## standalonecredits
+
+|Element            |Type                                   |Required|Description                        |
+|---                |---                                    |---|---                                |
+|id                 |string <br/>`length<=36`               |Read Only|This is the ID returned in the response. This ID can be used for future associated requests.|
+|amount             |number<br/>`max=99999999999`           |Mandatory|This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. <br/>**Note:** The *amount* specified in the Credit request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.|
+|merchantRefNum     |string <br/>`length<=255`              |Mandatory|This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|paymentHandleToken |string                                 |Mandatory|This is the payment token generated by Paysafe that will be used by merchants for Standalone Credit requests.|
+|currencyCode       |string<br/>`length=3`                  |Mandatory|This is the currency of the merchant account, for example, USD or CAD, returned in the request response. See [Currency Codes](#currencycodes). <br/>**Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.|
+|card \| paysafecard \| paysafecash \| sightline \| vippreferred \| skrill \| instant ACH \| Interac \| ACH \|EFT |[card](#cardobject) \| [paysafecard](#paysafecardobject)\| [paysafecash](#paysafecashobject) \|[sightline](#sightlineobject) \| [vippreferred](#vippreferredobject) \| [skrill](#skrillobject) \| [instant ACH](#instantachobject)  \| [ACH](#achobject)    \| [EFT](#eftobject)  |Read Only|These are the details of the payment method used.|
+|billingDetails     |[billingDetails](#billingdetailsobject)|Optional|These are the billing details for the request.|
+|customerIp         |string<br/>`length<=39`                |Optional|This is the customer's IP address.|
+|description        |string<br/>`length<=255`               |Optional|This is a description of the transaction, provided by the merchant.|
+
+```apib
+{
+  "merchantRefNum":"merchant ABC-444",
+  "amount":10098,
+  "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+  "currencyCode": "GBP",
+  "customerIp":"204.91.0.12",
+  "description":"Winning payment from Loto"
+}    
+```
+
+<a name="threeDsobject" title= "threeDs Object"></a>
+## threeDs
+
+|Element            |Type                      |Required  | Description                       |
+|---                |---                       |--------  |---                                |
+|threeDs            |string <br/>              |Optional  |Denotes the status of threeDs object. If true and is configured in the backend for the respective accountId, it is mandatory to pass this parameters. If false, parameters need not be passed.
+
+```apib
+{
+    "threeDs": {
+         "merchantUrl": "https://api.qa.paysafe.com/checkout/v2/index.html#/desktop",
+         "deviceChannel": "BROWSER",
+         "messageCategory": "PAYMENT",
+         "transactionIntent": "GOODS_OR_SERVICE_PURCHASE",
+         "authenticationPurpose": "PAYMENT_TRANSACTION"
+     },
+}
+```
+
+
+# Error Summary
+
+## Common Errors
+|HTTP Status Code|Error Code|Description|
+|---------|---------|---------------|
+|500|1000|An internal error occurred.|
+|502|1001|An error occurred with the external processing gateway.|
+|500|1002|An internal error occurred.|
+|500|1003|An internal error occurred.|
+|500|1007|An internal error occurred.|
+|500|1008|An internal error occurred.|
+|429|1200|The API call has been denied as it has exceeded the permissible call rate limit.|
+|401|5000|Your merchant account authentication failed. Either your store ID/password is invalid or the IP address from which you are sending the transaction has not been authorized.|
+|400|5001|The submitted currency code is invalid or your account does not support this currency.|
+|400|5003|You submitted an invalid amount with your request.|
+|400|5004|You submitted an invalid account type with your request.|
+|400|5005|You submitted an invalid operation type with your request.|
+|400|5010|The submitted country code is invalid.|
+|400|5016|The merchant account you provided cannot be found.|
+|400|5017|The merchant account you provided is disabled.|
+|402|5021|Your transaction request has been declined.|
+|400|5023|The request is not parseable.|
+|409|5031|The transaction you have submitted has already been processed.|
+|401|5040|Your merchant account is not configured for the transaction you attempted.|
+|400|5042|The merchant reference number is missing or invalid or it exceeds the maximum permissible length.|
+|400|5068|Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected.|
+|404|5269|The ID(s) specified in the URL do not correspond to the values in the system.|
+|403|5270|The credentials provided with the request do not have permission to access the requested data.|
+|406|5271|You requested a response in the 'Accept' header that is in an unsupported format.|
+|406|5272|The 'Content-Type' you specified in request header was submitted in an unsupported format.|
+|404|5273|Your client reached our application but we were unable to service your request due to an invalid URL.|
+|401|5275|The authentication credentials provided with the request have expired.|
+|401|5276|The authentication credentials provided with the request provided have been disabled.|
+|401|5277|The authentication credentials provided with the request have been locked due to multiple authentication failures.|
+|401|5278|The authentication credentials provided with the request were not accepted for an unknown reason.|
+|401|5279|The authentication credentials are invalid.|
+|401|5280|The required authentication credentials were not provided.|
+|405|5281|The request uses an action (for example, GET, POST, or PUT) that is not supported by the resource.|
+|400|5283|The requested operation can only be executed on a Payment Handle with the status of *PAYABLE*.|
+|400|5501|The profile does not have an active credit card.|
+|400|5502|Either the payment token is invalid or the corresponding profile or bank account is not active.|
+
+## Payment Errors
+|HTTP Status Code|Error Code|Description|
+|---------|---------|---------------|
+|400|PAYMENTHUB-1 |The submitted payment type and currency code combination is not supported. |
+|400|3002|You submitted an invalid card number or brand or combination of card number and brand with your request.|
+|400|3004|The zip/postal code must be provided for an AVS check request.|
+|400|3005|You submitted an incorrect CVV value with your request.|
+|400|3006|You submitted an expired credit card number with your request.|
+|402|3007|Your request has failed the AVS check. Note that the amount has still been reserved on the customer's card and will be released in 3–5 business days. Please ensure the billing address is accurate before retrying the transaction.|
+|400|3008|You submitted a card type for which the merchant account is not configured.|
+|402|3009|Your request has been declined by the issuing bank.|
+|402|3011|Your request has been declined by the issuing bank because the card used is a restricted card. Contact the cardholder's credit card company for further investigation.|
+|402|3012|Your request has been declined by the issuing bank because the credit card expiry date submitted is invalid.|
+|402|3013|Your request has been declined by the issuing bank due to problems with the credit card account.|
+|402|3014|Your request has been declined - the issuing bank has returned an unknown response. Contact the card holder's credit card company for further investigation.|
+|402|3015|The bank has requested that you process the transaction manually by calling the cardholder's credit card company.|
+|402|3016|The bank has requested that you retrieve the card from the cardholder – it may be a lost or stolen card.|
+|402|3017|You submitted an invalid credit card number with your request.|
+|402|3018|The bank has requested that you retry the transaction.|
+|402|3019|Your request has failed the CVV check. Please note that the amount may still have been reserved on the customer's card, in which case it will be released in 3–5 business days.|
+|402|3020|The bank has requested that you retry the transaction.|
+|404|3021|The confirmation number included in this request could not be found.|
+|402|3022|The card has been declined due to insufficient funds.|
+|402|3023|Your request has been declined by the issuing bank due to its proprietary card activity regulations.|
+|402|3024|Your request has been declined because the issuing bank does not permit the transaction for this card.|
+|400|3025|The external processing gateway has reported invalid data.|
+|400|3026|The external processing gateway has reported the account type is invalid.|
+|402|3027|The external processing gateway has reported a limit has been exceeded.|
+|502|3028|The external processing gateway has reported a system error.|
+|402|3029|The external processing gateway has rejected the transaction.|
+|402|3030|The external processing gateway has reported the transaction is unauthorized.|
+|400|3031|The confirmation number you submitted with your request references a transaction that is not on hold.|
+|402|3032|Your request has been declined by the issuing bank or external gateway because the card is probably in one of their negative databases.|
+|402|3035|Your request has been declined due to exceeded PIN attempts.|
+|402|3036|Your request has been declined due to an invalid issuer.|
+|402|3037|Your request has been declined because it is invalid.|
+|402|3038|Your request has been declined due to customer cancellation.|
+|402|3039|Your request has been declined due to an invalid authentication value.|
+|402|3040|Your request has been declined because the request type is not permitted on the card.|
+|402|3041|Your request has been declined due to a timeout.|
+|402|3042|Your request has been declined due to a cryptographic error.|
+|402|3044|You have submitted a duplicate request.|
+|402|3045|You submitted an invalid date format for this request.|
+|402|3046|The transaction was declined because the amount was set to zero.|
+|402|3047|The transaction was declined because the amount exceeds the floor limit.|
+|402|3048|The transaction was declined because the amount is less than the floor limit.|
+|402|3049|The bank has requested that you retrieve the card from the cardholder – the credit card has expired.|
+|402|3050|The bank has requested that you retrieve the card from the cardholder – fraudulent activity is suspected.|
+|402|3051|The bank has requested that you retrieve the card from the cardholder – contact the acquirer for more information.|
+|402|3052|The bank has requested that you retrieve the card from the cardholder – the credit card is restricted.|
+|402|3053|The bank has requested that you retrieve the card from the cardholder – please call the acquirer.|
+|402|3054|The transaction was declined due to suspected fraud.|
+|402|3055|This type of transaction is not supported.|
+|402|3056|The original transaction type does not match.|
+|402|3057|Please tell cardholder to call the issuer – do not retry transaction.|
+|409|5284|An entity with the specified identifier(s) already exists.|
+|400|5286|Card with the specified identifier(s) does not exist. |
+|404|5288|Card does not belong to consumer. |
+|400|5303|Payment instrument already exists.|
+|400|5304|Expired card. |
+|403|5309|The maximum amount of money allowed for the requested operation is exceeded.|
+
+## Settlement Errors
+|HTTP Status Code|Error Code|Description|
+|---------|---------|---------------|
+|400|3200|You have submitted an invalidly formatted Authorization ID for this Settlement.|
+|404|3201|The Authorization ID included in this Settlement request could not be found.|
+|402|3202|You have exceeded the maximum number of Settlements allowed.|
+|402|3203|The Authorization is either fully settled or cancelled.|
+|402|3204|The requested Settlement amount exceeds the remaining Authorization amount.|
+|402|3205|The Authorization you are attempting to settle has expired.|
+|402|3206|The external processing gateway has rejected the transaction.|
+|402|3207|Due to issuer policies, this type of transaction is not allowed.|
+
+## Refund Errors
+|HTTP Status Code|Error Code|Description|
+|---------|---------|---------------|
+|402|3402|The requested Refund amount exceeds the remaining Settlement amount.|
+|402|3403|You have already processed the maximum number of refunds allowed for this Settlement.|
+|402|3404|The Settlement has already been fully refunded.|
+|402|3405|The Settlement you are attempting to Refund has expired.|
+|402|3406|The Settlement you are attempting to Refund has not been batched yet. There are no settled funds available to Refund.|
+|400|3407|The Settlement referred to by the transaction response ID you provided cannot be found.|
+|400|3408|You have submitted an invalidly formatted response ID for the original Purchase or Settlement.|
+|402|3412|The Refund transaction you attempted was not permitted because your merchant account is in overdraft.|
+|402|3413|The requested Refund amount exceeds the permissible Visa credit ratio.|
+|400|3414|The Refund referred to by the transaction response ID you provided cannot be found.|
+|402|3415|You cannot cancel this transaction as it is no longer in a pending state.|
+|402|3416|The external processing gateway for which your merchant account is configured does not support partial Settlements.|
+|402|3417|There is already another request being processed on the transaction referenced for this request.|
+|402|3418|The external processing gateway for which your merchant account is configured does not support partial Credits.|
+|402|3419|This type of transaction cannot be refunded.|
+
+## Customer Vault Errors
+|HTTP Status Code       |Error Code |Description|
+|---                    |---        |---|
+|409                    |7503       |The card number you are trying to add to this profile is already used by this profile.|
+|409                    |7504       |This card has been used for the maximum number of profiles allowed. Please use a different card.|
+|409                    |7505       |The *merchantCustomerId* provided for this profile has already been used for another profile.|
+|409                    |7506       |The bank account you are trying to add to this profile is already in use.|
+|409                    |7507       |The mandate reference you are trying to add to this profile is already in use.|
+|400                    |7508       |You submitted an invalid card number or brand or combination of card number and brand with your request.|
+|409                    |7509       |The bank account has one or more existing mandates so associated banking information cannot be updated.|
+|400                    |7510       |You submitted invalid bank account information for your banking scheme.|
+|404                    |7511       |The address ID provided in your request could not be found.|
+|400                    |7512       |The merchant's Apple Pay configuration could not be found.|
+|400                    |7513       |The Apple Pay token is invalid.|
+|404                    |7514       |The payment token has expired.|
+|409                    |7515       |The card cannot be added to this profile because the profile has reached the maximum number of cards allowed.|
+|400                    |7516       |You need to provide at least one search parameter.|
+|400                    |7517       |You need to provide dates with the format YYYY-MM-DDTHH24:MI:SSZ.|
+|400                    |7518       |The days between the dates specified exceeds the maximum.|
+|400                    |7519       |The pagination limit exceeds the maximum.|
+|409                    |7520       |The bank account cannot be added to this profile because the profile has reached the maximum number of bank accounts allowed.|
+
+## Alternate Payments Errors
+|HTTP Status   |Error Code                    |Message                                 |Details|
+|---           |---                           |---                                     |---|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-1  |Transaction cancelled at the gateway    |The transaction was cancelled at the gateway.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-4  |Transaction declined by the gateway     |The transaction declined by the gateway. |
+|402           |ALTERNATE-PAYMENTS-GATEWAY-5  |Incomplete transaction                  |The requested operation can only be executed on a completed transaction.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-6  |Over refund                             |The total refund amount cannot exceed the original payment amount.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-7  |Payment expired                         |The payment has expired.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-8  |Over settlement                         |The total Settlement amount cannot exceed the authorized (payment) amount.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-9  |Risk gateway error                      |A risk issue was reported by the gateway.|
+|502           |ALTERNATE-PAYMENTS-GATEWAY-10 |Payment type temporarily unavailable    |The gateway is temporarily unavailable due to system maintenance activities.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-11 |Over voidauth                           |The void authorization cannot exceed the amount remaining to settle for the corresponding payment.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-12 |Payment already settled                 |The payment is already partially/fully settled.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-13 |Transaction not refundable yet          |The transaction is not refundable yet.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-14 |Partial settlements not possible        |Partial Settlements are not possible with the selected payment method.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-16 |The requested amount exceeds the allowed maximum for the specified payment type. |The requested amount exceeds the allowed maximum for the specified payment type.|
+|504           |ALTERNATE-PAYMENTS-GATEWAY-17 |Your request timed out before it could be completed. |Your request timed out before it could be completed.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-19 |The payment instrument does not have sufficient funds. |The payment instrument does not have sufficient funds.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-20 |The third-party account has not been activated. |The third-party account has not been activated.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-21 |The requested amount is under the allowed minimum amount for the specified payment type. |The requested amount is under the allowed minimum amount for the specified payment type.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-22 |The provided identity details do not match the identity details already present. |The provided identity details do not match the identity details already present.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-23 |The KYC documents provided could not be verified. |The KYC documents provided could not be verified.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-24 |There is an already existing third-party account with the details provided. |There is an already existing third-party account with the details provided.|
+
+
+# Using the Example API Calls (Console Window)
+
+To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right-hand pane. 
+Using the Console window you can update the headers, the request body, and parts of the API endpoint. For example, for many lookup requests you must update the endpoint to include your request ID (for example, payment_id), which you do by selecting **URI Parameters** and then updating the respective *id* value. 
+
+![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/ApiaryConsole.png)
+
+You must also update the Header to include your API Key by selecting **Headers** and then updating the **Authorization** value using the Base64 version of your API key.
+To get your Base64 encoded API key, sign in to the Business Portal and go to **Integrate>API Keys**.
+![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/API_authorization.png)
+
+When you are ready to test your example, you can choose between the Production and Mock server environment:
+
+- Production server – This calls the resource on Paysafe's Test system.
+- Mock server – This environment simply returns the dummy values in the example response irrespective of the parameters you supply. You do not need to use your account ID or Test API key for this request.
+
+To call the API resource, click **Call Resource**. The response is displayed in the Console window.
+
+# Legal and Community
+<ul>
+<li><a href="https://www.paysafe.com/paysafegroup/privacy-policy/" target="_blank">Privacy Policy</a></li>
+<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
+<li><a href="https://www.paysafe.com/paysafegroup/regulatory-disclosures/" target="_blank">Regulatory Disclosures</a></li>
+</ul>
+
+# Verify That the Service Is Accessible [GET /v1/monitor]
+<a name="verifyservice" title="Verify Service"></a>
+
+This call returns a status of READY if the API is available.
 
 + Response 200 (application/json)
 
-        [
+  + Body
+    
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
+                "status" : "READY"
             }
-        ]
 
-### Create a New Question [POST]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+# Group Payment Handles
 
-+ Request (application/json)
+## Payment Handle [/v1/paymenthandles]
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
+A Payment Handle represents tokenized information about the payment method that you set up for your customer. Once the Payment Handle is created, you can then include the *paymentHandleToken* returned in the Payment Handle request response in a new [payment request](#paymentrequest).  
+<br>
+> **Note:** A Payment Handle can be used in a [Payment request](#paymentrequest) only if it has the status of **PAYABLE**. 
 
-+ Response 201 (application/json)
+### Create a Payment Handle [POST]
+<a name="paymenthandlerequest" title="Create a Payment Handle"></a>
+
+Click **Create a Payment Handle** above to see the examples of how to create a Payment Handle object:
+
+* A Payment Handle for a standard credit card authorization
+* A Payment Handle for a credit card that is registered for 3D Secure - the response for this request will contain a redirect to present to the customer so they can validate their 3D Secure credentials
+* A Payment Handle for a credit card Standalone Credit
+
+ > **Note:** The *status* of Payment Handles will remain INITIATED  for the following cases:
+* When the customer is redirected to a *redirect_payment* URL until the customer verifies the payment instrument.
+* When the requested amount is more than the maximum amount configured in the Business Portal.
+* When Alternate Payment Methods like Paysafecash, Paysafecards are selected by the customer.
+
++ Attributes 
+    + Include PaymentHandleRequest
+
++ Request Create Payment Handle for Card without 3D Secure Enabled (application/json)
 
     + Headers
 
-            Location: /questions/2
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+    
+    + Body
+
+            {
+                "merchantRefNum": "merchantRefNum-101",
+                "transactionType": "PAYMENT",
+                "card": {
+                    "cardNum": "5191330000004415",
+                    "cardExpiry": {
+                        "month": 10,
+                        "year": 2020
+                    },
+                    "cvv": "111",
+                    "holderName": "poorna"
+                },
+                "wallet":{
+                   "id" : "GGG",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "paymentType": "CARD",
+                "amount": 1000,
+                "currencyCode": "GBP",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
+                    }
+                ]
+            }
+
++ Response 200 (application/json)
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+              "id": "26359efd-7cfb-4014-a13d-1724e3ff17fa",
+              "amount": 1000,
+              "merchantRefNum": "merchantRefNum-101",
+              "action": "NONE",
+              "currencyCode": "GBP",
+              "usage": "SINGLE_USE",
+              "status": "PAYABLE",
+              "paymentType": "CARD",
+              "executionMode": "SYNCHRONOUS",
+              "customerIp": "172.0.0.1",
+              "paymentHandleToken": "SCO3wKcIyLoQbQvw",
+              "billingDetails": {
+                "nickName": "Home",
+                "street": "100 Queen",
+                "street2": "Unit 201",
+                "city": "Toronto",
+                "country": "CA",
+                "zip": "M5H 2N2"
+              },
+              "card": {
+                "cardExpiry": {
+                  "month": "10",
+                  "year": "2020"
+                },
+                "holderName": "poorna",
+                "cardType": "MC",
+                "cardBin": "519133",
+                "lastDigits": "4415"
+              },
+              "wallet":{
+                   "id" : "GGG",
+                   "fee" : 400,
+                   "slipId" : "100753",
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+              },
+              "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
+                    }
+                ],
+              "timeToLiveSeconds": 899,
+              "transactionType": "PAYMENT"
+            }
+
++ Request Create Payment Handle for Card with 3D Secure Enabled (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Body
+
+            {
+                "merchantRefNum": "merchantRefNum-124",
+                "transactionType": "PAYMENT",
+                "card": {
+                    "cardNum": "4538261230000003",
+                    "cardExpiry": {
+                        "month": 10,
+                        "year": 2020
+                    },
+                    "cvv": "111",
+                    "holderName": "poorna"
+                },
+                "paymentType": "CARD",
+                "amount": 3000,
+                "currencyCode": "GBP",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "wallet":{
+                   "id" : "GGG",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
                     }
                 ]
             }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+                "amount": 3000,
+                "merchantRefNum": "merchantRefNum-124",
+                "action": "REDIRECT",
+                "currencyCode": "GBP",
+                "usage": "SINGLE_USE",
+                "status": "INITIATED",
+                "paymentType": "CARD",
+                "executionMode": "SYNCHRONOUS",
+                "customerIp": "172.0.0.1",
+                "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "card": {
+                    "cardExpiry": {
+                        "month": "10",
+                        "year": "2020"
+                    },
+                    "holderName": "poorna",
+                    "cardType": "VI",
+                    "cardBin": "453826",
+                    "lastDigits": "0003"
+                },
+                "wallet":{
+                   "id" : "GGG",
+                   "slipId" : "100753",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
+                    }
+                ],
+                "links": [{
+                    "rel": "redirect_payment",
+                    "href": "http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+                    "method": "GET"
+                }],
+                "timeToLiveSeconds": 899,
+                "transactionType": "PAYMENT"
+            }
+
+
+
++ Request Create Payment Handle for Card for Standalone Credit (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Body
+
+            {
+              "merchantRefNum": "merchantRefNum-190",
+              "transactionType": "STANDALONE_CREDIT",
+              "card": {
+                "cardNum": "4538261230000003",
+                "cardExpiry": {
+                  "month": 10,
+                  "year": 2020
+                },
+                "cvv": "111",
+                "holderName": "poorna"
+              },
+              "wallet":{
+                   "id" : "GGG",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"                   
+                    }
+              },
+              "paymentType": "CARD",
+              "amount": 3000,
+              "currencyCode": "GBP",
+              "customerIp": "172.0.0.1",
+              "billingDetails": {
+                "nickName": "Home",
+                "street": "100 Queen",
+                "street2": "Unit 201",
+                "city": "Toronto",
+                "zip": "M5H 2N2",
+                "country": "CA"
+              }
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+              "amount": 3000,
+              "merchantRefNum": "merchantRefNum-190",
+              "action": "NONE",
+              "currencyCode": "GBP",
+              "usage": "SINGLE_USE",
+              "status": "PAYABLE",
+              "paymentType": "CARD",
+              "executionMode": "SYNCHRONOUS",
+              "customerIp": "172.0.0.1",
+              "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+              "billingDetails": {
+                "nickName": "Home",
+                "street": "100 Queen",
+                "street2": "Unit 201",
+                "city": "Toronto",
+                "country": "CA",
+                "zip": "M5H 2N2"
+              },
+              "wallet":{
+                   "id" : "GGG",
+                   "fee" : 400,
+                   "slipId" : "100753",
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+              },
+              "card": {
+                "cardExpiry": {
+                  "month": "10",
+                  "year": "2020"
+                },
+                "holderName": "poorna",
+                "cardType": "VI",
+                "cardBin": "453826",
+                "lastDigits": "0003"
+              },
+              "timeToLiveSeconds": 899,
+              "transactionType": "STANDALONE_CREDIT"
+            }
+            
+
+
+### Get Payment Handle [GET /v1/paymenthandles/{paymenthandle_id}]
+<a name="getpaymenthandle" title="Look Up a Payment Handle"></a>
+
+    Click **Get Payment Handle** above to look up a Payment Handle using the ID returned in the response of the original request.
+
++ Parameters
+
+    + paymenthandle_id : `26359efd-7cfb-4014-a13d-1724e3ff17fa` - This is the Payment Handle ID returned in the response to the [Payment Handle creation request](#paymenthandlerequest).
+
++ Request Look Up Payment Handle (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "26359efd-7cfb-4014-a13d-1724e3ff17fa",
+              "amount": 1900,
+              "merchantRefNum": "merchantRefNum-115",
+              "action": "NONE",
+              "currencyCode": "GBP",
+              "usage": "SINGLE_USE",
+              "status": "EXPIRED",
+              "timeToLiveSeconds": 0,
+              "transactionType": "PAYMENT",
+              "paymentType": "CARD",
+              "executionMode": "SYNCHRONOUS",
+              "customerIp": "172.0.0.1",
+              "paymentHandleToken": "SC0YsGIIgFksiOsQ",
+              "billingDetails": {
+                "street": "100 Queen",
+                "street2": "Unit 201",
+                "city": "Toronto",
+                "country": "CA",
+                "zip": "M5H 2N2"
+              },
+              "wallet":{
+                   "id" : "GGG",
+                   "fee" : 400,
+                   "slipId" : "100753",
+                   "customerAccount" : {
+                       "id":"abc"
+                    }
+              },
+              "card": {
+                "cardExpiry": {
+                  "month": "12",
+                  "year": "2034"
+                },
+                "holderName": "poorna",
+                "cardType": "MC",
+                "cardBin": "519133",
+                "lastDigits": "4415"
+              },
+              "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success"
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed"
+                        "method": "GET"
+                    }
+                ]
+            }
+
+### Get Payment Handle Using Merchant Reference Number [GET /v1/paymenthandles?merchantRefNum={merchant_ref_num}]
+<a name="getpaymenthandlemerchantrefnum" title="Look Up a Payment Handle Using a Merchant Reference Number"></a>
+
+Click **Get Payment Handle Using Merchant Reference Number** above to look up a Payment Handle using the ID returned in the response of the original request.
+
++ Parameter
+
+    + merchant_ref_num : `13995817730005389` - This is the *merchantRefNum* used in the original Payment Handle creation request.
+         _Mandatory_
+    + limit : `32` (number) - This is the total number of records to return. Default = 10.
+        _Optional_ _Max=50_
+    + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
+        _Optional_ 
+    + startDate : `2019-01-26` (UTC Date) - This is the start date in UTC. Default = 30 days before the *endDate*.
+        _Optional_
+    + endDate : `2019-03-26` (UTC Date) - This is the end date in UTC. Default = current date and time.
+        _Optional_
+
++ Request Look Up Payment Handle Using Merchant Reference Number (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+
+     + Attributes
+        + Include paymenthandles
+
+    + Body
+
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "paymentHandles": [{
+                    "id": "cc719995-59ed-4146-a936-b54db72bcaa8",
+                    "amount": 1900,
+                    "merchantRefNum": "merchantRefNum-130",
+                    "action": "NONE",
+                    "currencyCode": "GBP",
+                    "usage": "SINGLE_USE",
+                    "status": "EXPIRED",
+                    "timeToLiveSeconds": 0,
+                    "transactionType": "PAYMENT",
+                    "paymentType": "CARD",
+                    "executionMode": "SYNCHRONOUS",
+                    "customerIp": "172.0.0.1",
+                    "paymentHandleToken": "SC0YsGIIgFksiOsQ",
+                    "billingDetails": {
+                        "street": "100 Queen",
+                        "street2": "Unit 201",
+                        "city": "Toronto",
+                        "country": "CA",
+                        "zip": "M5H 2N2"
+                    },
+                    "wallet":{
+                       "id" : "GGG",
+                       "fee" : 400,
+                       "slipId" : "100753",
+                        "customerAccount" : {
+                          "id":"abc"
+                        }
+                    },
+                    "card": {
+                        "cardExpiry": {
+                            "month": "12",
+                            "year": "2034"
+                        },
+                        "holderName": "poorna",
+                        "cardType": "MC",
+                        "cardBin": "519133",
+                        "lastDigits": "4415"
+                    },
+                    "returnLinks": [{
+                            "rel": "on_completed",
+                            "href": "https://US_commerce_site/payment/return/success",
+                            "method": "GET"
+                        },
+                        {
+                            "rel": "on_failed",
+                            "href": "https://US_commerce_site/payment/return/failed",
+                            "method": "GET"
+                        }
+                    ]
+                }]
+            }
+
+
+# Group Payments
+
+## Payments [/v1/payments]
+
+Payment requests allow you to process a payment using the *paymentHandleToken*.  The examples below include a *paymentHandleToken* created for a credit card.
+
+### Process Payment [POST]
+<a name="paymentrequest" title="Post Payment Using Payment Handle Token"></a>
+
+Click **Process Payment** above to create a Payment request using a Payment Handle token for:
+
+* A Payment request that authorizes and settles the Payment in a single request by setting the *settleWithAuth* parameter to *true*
+
++ Attributes 
+    + Include PaymentsRequest
+
++ Request Process a Card Payment Including Settlement (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+    
+    + Body
+
+            {
+              "merchantRefNum": "merchantRefNum-108",
+              "amount": 1000,
+              "currencyCode": "GBP",
+              "settleWithAuth": true,
+              "paymentHandleToken": "SCZJg09GWSv36NLB",
+              "customerIp": "10.10.12.64",
+              "description": "Magazine subscription"
+            }
+            
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+              "amount": 1000,
+              "merchantRefNum": "merchantRefNum-108",
+              "settleWithAuth": true,
+              "paymentHandleToken": "SCZJg09GWSv36NLB",
+              "txnTime": "2018-12-14T15:12:18Z",
+              "customerIp": "10.10.12.64",
+              "dupCheck": true,
+              "description": "Magazine subscription",
+              "currencyCode": "GBP",
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "availableToSettle": 0,
+              "gatewayResponse": {
+                "authCode": "135880",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH"
+              },
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "400",
+                 "customerAccount" : {
+                    "id":"abc",
+                    "currencyCode" : "EUR",
+                    "fx" : 1,
+                    "postings" : [
+                       {
+                          "type" : "GROSS_AMOUNT",
+                          "direction" : "CREDIT",
+                          "amount" : 1000
+                       },
+                       {
+                          "type" : "TRANSACTION_FEE",
+                          "direction" : "DEBIT",
+                          "amount" : 400
+                       }
+                    ]
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                     "currencyCode" : 'EUR",
+                     "fx" : 1,
+                     "postings" : [
+                      {
+                        "type" : "GROSS_AMOUNT",
+                        "direction" : "CREDIT",
+                        "amount" : 400
+                       },
+                       {
+                         "type" : "TRANSACTION_FEE",
+                         "direction" : "DEBIT",
+                         "amount" : 100
+                       }
+                      ]
+                  }
+              }
+            }
+
+
+### Get Payments [GET /v1/payments/{payment_id}]
+<a name="getpayment" title="Look Up a Payment"></a>
+
+Click **Get Payments** above to look up a Payment using the ID returned in the response of the original request.
+
++ Parameter
+
+   + payment_id : `3aeb9c63-6386-46a3-9f8e-f452e722228a` - This is the ID returned in the response of the Payments request.
+
++ Request Look Up Payment (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+              "amount": 1000,
+              "merchantRefNum": "merchantRefNum-108",
+              "settleWithAuth": false,
+              "paymentHandleToken": "SCZJg09GWSv36NLB",
+              "txnTime": "2018-12-14T15:12:18Z",
+              "customerIp": "10.10.12.64",
+              "dupCheck": true,
+              "description": "Magazine subscription",
+              "currencyCode": "GBP",
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "availableToSettle": 1900,
+              "gatewayResponse": {
+                "authCode": "135880",
+                "avsResponse": "MATCH",
+                "cvvVerification": "MATCH"
+              },
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "400",
+                 "customerAccount" : {
+                    "id":"abc",
+                    "currencyCode" : "EUR",
+                    "fx" : 1,
+                    "postings" : [
+                       {
+                          "type" : "GROSS_AMOUNT",
+                          "direction" : "CREDIT",
+                          "amount" : 1000
+                       },
+                       {
+                          "type" : "TRANSACTION_FEE",
+                          "direction" : "DEBIT",
+                          "amount" : 400
+                       }
+                    ]
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                     "currencyCode" : 'EUR",
+                     "fx" : 1,
+                     "postings" : [
+                      {
+                        "type" : "GROSS_AMOUNT",
+                        "direction" : "CREDIT",
+                        "amount" : 400
+                       },
+                       {
+                         "type" : "TRANSACTION_FEE",
+                         "direction" : "DEBIT",
+                         "amount" : 100
+                       }
+                      ]
+                  }
+              }
+            }
+            
+### Get Payments Using Merchant Reference number [GET /v1/payments?merchantRefNum={merchant_ref_num}]
+<a name="getpaymentmerchantrefnum" title="Look Up a Payment Using a Merchant Reference Number"></a>
+
+Click **Get Payment Using Merchant Reference Number** above to look up a Payment using the merchant reference number used in the original request.
+
++ Parameter
+
+   + merchant_ref_num : `merchantRefNum-145` - This is the merchant reference number created by the merchant and submitted as part of the Payments request.
+    _Mandatory_
+    + limit : `32` (number) - This is the total number of records to return. Default = 10.
+        _Optional_ _Max=50_
+    + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
+        _Optional_ 
+    + startDate : `2019-01-26` (UTC Date) - This is the start date in UTC. Default = 30 days before the *endDate*.
+        _Optional_
+    + endDate : `2019-03-26` (UTC Date) - This is the end date in UTC. Default = current date and time.
+        _Optional_
+
++ Request Look Up Payment Using Merchant Reference Number (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+
+     + Attributes
+        + Include payments
+
+    + Body
+
+            {
+              "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+              "payments": [
+                {
+                  "id": "8190c675-6d68-4cd7-a29c-55b406addaeb",
+                  "amount": 1000,
+                  "merchantRefNum": "merchantRefNum-145",
+                  "settleWithAuth": false,
+                  "paymentHandleToken": "SChfCGCURe5NiLIv",
+                  "authCode": "107212",
+                  "txnTime": "2018-12-14T15:12:18Z",
+                  "customerIp": "10.10.12.64",
+                  "description": "Magazine subscription",
+                  "currencyCode": "GBP",
+                  "paymentType": "CARD",
+                  "status": "COMPLETED",
+                  "avsResponse": "MATCH",
+                  "cvvVerification": "MATCH",
+                  "availableToSettle": 40
+                }
+              ]
+            }
+
+
+# Group Settlements 
+
+
+### Get Settlements [GET /v1/settlements/{settlement_id}]
+<a name="getsettlement" title="Look Up a Settlement"></a>
+
+Click **Get Settlements** above to look up a Settlement using the ID returned in the response of the original request.
+
++ Parameter
+
+   + settlement_id : `ea49ab6c-cf9b-4efd-bde8-2fa3bb5ccd85` - This is the ID returned in the response of the Settlement request.
+
++ Request Look Up Settlement (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "merchantRefNum": "merchantRefNum-144",
+              "amount": 40,
+              "id": "ea49ab6c-cf9b-4efd-bde8-2fa3bb5ccd85",
+              "availableToRefund": 40,
+              "txnTime": "2018-12-11T16:33:49Z",
+              "status": "PENDING"
+            }
+            
+### Get Settlements Using Merchant Reference Number [GET /v1/settlements?merchantRefNum={merchant_ref_num}]
+<a name="getsettlementmerchantrefnum" title="Look Up a Settlement Using a Merchant Reference Number"></a>
+
+Click **Get Settlements Using Merchant Reference Number** above to look up a Settlement using the merchant reference number used in the original request.
+
++ Parameter
+
+   + merchant_ref_num : `merchantRefNum-144` - This is the merchant reference number created by the merchant and submitted as part of the request.
+        _Mandatory_
+   + limit : `32` (number) - This is the total number of records to return. Default = 10.
+        _Optional_ _Max=50_
+   + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
+         _Optional_ 
+   + startDate : `2019-01-26` (UTC Date) - This is the start date in UTC. Default = 30 days before the *endDate*.
+        _Optional_
+   + endDate : `2019-03-26` (UTC Date) - This is the end date in UTC. Default = current date and time.
+        _Optional_
+
++ Request Look Up Settlement Using Merchant Reference Number (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+    
+     + Attributes
+        + Include settlementsArray
+
+    + Body
+
+            {
+              "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+              "settlements": [
+                {
+                  "merchantRefNum": "merchantRefNum-144",
+                  "amount": 40,
+                  "id": "ea49ab6c-cf9b-4efd-bde8-2fa3bb5ccd85",
+                  "availableToRefund": 40,
+                  "txnTime": "2018-12-11T16:33:49Z",
+                  "status": "PENDING"
+                }
+              ]
+            }
+
+
+# Group Standalone Credits 
+
+## Standalone Credits [/v1/standalonecredits]
+
+Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Payment/Settlement.
+
+**Note:** If your merchant category code (MCC) is listed to [process Original Credits](#originalcreditrequest), you must not use Standalone Credits.
+
+
+### Process Standalone Credit [POST]
+<a name="standalonecreditrequest" title="Process Standalone Credit"></a>
+
+Click **Process Standalone Credit** above to see how to process a Standalone Credit request. 
+
++ Attributes (OriginalCreditResponse)
+
++ Request Process a Standalone Credit Using a Payment Handle Token (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Body
+
+            {
+              "amount": 40,
+              "merchantRefNum": "merchantRefNum-151",
+              "currencyCode": "GBP",
+              "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+              "customerIp": "204.91.0.12",
+              "description": "Pay surplus"
+            }    
+            
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "e075f2ae-dfc4-4f6d-8d89-61158367b6a6",
+              "amount": 40,
+              "merchantRefNum": "merchantRefNum-151",
+              "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+              "customerIp": "204.91.0.12",
+              "currencyCode": "GBP",
+              "paymentType": "CARD",
+              "status": "PENDING",
+              "description": "Pay surplus"
+            }
+            
+
+### Get Standalone Credit [GET /v1/standalonecredits/{standalone_credit_id}]
+<a name="getstandalonecredit" title="Look Up a Standalone Credit"></a>
+
+Click **Get Standalone Credit** above to look up a Standalone Credit using the ID returned in the response of the original request.
+
++ Parameter
+
+    + standalone_credit_id : `e075f2ae-dfc4-4f6d-8d89-61158367b6a6`
+
++ Request Look Up Standalone Credit (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "e075f2ae-dfc4-4f6d-8d89-61158367b6a6",
+              "amount": 40,
+              "merchantRefNum": "merchantRefNum-151",
+              "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+              "customerIp": "204.91.0.12",
+              "currencyCode": "GBP",
+              "paymentType": "CARD",
+              "status": "PENDING",
+              "description": "Pay surplus"
+            }
+            
+### Get Standalone Credit Using Merchant Reference Number  [GET /v1/standalonecredits?merchantRefNum={merchant_ref_num}]
+<a name="getstandalonecreditmerchantrefnum" title="Look Up a Standalone Credit Using a Merchant Reference Number"></a>
+
+Click **Get Standalone Credit Using Merchant Reference Number** above to look up a Standalone Credit using the merchant reference number used in the original request.
+
++ Parameter
+
+   + merchantRefNum : `merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        _Mandatory_
+    + limit : `32` (number) - This is the total number of records to return. Default = 10.
+        _Optional_ _Max=50_
+    + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
+        _Optional_ 
+    + startDate : `2019-01-26` (UTC Date) - This is the start date in UTC. Default = 30 days before the *endDate*.
+        _Optional_
+    + endDate : `2019-03-26` (UTC Date) - This is the end date in UTC. Default = current date and time.
+        _Optional_
+
++ Request Look Up Standalone Credit Using Merchant Reference Number (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+
+    + Attributes
+        + Include standalonecredits
+    
+    + Body
+
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "standaloneCredits": [{
+                    "id": "e075f2ae-dfc4-4f6d-8d89-61158367b6a6",
+                    "amount": 40,
+                    "merchantRefNum": "merchantRefNum-151",
+                    "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+                    "customerIp": "204.91.0.12",
+                    "currencyCode": "GBP",
+                    "paymentType": "CARD",
+                    "status": "PENDING",
+                    "description": "Pay surplus"
+                }]
+            }
+            
+
+
+
+
+
+
+# Data Structures
+
+## accordD
++ accordD (object)
+    + Properties
+        + `financingType`:`DEFERRED_PAYMENT` (enum) - This is the type of financing offered.
+            + Members
+                + DEFERRED_PAYMENT - Deferred payment financing
+                + EQUAL_PAYMENT - Equal payment financing
+        + `plan`:`124` (string) - This is the plan number for the financing transaction.
+            _length<=3_
+        + `gracePeriod`:`12` (number) - This is the grace period, in months, associated with deferred payment transactions.
+            _max=99_
+        + `term`:`12` (number) - This is the number of payments, in months, for equal payment transactions.
+            _max=99_
+
+## Address
++ `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of request, returned in the response.
+    _Read Only, length<=36_
++ nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
+    _Optional, length<=50_
++ street:`100 Queen` (string) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
+    _Mandatory, length<=50_
++ street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
+    __Optional, length<=50_
++ city:`Toronto` (string) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
+    _Mandatory, length<=40_
++ zip:`M5H 2N2` (string) - This is the zip, postal, or post code of the customer's address.
+    _Mandatory, length<=10_
++ country:`CA` (string) - This is the country where the address is located. See [Country Codes](#countrycodes).
+    _Mandatory, length=2_
++ state:`ON` (string) - This is the state/province/region in which the customer lives.
+    _Optional, length<=2_
++ phone:`647-788-3901` (string) - This is the customer's phone number.
+    _Optional, length<=40_
++ defaultShippingAddressIndicator:`true` (boolean) - Flag to mark this address as the default shipping address.
+    _Conditional_
++ status: `ACTIVE`(enum) - This is the status of the address.
+    _Read Only_
+    + Members
+        + ACTIVE
+        + INITIAL
+
+## Addresses
++ addresses (array)
+    + (object)
+        + Properties
+            + `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of request, returned in the response.
+                _Read Only, length<=36_
+            + nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
+                _Optional, length<=50_
+            + street:`100 Queen` (string) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
+                _Mandatory, length<=50_
+            + street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
+                _Optional, length<=50_
+            + city:`Toronto` (string) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
+                _Mandatory, length<=40_
+            + zip:`M5H 2N2` (string) - This is the zip, postal, or post code of the customer's address.
+                _Mandatory, length<=10_
+            + country:`CA` (string) - This is the country where the address is located. See [Country Codes](#countrycodes).
+                _Mandatory, length=2_
+            + state:`ON` (string) - This is the state/province/region in which the customer lives.
+                _Optional, length<=40_
+            + phone:`647-788-3901` (string) - This is the customer's phone number.
+                _Optional, length<=40_
+            + defaultShippingAddressIndicator:`true` (boolean) - Flag to mark this address as the default shipping address.
+                _Conditional_
+
+## Authentications Object
++ authentication (object) - These are the 3D Secure authentication details.
+    + `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of authentication, returned in the response.
+        _Read Only, length<=36_
+    + `eci`:`5` (number) - This is the [E-Commerce Indicator](#authenticationobject).
+    + `cavv`:`AAABBhkXYgAAAAACBxdiENhf7A+=` (string) - This is the Cardholder Authentication Verification Value, indicating that the transaction has been authenticated.
+        _Read Only, length<=80_
+    + `xid`:`aWg4N1ZZOE53TkFrazJuMmkyRDA=` (string) - This is the transaction identifier returned by the card issuer.
+        _Read Only, length<=40_
+    + `status`: (enum) - This is the status of authentication request.
+        _Read Only_
+        + Members
+            + COMPLETED
+            + FAILED
+    + `merchantRefNum`:`merchantABC-123-authentications` (string) - This is the merchant reference number for the authentication request.
+        _Read Only, length<=255_
+    + `threeDEnrollment`:`Y` (enum) - This indicates whether or not the cardholder is enrolled in 3D Secure.
+        _Read Only_
+        + Members
+            + Y - Cardholder authentication available
+            + N - Cardholder not enrolled in authentication
+            + U - Cardholder authentication unavailable
+    + `threeDResult`:`Y` (enum) - This indicates the outcome of the Authentication.
+        _Read Only_
+        + Members
+            + Y - The cardholder successfully authenticated with their card issuer.
+            + A - The cardholder authentication was attempted.
+            + N - The cardholder failed to successfully authenticate with their card issuer.
+            + U - Authentication with the card issuer was unavailable.
+            + E - An error occurred during authentication.
+    + `signatureStatus`:`Y` (enum) - This is the 3D Secure signature verification result value.
+        _Read Only_
+        + Members
+            + Y - All transaction and signature checks satisfied.
+            + N - At least one transaction or signature check failed.
+    + Include Authentication Errors
+
+## Authentication Errors
++ error (object) - This is the error details of authentication.
+    _Read Only_
+    + `code`:`5016` (string) - This is the error code.
+    + `message`:`Account not found.` (string) - This is the description of the error.
+    + `fieldErrors` (array) - This is a list of fields that have issues.
+        + `field`:`amount` (string) - Field name.
+        + `error`:`Contain invalid characters` (string)  - Error associated with the field name.
+
+
+## `Bacs`
+
++ bacs (object) - These are the details of the [bacs](#bacsobject) used for the request.
+
+    + Properties
+
+        + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+            _Optional, length<=50_
+        + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
+            _Mandatory, length<=18_
+        + accountNumber: `98877219` (string) - This is the bank account number.
+            _Mandatory, length=8_
+        + sortCode:`Jane's Card` (string) - This is the 6-digit sort code that identifies the financial institution and branch of the customer’s bank.
+            _Mandatory, length=6_
+        + Include Mandate
+        + lastDigits: `11` (string) - These are the last two digits of the account number.
+            _Read Only, length=2_
+
+## Billing Details
++ billingDetails (object) - These are the customer's billing details. **Note:** For single-use Payment Handles, this address information will be ignored if the *paymentHandleTokenFrom* parameter is included in the Payment Handle creation request and there is already address information associated with that customer.
+    + street:`100 Queen` (string)  - This is the first line of the street address in the billing address.
+        _Mandatory, length<=50_
+    + street2:`Unit 201` (string) - This is the second line of the street address in the billing address, if required (for example, apartment number).
+        _Optional, length<=50_
+    + city:`Toronto` (string) - This is the city in the billing address.
+        _Mandatory, length<=40_
+    + zip:`MSH 2N2` (string) - This is the postal/zip code in the billing address.
+        _Mandatory, length<=10_
+    + country:`CA` (string) - This is the country where the address is located. See [Country Codes](#countrycodes).
+        _Mandatory, length=2_
+    + state:`ON` (string) - This is the state or province of the billing address. For Canada see [Province Codes](#provincecodes). For the United States see [State Codes](#statecodes). Other countries have no restrictions.
+        _Optional, length<=40_
+    + phone:`444-9999` (string) - This is the customer's telephone number.
+        _Optional, length<=40_
+    + `nickName`:`Home` (string) - This is the nickname the merchant has for the billing address.
+        _Optiona, length<=50_
+
+## Billing Details Response
++ billingDetails (object) - These are the customer's billing details.
+     _Read Only_
+     
+     + Properties
+    
+        + street:`100 Queen` (string)  - This is the first line of the street address in the billing address.
+            _length<=50_
+        + street2:`Unit 201` (string) - This is the second line of the street address in the billing address, if required (for example, apartment number).
+            _length<=50_
+        + city:`Toronto` (string) - This is the city in the billing address.
+            _length<=40_
+        + zip:`MSH 2N2` (string) - This is the postal/zip code in the billing address.
+            _length<=10_
+        + country:`CA` (string) - This is the country where the address is located. See [Country Codes](#countrycodes).
+            _length=2_
+        + state:`ON` (string) - This is the state or province of the billing address. For Canada see [Province Codes](#provincecodes). For the United States see [State Codes](#statecodes). Other countries have no restrictions.
+            _length<=40_
+        + phone:`444-9999` (string) - This is the customer's telephone number.
+            _length<=40_
+        + `nickName`:`Home` (string) - This is the nickname the merchant has for the billing address.
+            _length<=50_
+
+## `Card`
+
++ card (object) - These are the details of the [card](#cardobject) used for the request.
+
+    + Properties
+
+        + cardNum:`4111111111111111` (string) - This is the card number used for the request.
+            _Mandatory, length=8-20_
+        + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
+            _Mandatory_
+            + month:12 (number) - This is the card expiry month.
+                _length=2_
+            + year:2020 (number) - This is the card expiry year.
+                _length=4_
+        + cvv:`123` (string) - This is the 3- or 4-digit security code that appears on the card following the card number.
+            _Conditional, length=3-4_
+        + lastDigits:`1111` (string) - These are the last four digits of the card used for the request.
+            _Read Only, length=4_
+        + holdername:`Jane Smith` (string) - This is the name of the card holder.
+            _Read Only_
+        + nickName:`Jane's Card` (string) - This is the nickname the merchant has for the card holder.
+            _Optional, length<=50_
+        + cardBin:`411111` (string) - This is the card BIN (typically the first 6 digits).
+            _Read Only, length=6_
+        + cardType: `AM` (enum) - This is the type of card used for the request, returned in the response.
+            _Read Only_
+            + Members
+                + AM – American Express
+                + DI – Discover
+                + JC – JCB
+                + MC – Mastercard
+                + MD – Maestro
+                + SO – Solo
+                + VI – Visa
+                + VD – Visa Debit
+                + VE – Visa Electron
+
+## `Card Customer`
+
++ card (object, required) - These are the details of the [card](#cardobject) used for the request.
+
+    + Properties
+
+        + cardNum:`4111111111111111` (string) - This is the card number used for the request.
+            _Mandatory, length=8-20_
+        + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
+            __Mandatory_
+            + month:12 (number) - This is the card expiry month.
+                _length=2_
+            + year:2020 (number) - This is the card expiry year.
+                _length=4_
+        + cvv:`123` (string) - This is the 3- or 4-digit security code that appears on the card following the card number.
+            _Conditional, length=3-4_
+        + lastDigits:`1111` (string) - These are the last four digits of the card used for the request.
+            _Read Only, length=4_
+
+## `Card Response`
+
++ card (object) - These are the details of the [card](#cardobject) used for the request.
+    _Read Only_
+
+    + Properties
+
+        + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
+        _Mandatory_
+            + month:12 (number) - This is the card expiry month.
+                _length=2_
+            + year:2020 (number) - This is the card expiry year.
+                _length=4_
+        + lastDigits:`1111` (string) - These are the last four digits of the card used for the request.
+            _Read Only, length=4_
+        + cardBin:`411111` (string) - This is the card BIN (typically the first 6 digits).
+            _Read Only, length=6_
+
+## Customer Base
++ `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of the request, returned in the response.
+    _Read Only, length<=36_
++ merchantCustomerId:`mycustomer10` (string) - This is a customer ID that the merchant provides with the request for their own internal customer identification. This value must be unique for each customer belonging to a merchant.
+    _Mandatory, length<=100_
++ locale: `en_US` (enum) - This indicates the language of the customer.
+    _Mandatory_
+    - en_US
+    - fr_CA
+    - en_GB
++ firstName:`John` (string) - This is the customer's first name.
+    _Optional, length<=80_
++ middleName:`James` (string) - This is the customer's middle name.
+    _Optional, length<=80_
++ lastName:`Smith` (string) - This is the customer's last name.
+    _Optional, length<=80_
++ Include Date of Birth
++ email:`john.smith@email.com` (string) - This is the customer's email address.
+    _Optional, length<=255_
++ phone:`777-444-8888` (string) - This is the customer's phone number.
+    _Optional, length<=40_
++ ip:`192.0.126.111` (string) - This is the customer’s IP address.
+    _Optional, length<=46_
++ gender: `F` (enum) - This is the customer’s gender.
+    _Optional_
+    - F
+    - M
++ nationality:`Canadian` (string) - This is the customer’s nationality.
+    _Optional, length<=30_
++ cellPhone:`777-555-8888` (string) - This is the customer’s cell phone number.
+    _Optional, length<=40_
++ status: `ACTIVE` (enum) - This is the status of the customer. By default the system automatically sets the customer status to an ACTIVE state. If you want to prevent the customer from being used for payments, you can set the status to an INITIAL state (for example, in cases where you first want to validate the customer).
+    _Read Only_
+    + Members
+        + INITIAL
+        + ACTIVE
++ Include Metadata Object
+
+## Date of Birth
++ `dateOfBirth` (object) - This is the customer's date of birth. 
+    _Mandatory_
+    + Properties
+        + `day`:`29` (number) - This is the day of birth.
+            _Mandatory, length=2_
+        + `month`:`12` (number) - This is the month of birth.
+            _Mandatory, length=2_
+        + `year`:`2020` (number) - This is the year of birth. Minimum value for this property is 1900. 
+            _Mandatory, length=4_ 
+
+## Error Attributes
++ `error` (object) 
+    _Read Only_
+    + Properties
+        + `code`:`1001` (string) - This is the error code.
+            _Read Only_
+        + `message`:`An internal error occurred.` (string) - This is the description of the error.
+            _Read Only_
+        + `riskReasonCode`:`text` (string) - If applicable, this is the corresponding system reason code.
+            _Read Only_
+        + `details` (array) - If applicable, this is a collection of detailed descriptions.
+            _Read Only_
+        + `fieldErrors` (array) - If applicable, this is a list of fields that have issues.
+            _Read Only_
+            + `field`:`street` (string) - This is the field name. 
+            + `error`:`Unexpected characters` (string) This is the error associated with the field name.
+        + `links` (array) - If applicable, this is a list of links to the related resource.
+            _Read Only_
+            + `rel` (string) - This is the description or relation of the link, for example, default, self, first, prev, next, last.
+            + `href` (string) - This is the actual URL of the link.
+
+## Gateway Response
++ `gatewayResponse` (object) - This is the raw response returned by an acquirer. It is returned only if your account is configured accordingly.
+    _Read Only_
+
+    + Properties
+        + code (string) - This is acquirer identification code, such as DJN, CRX, etc.
+            _Read Only_
+        + responseCode (string) - This is the raw response returned by the acquirer.
+            _Read Only_
+        + avsCode (string) - This is the raw AVS code returned by the acquirer.
+            _Read Only_
+        + avsResponse (string) - This is the AVS response returned from the card issuer.
+            _Read Only_
+        + balanceResponse (string) - This is the balance remaining on a gift card, if a gift card was used for the original transaction.
+            _Read Only_
+        + mid (string) - This is the acquirer MID that was sent to the clearing house.
+            _Read Only_
+        + terminalId (string) - This is the merchant's terminal ID.
+            _Read Only_
+        + batchNumber (string) - This is the batch number.
+            _Read Only_
+        + seqNumber (string) - This is the merchant's sequence number.
+            _Read Only_
+        + effectiveDate (string) - This is the date of the bank deposit associated with the transaction.
+            _Read Only_
+        + financingType (string) - This is the type of financing offered.
+            _Read Only_
+        + plan (string) - This is the plan number for the financing transaction.
+            _Read Only_
+        + gracePeriod (string) - This is the grace period, in months, associated with deferred payment transactions.
+            _Read Only_
+        + term (string) - This is the number of payments, in months, for equal payment transactions.
+            _Read Only_
+        + responseId (string) - This is the response ID assigned by Credorax.
+            _Read Only_
+        + requestId (string) - This is the request ID assigned by Paysafe.
+            _Read Only_
+        + description (string) - This is a description of the response.
+            _Read Only_
+        + authCode (string) - This is the authorization code.
+            _Read Only_
+        + txnDateTime (string) - This is the transaction date and time.
+            _Read Only_
+        + referenceNbr (string) - This is the bank net transaction Id/Merch Tran Ref
+            _Read Only_
+        + responseReasonCode (string) - This is the raw response reason code returned by Credorax.
+            _Read Only_
+        + cvvVerification (string) - This is the response to the cvv submitted with the transaction request.
+            _Read Only_
+        + cvv2Result (string) - This is the raw cvv2 result code.
+            _Read Only_
+
+## Level2Level3
+
++ `level2Level3` (object) - This allows merchants who are enabled to provide additional [L2/L3 transaction data](#level2level3object). Not all processing gateways support this parameter. Contact your account manager for more information.
+    + exemptLocalTax:true (boolean) - This indicates whether or not local tax is exempted for the request. 
+    + localTaxAmount:1500 (number) - This is the local sales tax applied to the purchase.
+        _length<=99999999999_
+    + nationalTaxAmount:0 (number) - This is the national tax included in the transaction amount.
+        _length<=99999999999_
+    + freightAmount:0 (number) - This is the freight or shipping portion of the total transaction amount.
+        _length<=99999999999_
+    + dutyAmount:0 (number) - This is the duty associated with the import of the purchased goods.
+        _length<=99999999999_
+    + destinationZip:90210 (string) - This is the postal/zip code of the address to which the purchased goods will be delivered.
+        _length<=10_
+    + destinationCountry:US (string) - This is the country to which the goods are being shipped.
+        _length=2_
+    + shipFromZip:90211 (string) - This is the postal/zip code of the address from which the purchased goods are being shipped.
+        _length<=10_
+    + Include Line Items
+
+## Line Items
+
++ `lineItems` (object) - This is more [detailed information](#lineitemsobject) about the items that are being purchased.
+    + description:Disney Cruise Line (string, optional) - This is a description of the item(s) being purchased.
+        _length<=50_
+    + productCode:DCL (string) - This is a merchant-defined description code of the item being purchased.
+        _length<=12_
+    + quantity:4 (number) - This is the quantity of the item.
+        _length<=99999999999_, _max 4 decimals_
+    + unitAmount:120000 (number) - This is the unit price of the item being purchased, in minor units. The currency will be based on the account setting.
+        _length<=99999999999_
+    + taxRate:5 (number) - This is the tax rate used to calculate the tax amount.
+        _length<=100_, _max 2 decimals_
+    + taxAmount:24000 (number) - This is the amount of any value-added taxes that can be associated with the purchased item, in minor units.
+        _length<=99999999999_
+    + totalAmount:504000 (number) - This is the total amount of the line item, typically calculated as price multiplied by quantity, in minor units.
+        _length<=99999999999_
+
+## Mandate
++ `mandate` (object) - This object contains mandate information like id, reference and status of mandate.
+    _Mandatory_
+
+    + Properties
+        + `id`: `abcdc28d-486e-4b0a-bbf9-314033863542` (string) - This is the id of the mandate that got created.
+             _Read Only_
+        + `reference`: `ABCDEF0796` (string) - This is the identifier of the mandate in the banking system.
+            _Mandatory_
+        + `status`: `PENDING` (string) - This is the status of the mandate.
+             _Read Only_
+
+
+## Merchant Descriptor
++ merchantDescriptor (object)
+    _Optional_
+    + Properties
+        + `dynamicDescriptor`:`OnlineStore` (string) - This is a merchant descriptor that will be displayed on a customer’s statement.
+            _length<=20_
+        + `phone`:`999-8888` (string) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s statement.
+            _length<=13_
+
+## Merchant Descriptor Response
++ merchantDescriptor (object)
+    _Read Only_
+
+    + Properties
+        + `dynamicDescriptor`:`OnlineStore` (string) - This is a merchant descriptor that will be displayed on a customer’s statement.
+            _length<=20_
+        + `phone`:`999-8888` (string) - This is the merchant’s phone number, which will be appended to the merchant descriptor on a customer’s statement.
+            _length<=13_
+
+## Metadata Object
++ `meta` (object) 
+    _Read Only_
+
+    + Properties
+        + `numberOfRecords`:`1` (number) - This is the number of records returned in the lookup.
+        + `limit`:`10` (number) - This is the number of records returned per page. 
+        + `page`:`1` (number) - This is the page of records on which the lookup starts.
+
+## originalCredits
++ Include Metadata Object
++ `originalCredits`: `` (array) - An array of Original Credits.
+
+## OriginalCreditResponse (object)
++ `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
+    _Read Only, length<=36_
++ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _Mandatory, length<=255_
++ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string) - This is the payment token generated by Paysafe that will be used for the request.
+    __Mandatory, length<=36_
++ `amount`:`1000` (string) - This is the amount of the request, in minor units. **Note:** The *amount* specified in the Credit request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _Mandatory, Max =99999999999_
++ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _Mandatory, max=3_
++ `txnTime`:`2018-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+    _Read Only_
++ `paymentType`: `CARD` (enum) - This is the payment type associated with the Payment Handle used for this request.
+    _Read Only_
+    + Members
+        + CARD
++ `status`: `PENDING` (enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PENDING - The transaction awaiting payment service provider's response.
+        + FAILED - The transaction failed, due to either an error or being declined. 
+        + CANCELLED - The authorization request has been fully reversed.
+        + EXPIRED - The request expired. 
+        + COMPLETED - The request was completed.
+        + RECEIVED - Our system has received the request and is waiting for the downstream processor’s response. 
++ `description`:`Purchase Credit` (string) - This is a description of the transaction, provided by the merchant.
+    _Optional, length<=255_
++ `customerIp`:`204.91.0.12` (string) - This is the customer's IP address.
+    _Optional, length<=39_
+
+## Partial Auth
++ partialAuth (object)
+    + `requested`:`true` (boolean) - This specifies whether or not a partial authorization was requested.
+        + Default: false
+    + `amountDue`:`1000` (number) - This is the amount of the full authorization that is not covered by the Payment request.
+        _max=99999999999_
+    + `originalAmount`:`2000` (number) - This is the actual amount of the full authorization.
+        _max=99999999999_
+
+## Payment Methods Get
++ paymentMethods (object)
+    + `paymentMethod`: (enum) - This is the payment type associated with this payment method.
+        _Read Only_
+        + Members
+            + CARD
+            + PAYSAFECASH
+            + PAYSAFECARD
+            + SIGHTLINE
+            + SKRILL
+            + INSTANTACH
+            + VIPPREFERRED
+            + ACH
+            + EFT
+            + INTERAC
+    + currencyCode:`USD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD.
+        _Read Only, max=3_
+    + `accountId`: `1009355920` (string) - If you are a merchant, then this field is required only if you have more than one account configured for the same payment method and currency. If you are a partner using a shared API key, then this field is mandatory.
+        _Read Only, length<=10_
+            
+
+## PaymentHandleRequest (object)
+
++ `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, to look up the Payment Handle. 
+    _Read Only, length<=36_
++ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _Mandatory, length<=255_
++ `transactionType`: `PAYMENT` (enum) - This specifies the transaction type for which the Payment Handle is created.
+    _Mandatory_
+    + Members
+        + PAYMENT - Payment Handle is created to continue the Payment.
+        + STANDALONE_CREDIT - Payment Handle is created to continue the Standalone Credit.
++ `accountId`:`9876543210` (string) - If you are a merchant, then this field is required only if you have more than one account configured for the same payment method and currency. If you are a partner using a shared API key, then this field is mandatory.
+    _Conditional, length<=10_
++ `status`:`PAYABLE` (enum) - This is the status of the payment handle.
+    _Read Only_
+    + Members
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PAYABLE - The merchant can use the Payment Handle for a Payment request.
+        + PROCESSING - The Payment Handle was authorized by customer, awaiting PSP response.
+        + FAILED - The transaction failed due to either an error or being declined. 
+        + EXPIRED - The Payment Handle expired because the merchant did not proceed with the Payment request. 
+        + COMPLETED - The Payment request was initiated successfully using the Payment Handle.
++ `usage`:`SINGLE_USE` (enum) - This specifies how the Payment Handle will be used for Payments.
+    _Read Only_
+    + Members
+        + SINGLE_USE - The Payment Handle can be used for one transaction only and expires if not used.
++ `paymentType`: `CARD` (enum) - This is the payment type associated with this Payment Handle. If applicable, you need to pass the corresponding payment type object as listed after this parameter.
+    _Mandatory_
+    + Members
+         + CARD
++ Include Payment Instrument
++ `action`:`NONE` (enum) - This specifies the next step of the user journey once they proceed to the Payment.
+    _Read Only_
+    + Members
+        + NONE - No action is required, for example, for a standard credit card Payment.
+        + REDIRECT -The user must be redirected in order to complete a Payment, for example, when an alternate payment method like Paysafecard is used.
++ `executionMode`:`SYNCHRONOUS` (enum) - This specifies the action of the merchant server in order to complete the Payment.
+    _Read Only_    
+    + Members
+        + ASYNCHRONOUS - The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.
+        + SYNCHRONOUS - The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.
++ `amount`:`1000` (string) - This is the amount of the request, in minor units. **Note:** This field is mandatory if *transactionType* is included. The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.
+    _Mandatory, Max =99999999999_
++ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** This field is mandatory if *transactionType* is included. The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.
+    __Mandatory, max=3_
++ `paymentHandleTokenFrom`:`SCyGZDlUuZ9zxjyd` (string) - This is an [existing Customer Payment Handle](#createcustomerpaymenthandlerequest), from which the payment instrument and profile details are retrieved. If this parameter is included you can omit the *billingDetails* object.
+    _Optional, length<=36_
++ `paymentHandleToken`:`SCO3wKcIyLoQbQvw` (string) - This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.
+    _Read Only, length<=36_
++ Include Profile
++ Include Billing Details
++ Include Merchant Descriptor
++ `returnLinks` (object) - The URL endpoints to redirect the customer to after a redirection to an alternative payment or 3D Secure site. You can customize the return URL based on the transaction status. 
+    _Conditional_
+    + `rel`(enum) - This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. 
+        + default (string, required) - The default return URL that will be used if specific status return URL is not defined.
+        + on_completed (string) - Will be returned to this URL if the payment is completed.
+        + on_failed (string) - Will be returned to this URL if the payment fails.
+    + `href` - The actual URL
+    + `method` - The HTTP method
++ links (object) - This is an array of links related to the resource.
+    _Read Only_
+    + `rel`: `redirect_payment` (enum)
+    + `href`:`http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709`
+    + `method`:`GET`
++ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
+    _Optional, length<=39_
++ `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration. 
+    _Read Only, length<=899_
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+    _Read Only_
++ Include Metadata Object
++ Include Gateway Response
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+    _Read Only_
++`statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
+    _Read Only_
+
+
+## PaymentHandleRequest Customer
+
++ `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, to look up the Payment Handle. 
+    _Read Only, length<=36_
++ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _Mandatory, length<=255_
++ `status`:`PAYABLE` (enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PAYABLE - The merchant can use the Payment Handle for a Payment request.
+        + PROCESSING - The Payment Handle was authorized by customer, awaiting PSP response.
+        + FAILED - The transaction failed due to either an error or being declined. 
+        + EXPIRED - The Payment Handle expired because the merchant did not proceed with the Payment request. 
+        + COMPLETED - The Payment request was initiated successfully using the Payment Handle.
++ `usage`:`MULTI_USE` (enum) - This specifies how the Payment Handle will be used for Payments.
+    _Read Only_
+    + Members
+        + MULTI_USE - The Payment Handle can be used multiple times.
++ `paymentType`: `CARD`(enum) - This is the payment type associated with this Payment Handle.
+    _Mandatory_
+    + Members
+        + CARD
+        + ACH
+        + EFT
+        + BACS
+        + SEPA
++ `executionMode`: `SYNCHRONOUS`(enum) - This specifies the action of the merchant server in order to complete the Payment.
+    _Read Only_
+    + Members
+        + ASYNCHRONOUS - The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.
+        + SYNCHRONOUS - The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.
++ `amount`:`1000` (string) - This is the amount of the request, in minor units. **Note:** This field is mandatory if *transactionType* is included.
+    _Conditional, Max =99999999999_
++ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD.
+    _Read Only, max=3_
++ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string) - This is the payment token generated by Paysafe that will be used by merchants for Payment API requests, provided its *status* is PAYABLE.
+    _Read Only, length<=36_
++ Include Payment Instrument Customer
++ `billingDetailsId`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID returned in the response to the [address creation request](#createaddressrequest).
+    _Optional, length<=36_
++ `returnLinks` (object) - The URL endpoints to redirect the customer to after a redirection to an alternative payment or 3D Secure site. You can customize the return URL based on the transaction status. 
+    _Conditional_
+    + `rel`(enum) - This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. 
+        + default (string, required) - The default return URL that will be used if specific status return URL is not defined.
+        + on_completed (string) - Will be returned to this URL if the payment is completed.
+        + on_failed (string) - Will be returned to this URL if the payment fails.
+    + `href` - The actual URL
+    + `method` - The HTTP method
++ links (object) - This is an array of links related to the resource.
+    _Read Only_
+    + `rel`: `redirect_payment` (enum)
+    + `href`:`http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709`
+    + `method`:`GET`
++ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
+    _Optional, length<=39_
+
+## PaymentHandleRequest SUT
+
++ `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, to look up the Payment Handle. 
+    _Read Only, length<=36_
++ `profileId`:`59cce04e-e429-4016-9d3f-1e579f3aa2ad` (string) - This is the ID of the customer profile used for this request.
+    _Read Only, length<=36_
++ `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *singleUseCustomerToken* is valid before expiration. 
+    _Read Only, length<=899_
++ `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _length<=255_
++ `status`: (enum) - This is the status of the single-use customer token.
+    _Read Only_
+    + Members
+        + INITIAL
+        + ACTIVE
++ `singleUseCustomerToken`:`SPFAB1cA5iwdu48H` (string) - This token can be [used in the Payments Checkout](#paymentscheckout) to populate the checkout with customer information.
+    _Read Only, length<=16_
++ `locale`:`ca_en` (enum) - This indicates the customer's locale.
+    _Read Only_
+    + Members
+        + en_US
+        + fr_CA
+        + en_GB
+
++ `firstName`:`Jane` (string) - This is the customer’s first name.
+    _Read Only, length<=80_
++ `middleName`:`Joan` (string) - This is the customer’s middle name.
+    _Read Only, length<=80_
++ `lastname`:`Smyth` (string) - This is the customer's last name.
+    _Read Only, length<=80_
++ Include Date of Birth
++ `email`:`jane.smyth@email.com` (string) - This is the customer's email address.
+    _Read Only, length<=255_
++ `phone`:`12345678` (string) - This is the customer's phone number.
+    _Read Only, length<=40_
++ `ip`:`192.0.126.111` (string) - This is the customer’s IP address.
+    _Read Only, length<=46_
++ `nationality`:`American` (string) - This is the customer’s nationality.
+    _Read Only, length<=30_
++ `addresses`:`addresses` (array) - This is an array of addresses associated with the customer.
+    _Read Only_
++ `paymentHandles`:`paymentHandles` (array) - This is an array of payment handles associated with the customer.
+    _Read Only_
+
+## PaymentHandleRequest Customer SUT Response
++ `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, to look up the Payment Handle. 
+    _Read Only, length<=36_
++ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _Read Only, length<=255_
++ `status`:`INITIATED` (enum) - This is the status of the transaction request.
+    _Read Only_
+    
+    + Members
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PAYABLE - The merchant can use the Payment Handle for a Payment request.
+        + PROCESSING - The Payment Handle was authorized by customer, awaiting PSP response.
+        + FAILED - The transaction failed due to either an error or being declined. 
+        + EXPIRED - The Payment Handle expired because the merchant did not proceed with the Payment request. 
+        + COMPLETED - The Payment request was initiated successfully using the Payment Handle.
++ `usage`:`MULTI_USE` (enum) - This specifies how the Payment Handle will be used for Payments.
+    _Read Only_
+    
+    + Members
+        + MULTI_USE - The Payment Handle can be used multiple times.
++ `paymentType`: (enum, required) - This is the payment type associated with this Payment Handle.
+    _Read Only_
+    
+    + Members
+        + CARD
++ `action`: (enum) - This specifies the next step of the user journey once they proceed to the Payment.
+    _Read Only_
+    
+    + Members
+        + NONE
+        + REDIRECT
++ `paymentHandleTokenFrom`:`7576835c-0396-11e9-8eb2-f2801f1b9fd1` (string) - This is an existing [Payment Handle token created for a customer](#createcustomerpaymenthandlerequest).
+    _Read Only_
++ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string) - This is the payment token generated by Paysafe that will be used by merchants for Payment API requests, provided its *status* is PAYABLE.
+    _Read Only, length<=36_
++ Include Card Response
++ Include Merchant Descriptor Response
++ Include Billing Details Response
+
+
+## PaymentHandleRequest Object
++ paymentHandleRequest (object)
+    + `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, to look up the Payment Handle. 
+        _Read Only, length<=36_
+    + `paymentHandleTokenFrom`:`7576835c-0396-11e9-8eb2-f2801f1b9fd1` (string) - This is an existing [Payment Handle token created for a customer](#createcustomerpaymenthandlerequest), from which payment instrument and profile details can be retrieved.
+        _length<=36_
+    + `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+        _length<=255_
+    + `transactionType`: (enum, required) - This specifies the transaction type for which the Payment Handle is created. 
+        + Members
+            + PAYMENT - Payment Handle is created to continue the Payment.
+            + STANDALONE_CREDIT - Payment Handle is created to continue the Standalone Credit.
+            + ORIGINAL_CREDIT - Payment Handle is created to continue the Original Credit.
+            + VERIFICATION - Payment Handle is created to continue the Verification request.
+    + `status`: (enum) - This is the status of the transaction request.
+        _Read Only_
+        + Members
+            + RECEIVED - Paysafe has received the request and is waiting for the downstream processor’s response.
+            + INITIATED - The transaction was initiated with the downstream provider.
+            + PAYABLE - The merchant can use the Payment Handle for a Payment request.
+            + PROCESSING - The Payment Handle was authorized by customer, awaiting PSP response.
+            + FAILED - The transaction failed due to either an error or being declined. 
+            + CANCELLED - The authorization request has been fully reversed.
+            + EXPIRED - The Payment Handle expired because the merchant did not proceed with the Payment request. 
+            + COMPLETED - The Payment request was initiated successfully using the Payment Handle.
+    + `usage`:`SINGLE_USE` (enum) - This specifies how the Payment Handle will be used for Payments.
+        _Read Only_
+        + Members
+            + SINGLE_USE - The Payment Handle can be used for one transaction only and expires if not used.
+    + `paymentType`: (enum, required) - This is the payment type associated with this Payment Handle. If applicable, you need to pass the corresponding payment type object as listed after this parameter. 
+        + Members
+            + CARD
+            + PAYSAFECASH
+            + PAYSAFECARD
+            + SIGHTLINE
+            + SKRILL
+            + INSTANTACH
+            + PAYPAL
+            + ACH
+            + EFT
+            + VIPPREFERRED
+            + INTERAC
+    + Include Payment Instrument
+    + `action`: (enum) - This specifies the next step of the user journey once they proceed to the Payment.
+        + Members
+            + NONE
+            + REDIRECT
+    + `executionMode`: (enum) - This specifies the action of the merchant server in order to complete the Payment.
+        + Members
+            + ASYNCHRONOUS - The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.
+            + SYNCHRONOUS - The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.
+    + `amount`:`1000` (string) - This is the amount of the request, in minor units. **Note:** This field is mandatory if *transactionType* is included. The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.
+        _Max =99999999999_
+    + `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** This field is mandatory if *transactionType* is included. The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.
+        _max=3_
+    + `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string) - This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.
+        _Read Only, length<=36_
+    + Include Profile
+    + Include Billing Details
+    + Include Splitpay
+    + `returnLinks` (object) - The URL endpoints to redirect the customer to after a redirection to an alternative payment or 3D Secure site. You can customize the return URL based on the transaction status. 
+        + `rel` (enum) - This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. 
+            + default (string, required) - The default return URL that will be used if specific status return URL is not defined.
+            + on_completed (string) - Will be returned to this URL if the payment is completed.
+            + on_failed (string) - Will be returned to this URL if the payment fails.
+        + `href` - The actual URL
+        + `method` - The HTTP method
+    + `links` (object) - This is an array of links related to the resource.
+        + `rel`:`redirect_payment` (enum)
+        + `href`:`http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709`
+        + `method`:`GET`
+    + `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
+        _length<=39_
+    + `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration. 
+        _Read Only, length<=899_
+
+## `Payment Instrument`
+
++ One of
+
+    + card (object) - These are the details of the [card](#cardobject) used for the request. Only one payment instrument object (for example, *card* or *paysafecash* or *sightline*) can be included in the request.
+
+        + Properties
+
+            + cardNum:`4111111111111111` (string) - This is the card number used for the request.
+                _Mandatory, length=8-20_
+            + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
+                __Mandatory_
+                + month:12 (number) - This is the card expiry month.
+                    _length=2_
+                + year:2020 (number) - This is the card expiry year.
+                    _length=4_
+            + cvv:`123` (string) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                _Conditional, length=3-4_
+            + holdername:`Jane Smith` (string) - This is the name of the card holder.
+                _Read Only_
+            + cardType (enum) - This is type of card used for the request.
+                _Read Only_
+                - AM – American Express
+                - DI – Discover
+                - JC – JCB
+                - MC – Mastercard
+                - MD – Maestro
+                - SO – Solo
+                - VI – Visa
+                - VD – Visa Debit
+                - VE – Visa Electron
+            + lastDigits:`1111` (string) - These are the last four digits of the card used for the request.
+                _Read Only, length=4_
+            + nickName:`Jane's Card` (string) - This is the nickname the merchant has for the card holder.
+                _Optional, length<=50_
+            + cardBin:`411111` (string) - This is the card BIN (typically the first 6 digits).
+                _Read Only, length=6_
+            + threeDs: (string) - Indicates the threeDs object.
+                _Optional_
+        
+    
+## `Payment Instrument Customer`
+
++ One of
+
+    + card (object, required) - These are the details of the [card](#cardobject) used for the request.
+       
+        + Properties
+
+            + cardNum:`4111111111111111` (string) - This is the card number used for the request.
+                _Mandatory, length=8-20_
+            + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
+                __Mandatory_
+                + month:12 (number) - This is the card expiry month.
+                    _length=2_
+                + year:2020 (number) - This is the card expiry year.
+                    _length=4_
+            + cvv:`123` (string) - This is the 3- or 4-digit security code that appears on the card following the card number.
+                _Conditional, length=3-4_
+            + lastDigits:`1111` (string) - These are the last four digits of the card used for the request.
+                _Read Only, length=4_
+        
+    
+## PaymentsRequest (object)
+
++ `id`:`3aeb9c63-6386-46a3-9f8e-f452e722228a` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, looking up the Payment. 
+    _Read Only, length<=36_
++ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _Mandatory, length<=255_
++ `amount`:`1000` (number) - This is the amount of the request, in minor units. **Note:** The *amount* specified in the Payment request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _Mandatory, max=99999999999_
++ `settleWithAuth`:`true` (boolean) - This indicates whether the request is an Authorization only (no Settlement) or a Purchase (Authorization and Settlement). Default: true
+    _Optional_
++ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string, required) - This is the payment token generated by Paysafe that will be used for the Payment request.
+    _Mandatory, length<=36_
++ `availableToSettle`:`0` (number) - This is the amount of the Authorization remaining to settle, in minor units.
+    _Read Only_
++ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
+    _Optional, length<=39_
++ `description`:`Consumer Purchase` (string) - This is a description of the transaction, provided by the merchant.
+    _Optional, length<=255_
++ `txnTime`:`2018-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+    _Read Only_
++ `paymentType`: `CARD`(enum) - This is the payment type associated with the Payment Handle used for this request.
+    _Read Only_
+    + Members
+        + CARD
++ `status`: `HELD`(enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+        + RECEIVED - Our system has received the request and is waiting for the downstream processor’s response.
+        + COMPLETED - The request was completed.
+        + HELD - The request has been placed on hold due to risk considerations.
+        + FAILED - The transaction failed, due to either an error or being declined.
+        + CANCELLED - The request has been reversed.
+        + PENDING - The transaction awaiting payment service provider's response.
++ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Payment request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _Mandatory, max=3_
++ Include Gateway Response
++ `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
++ Include Stored Credential
++ settlements (array) - This is the list of all Settlements. This will be returned only if *settleWithAuth* = *true* in the request.
++ Include Error Attributes
++ Include Metadata Object
++ `statusReason` - This is reason for the status. This is present in case of ERROR, FAILURE, HELD status.
+    _length<=255_
++ Include Authentications Object
+
+## Profile
+
++ `profile` (object) 
+    + `firstName`:`Jane` (string) - This is the customer's first name.
+        _length<=80_
+    + `lastname`:`Smyth` (string) - This is the customer's last name.
+        _length<=80_
+    + `locale`:`ca_en` (enum) - This indicates the customer's locale.
+        + Members
+            + en_US
+            + fr_CA
+            + en_GB
+    + Include Date of Birth
+    + `email`:`jane.smyth@email.com` (string) - This is the customer's email address.
+        _length<=255_
+    + `phone`:`12345678` (string) - This is the customer's phone number.
+        _length<=40_
+    + `mobile`:`4446666` (string) - This is the customer's mobile phone number. 
+        _length<=40_
+    + `gender`: (enum) - This is the customer's gender.
+        - F
+        - M
+    + `nationality`:`Indian` (string) - This is the customer's nationality.
+        _length<=30_
+
+## paymenthandles
++ Include Metadata Object
++ `paymenthandles`: (array) - An array of Payment Handles.
+
+## payments
++ Include Metadata Object
++ `payments`: (array) - An array of Payments.
+
+
+## Recipient (object)
++ `recipient` (object) - The recipient is the person or party who has a contractual relationship with the merchant/financial institution
+    + `dateOfBirth` (object) - This is the date of birth of the recipient.
+        + `day`:`24` (number) - This is the day of birth.
+        + `month`:`12` (number) - This is the month of birth.
+        + `year`:`1990` (number) - This is the year of birth.
+    + `zip`:`EC4Y 0HQ` - This is the zip/postal code of the recipient.
+        _length<=10_
+    + `lastName` - This is the last name of the recipient.
+        _length<=255_
+    + `accountNumber` - This is the account number of the recipient.
+        _length<=25_
+
+## refundsArray
++ Include Metadata Object
++ `refunds`: (array) - An array of Refunds.
+
+
+## Refunds
++ `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. You can use this ID for future associated requests.
+    _Read Only, length<=36_
++ `merchantRefNum`:`P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    _Mandatory, length<=255_
++ `amount`:`100` (number) - This is the amount of the request, in minor units. If this value is not provided, the full remaining amount on the Settlement will be refunded. 
+    _Optional, max=99999999999_
++ `dupCheck`:`true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
+    _Optional_
+    + Default: true
++ `childAccountNum`:`1234567898` (string) - This is the child merchant account number. It is returned only when the transaction is processed via a master account.
+    _Optional, length<=10_
++ `txnTime`:`2018-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+    _Read Only_
++ `status`:`PENDING` (enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+        + RECEIVED - Our system has received the request and is waiting for the downstream processor’s response. 
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PENDING - The transaction awaiting payment service provider's response.
+        + FAILED - The transaction failed, due to either an error or being declined. 
+        + CANCELLED - The request has been cancelled.
+        + EXPIRED - The request expired. 
+        + COMPLETED - The request was completed.
++ Include Error Attributes
++ Include Splitpay
++ `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
+    _Read Only_
++ Include Gateway Response
++ Include Metadata Object
+
+## `Sepa`
+
++ sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+
+    + Properties
+
+        + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+            _Optional, length<=50_
+        + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
+            _Mandatory, length<=32_
+        + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
+            _Optional, length=8-11_
+        + iban: `DE89370400440532013000` (string) - This is the International Bank Account Number for the costumer's bank account.
+            _Mandatory, length=8-34_
+        + Include Mandate
+        + lastDigits:`11` (string) - These are the last two digits of the iban.
+            _Read Only, length=2_
+
+## settlementsArray
++ Include Metadata Object
++ `settlements`: (array) - An array of Settlements.
+
+## Settlements
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. You can use this ID for future associated requests.
+    _Read Only, length<=36_
++ `merchantRefNum`: `P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    _Mandatory, length<=255_
++ `amount`: `100` (number) - This is the amount of the request, in minor units. If this value is not provided, the full remaining amount will be settled. 
+    _Optional, max=99999999999_
++ `dupCheck`: `true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
+    _Optional_
+    + Default: true
++ `availableToRefund`:`25` (number) - This is the remaining amount of the refund, in minor units.
+    _Read Only, max=99999999999_
++ `childAccountNum` : `1234567898` (string) - This is the child merchant account number. It is returned only when the transaction is processed via a master account.
+    _Optional, length<=10_
++ `status`:`PENDING` (enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+       + RECEIVED - Our system has received the request and is waiting for the downstream processor's response. 
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PENDING - The transaction is awaiting the payment service provider's response.
+        + FAILED - The transaction failed due to an error or got declined. 
+        + CANCELLED - The authorization request is reversed.
+        + EXPIRED - The request expired. 
+        + COMPLETED - The request was completed.
++ Include Error Attributes
++ Include Splitpay
++ `riskReasonCode`: `1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
++ Include Gateway Response
++ Include Metadata Object
+
+## Splitpay
++ splitpay (array, optional) - For Splitpay transactions only, an array containing the linked accounts and the amount shared with each. You must include either *amount* or *percent*. However, you cannot include both values.
+    + (object)
+        + Properties
+            + linkedAccount:`123124124` (string, required) - This is the ID of the linked account. This account must already be linked to the merchant account.
+            + One of
+                + amount:`505` (number) - This is the amount to transfer to the linked account in minor currency units.
+                + percent:`5` (number) - This is the percentage of the total transaction amount to transfer to that account.
+
+## standalonecredits
+    
++ Include Metadata Object
++ `standalonecredits`: (array) - An array of Standalone Credits.
+
+## statusAttributes (enum) - This is the status of the request.
++ RECEIVED - Our system has received the request and is waiting for the downstream processor’s response.
++ INITIATED - The transaction was initiated with the downstream provider.
++ PAYABLE - The merchant can proceed with the Payment request.
++ PROCESSING - The Payment Handle was authorized by the customer, awaiting the PSP response.
++ FAILED - The transaction failed due to an error or got declined. 
++ CANCELLED - The authorization request is reversed.
++ EXPIRED - The Payment Handle expired as the merchant did not proceed with the Payment request.
++ COMPLETED - The Payment request was initiated successfully using the Payment Handle.
+
+## `Stored Credential`
++ storedCredential (object) - You can use this object to identify authorization requests that use stored credentials for a consumer's authorization request, to improve authorization rates and reduce fraud. You can use Stored credentials in two cases: using a payment token from the Customer Vault for authorization, and using a card number stored by the merchant for an authorization.
+
+    + Properties
+        + type:`ADHOC` (enum) - This specifies the type of request being made. 
+            + ADHOC – Ad hoc consumer-initiated request.
+            + TOPUP – Unscheduled merchant initiated request when a consumer balance is below a set limit.
+            + RECURRING –  Scheduled merchant initiated recurring requests.
+            
+            + Default: ADHOC
+        + occurrence:`RECURRING` (enum) - This specifies whether the stored credential request is initial or recurring.
+            + INITIAL – Used when this is the first time the consumer uses this credit card.
+            + SUBSEQUENT – Used when the consumer uses this credit card for subsequent requests.
+            
+            + Default: INITIAL
+
+## VerificationResponse (object)
++ `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. You can use this ID for future associated requests.
+    _Read Only, length<=36_
++ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string) - This is the payment token generated by Paysafe that will be used for the verification request.
+    _Mandatory, length<=36_
++ `merchantRefNum`:`P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    _Mandatory, length<=255_
++ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
+    _Optional, length<=39_
++ `dupCheck`:`true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
+    _Optional_
+    + Default: true
++ `description`:`Consumer Card Verification` (string) - This is a description of the transaction provided by the merchant.
+    _Optional, length<=255_
++ `txnTime`:`2018-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+    _Read Only_
++ `paymentType`: `CARD` (enum) - This is the payment type associated with the Payment Handle used for this request.
+    _Read Only_
+    + Members
+        + CARD
++ `status` (enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+        + RECEIVED - Our system has received the request and is waiting for the downstream processor's response. 
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PENDING - The transaction is awaiting the payment service provider's response.
+        + FAILED - The transaction failed due to an error or got declined. 
+        + CANCELLED - The authorization request is reversed.
+        + EXPIRED - The request expired. 
+        + COMPLETED - The request was completed.
++ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD, returned in the request-response.
+    _Read Only, max=3_
++ Include Gateway Response
++ Include Error Attributes
++ Include Metadata Object
++ `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
+    _Optional_
+
+## verifications
++ Include Metadata Object
++ `verifications`: (array) - An array of Verifications.
+
+## voidAuths
++ Include Metadata Object
++ `voidAuths`: (array) - An array of Void Authorizations.
+
+## voidAuthResponse (object)
++ `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) This is the ID returned in the response. This ID can be used for future associated requests.
+    _Read Only, length<=36_
++ `merchantRefNum`:`P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    _length<=255_
++ `amount`:`100` (number) - This is the amount of the request, in minor units. *Note*: This will be a required field for partial void auth.
+    _max=99999999999_
++ `txnTime`:`2018-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+    _Read Only_
++ `status` (enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+        + RECEIVED - Our system has received the request and is waiting for the downstream processor's response.
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PENDING - The transaction is awaiting the payment service provider's response.
+        + FAILED - The transaction failed due to an error or got declined. 
+        + CANCELLED - The request is cancelled.
+        + EXPIRED - The request expired.  
+        + COMPLETED - The request is completed.
++ Include Metadata Object
