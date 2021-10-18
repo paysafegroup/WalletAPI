@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api2.test.paysafe.com/paymenthub/
+HOST: https://api2.test.paysafe.com/
 
 # Paysafe Payments & Wallets API 
 
@@ -207,26 +207,26 @@ You must use "**Simulator**" in the HTTP header of your request, which has the f
 
 | Endpoint URL                                             | Description                      | Action             |
 |----------------------------------------------------------|----------------------------------|--------------------|
-| /paymenthandles                                          | Create a Customer Payment Handle | POST               |
-| /paymenthandles/{payment_handle_id}                      | Look Up a Payment Handle         | GET                |
-| /payments                                                | Submit a Payment Request         | POST               |
-| /payments/{payment_id}                                   | Look Up a Payment                | GET                |
-| /settlements/{settlement_id}                             | Look Up a Settlement             | GET                |
-| /standalonecredits                                       | Submit a Standalone Credit       | POST               |
-| /standalonecredits/{standalone_credit_id}                | Look Up a Standalone Credit      | GET                |
-| /wallets                                                 | Wallets                          | POST               |
-| /customers/{customerId}                                  | Customers By CustomerId          | GET, PATCH, DELETE |
-| /identity-documents                                      | Identity Documents               | GET, POST          |
-| /identity-documents/{id}                                 | Identity Documents               | GET                |
-| /accounts{?customerId,limit,offset}                      | Accounts                         | GET                |
-| /accounts/{accountId}                                    | Accounts By AccountId            | GET                |
-| /transactions{?limit,offset,startDate,endDate,accountId} | Transactions                     | GET                |
-| /transactions/{transactionId}                            | Transactions By TransactionId    | GET                |
-| /authorization-holds                                     | Authorization Holds              | POST               |
-| /authorization-holds{?limit,offset,accountId}            | Authorization Holds              | GET                |
-| /authorization-holds/{id}                                | Authorization Holds By Id        | GET, DELETE        |
-| /payins                                                  | Payins                           | POST               |
-| /payouts                                                 | Payouts                          | POST               |
+| /paymenthub/v1/paymenthandles                                          | Create a Customer Payment Handle | POST               |
+| /paymenthub/v1/paymenthandles/{payment_handle_id}                      | Look Up a Payment Handle         | GET                |
+| /paymenthub/v1/payments                                                | Submit a Payment Request         | POST               |
+| /paymenthub/v1/payments/{payment_id}                                   | Look Up a Payment                | GET                |
+| /paymenthub/v1/settlements/{settlement_id}                             | Look Up a Settlement             | GET                |
+| /paymenthub/v1/standalonecredits                                       | Submit a Standalone Credit       | POST               |
+| /paymenthub/v1/standalonecredits/{standalone_credit_id}                | Look Up a Standalone Credit      | GET                |
+| /digitalwallets/v1/wallets                                                 | Wallets                          | POST               |
+| /digitalwallets/v1/customers/{customerId}                                  | Customers By CustomerId          | GET, PATCH, DELETE |
+| /digitalwallets/v1/identity-documents                                      | Identity Documents               | GET, POST          |
+| /digitalwallets/v1/identity-documents/{id}                                 | Identity Documents               | GET                |
+| /digitalwallets/v1/accounts{?customerId,limit,offset}                      | Accounts                         | GET                |
+| /digitalwallets/v1/accounts/{accountId}                                    | Accounts By AccountId            | GET                |
+| /digitalwallets/v1/transactions{?limit,offset,startDate,endDate,accountId} | Transactions                     | GET                |
+| /digitalwallets/v1/transactions/{transactionId}                            | Transactions By TransactionId    | GET                |
+| /digitalwallets/v1/authorization-holds                                     | Authorization Holds              | POST               |
+| /digitalwallets/v1/authorization-holds{?limit,offset,accountId}            | Authorization Holds              | GET                |
+| /digitalwallets/v1/authorization-holds/{id}                                | Authorization Holds By Id        | GET, DELETE        |
+| /digitalwallets/v1/payins                                                  | Payins                           | POST               |
+| /digitalwallets/v1/payouts                                                 | Payouts                          | POST               |
 
 
 <a name="paymentswebhooks" title="Payments Webhooks"></a>
@@ -1086,7 +1086,7 @@ To call the API resource, click **Call Resource**. The response is displayed in 
 <li><a href="https://www.paysafe.com/paysafegroup/regulatory-disclosures/" target="_blank">Regulatory Disclosures</a></li>
 </ul>
 
-# Verify That the Service Is Accessible [GET /v1/monitor]
+# Verify That the Service Is Accessible [GET /paymenthub/v1/monitor]
 <a name="verifyservice" title="Verify Service"></a>
 
 This call returns a status of READY if the API is available.
@@ -1102,7 +1102,7 @@ This call returns a status of READY if the API is available.
 
 # Group Payment Handles
 
-## Payment Handle [/v1/paymenthandles]
+## Payment Handle [/paymenthub/v1/paymenthandles]
 
 A Payment Handle represents tokenized information about the payment method that you set up for your customer. Once the Payment Handle is created, you can then include the *paymentHandleToken* returned in the Payment Handle request response in a new [payment request](#paymentrequest).  
 <br>
@@ -1442,7 +1442,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
             
 
 
-### Get Payment Handle [GET /v1/paymenthandles/{paymenthandle_id}]
+### Get Payment Handle [GET /paymenthub/v1/paymenthandles/{paymenthandle_id}]
 <a name="getpaymenthandle" title="Look Up a Payment Handle"></a>
 
     Click **Get Payment Handle** above to look up a Payment Handle using the ID returned in the response of the original request.
@@ -1514,7 +1514,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 ]
             }
 
-### Get Payment Handle Using Merchant Reference Number [GET /v1/paymenthandles?merchantRefNum={merchant_ref_num}]
+### Get Payment Handle Using Merchant Reference Number [GET /paymenthub/v1/paymenthandles?merchantRefNum={merchant_ref_num}]
 <a name="getpaymenthandlemerchantrefnum" title="Look Up a Payment Handle Using a Merchant Reference Number"></a>
 
 Click **Get Payment Handle Using Merchant Reference Number** above to look up a Payment Handle using the ID returned in the response of the original request.
@@ -1608,7 +1608,7 @@ Click **Get Payment Handle Using Merchant Reference Number** above to look up a 
 
 # Group Payments
 
-## Payments [/v1/payments]
+## Payments [/paymenthub/v1/payments]
 
 Payment requests allow you to process a payment using the *paymentHandleToken*.  The examples below include a *paymentHandleToken* created for a credit card.
 
@@ -1706,7 +1706,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
             }
 
 
-### Get Payments [GET /v1/payments/{payment_id}]
+### Get Payments [GET /paymenthub/v1/payments/{payment_id}]
 <a name="getpayment" title="Look Up a Payment"></a>
 
 Click **Get Payments** above to look up a Payment using the ID returned in the response of the original request.
@@ -1786,7 +1786,7 @@ Click **Get Payments** above to look up a Payment using the ID returned in the r
               }
             }
             
-### Get Payments Using Merchant Reference number [GET /v1/payments?merchantRefNum={merchant_ref_num}]
+### Get Payments Using Merchant Reference number [GET /paymenthub/v1/payments?merchantRefNum={merchant_ref_num}]
 <a name="getpaymentmerchantrefnum" title="Look Up a Payment Using a Merchant Reference Number"></a>
 
 Click **Get Payment Using Merchant Reference Number** above to look up a Payment using the merchant reference number used in the original request.
@@ -1849,7 +1849,7 @@ Click **Get Payment Using Merchant Reference Number** above to look up a Payment
 # Group Settlements 
 
 
-### Get Settlements [GET /v1/settlements/{settlement_id}]
+### Get Settlements [GET /paymenthub/v1/settlements/{settlement_id}]
 <a name="getsettlement" title="Look Up a Settlement"></a>
 
 Click **Get Settlements** above to look up a Settlement using the ID returned in the response of the original request.
@@ -1878,7 +1878,7 @@ Click **Get Settlements** above to look up a Settlement using the ID returned in
               "status": "PENDING"
             }
             
-### Get Settlements Using Merchant Reference Number [GET /v1/settlements?merchantRefNum={merchant_ref_num}]
+### Get Settlements Using Merchant Reference Number [GET /paymenthub/v1/settlements?merchantRefNum={merchant_ref_num}]
 <a name="getsettlementmerchantrefnum" title="Look Up a Settlement Using a Merchant Reference Number"></a>
 
 Click **Get Settlements Using Merchant Reference Number** above to look up a Settlement using the merchant reference number used in the original request.
@@ -1931,7 +1931,7 @@ Click **Get Settlements Using Merchant Reference Number** above to look up a Set
 
 # Group Standalone Credits 
 
-## Standalone Credits [/v1/standalonecredits]
+## Standalone Credits [/paymenthub/v1/standalonecredits]
 
 Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Payment/Settlement.
 
@@ -1980,7 +1980,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
             }
             
 
-### Get Standalone Credit [GET /v1/standalonecredits/{standalone_credit_id}]
+### Get Standalone Credit [GET /paymenthub/v1/standalonecredits/{standalone_credit_id}]
 <a name="getstandalonecredit" title="Look Up a Standalone Credit"></a>
 
 Click **Get Standalone Credit** above to look up a Standalone Credit using the ID returned in the response of the original request.
@@ -2012,7 +2012,7 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
               "description": "Pay surplus"
             }
             
-### Get Standalone Credit Using Merchant Reference Number  [GET /v1/standalonecredits?merchantRefNum={merchant_ref_num}]
+### Get Standalone Credit Using Merchant Reference Number  [GET /paymenthub/v1/standalonecredits?merchantRefNum={merchant_ref_num}]
 <a name="getstandalonecreditmerchantrefnum" title="Look Up a Standalone Credit Using a Merchant Reference Number"></a>
 
 Click **Get Standalone Credit Using Merchant Reference Number** above to look up a Standalone Credit using the merchant reference number used in the original request.
@@ -2066,7 +2066,7 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
 
 # Group Wallets
 
-## Wallets [/wallets]
+## Wallets [/digitalwallets/v1/wallets]
 
 ### CreateWallet [POST]
 Create a new wallet.
@@ -2106,13 +2106,13 @@ Create a new wallet.
 
 
 
-## Customers By CustomerId [/customers/{customerId}]
+## Customers By CustomerId [/digitalwallets/v1/customers/{customerId}]
 
 + Parameters
     + customerId (string, required)
 
 
-### getcustmerid [GET]
+### getcustomerid [GET]
 Get a customer by ID.
 
 + Response 200 (application/json)
@@ -2164,7 +2164,7 @@ Deactivates a customer.
 
 
 
-## Identity Documents [/identity-documents]
+## Identity Documents [/digitalwallets/v1/identity-documents]
 
 ### postidentitydocuments [POST]
 Create a new identity document
@@ -2192,13 +2192,9 @@ Create a new identity document
 
 
 
-
-# Group Accounts
+## Accounts [/digitalwallets/v1/accounts{?customerId,limit,offset}]
 
 Every wallet has one or more accounts associated with it - one for every currency that the customer has funds in.
-
-
-## Accounts [/accounts{?customerId,limit,offset}]
 
 ### getaccounts [GET]
 Get accounts
@@ -2240,7 +2236,7 @@ Get accounts
 
 
 
-## Accounts By AccountId [/accounts/{accountId}]
+## Accounts By AccountId [/digitalwallets/v1/accounts/{accountId}]
 
 + Parameters
     + accountId (string, required)
@@ -2271,7 +2267,7 @@ Retrieve the account with the provided id. The list of accounts for a customer c
 Initiate and confirm transactions - deposit, withdrawal, transfer of funds, as well as transaction history functionality.
 
 
-## Transactions [/transactions{?limit,offset,startDate,endDate,accountId}]
+## Transactions [/digitalwallets/v1/transactions{?limit,offset,startDate,endDate,accountId}]
 
 ### gettransactionsbyaccount [GET]
 Retrieve transactions for an account, ordered by creationTime descending
@@ -2316,7 +2312,7 @@ Retrieve transactions for an account, ordered by creationTime descending
 
 
 
-## Transactions By TransactionId [/transactions/{transactionId}]
+## Transactions By TransactionId [/digitalwallets/v1/transactions/{transactionId}]
 
 + Parameters
     + transactionId (string, required)
@@ -2341,7 +2337,7 @@ Retrieve details on a transaction with the specified id. List of transactions ca
 
 
 
-## Authorization Holds [/authorization-holds]
+## Authorization Holds [/digitalwallets/v1/authorization-holds]
 
 ### postauthorizationholds [POST]
 Create a new authorization hold.
@@ -2369,7 +2365,7 @@ Create a new authorization hold.
 
 
 
-## Authorization Holds [/authorization-holds{?limit,offset,accountId}]
+## Authorization Holds [/digitalwallets/v1/authorization-holds{?limit,offset,accountId}]
 
 ### getwalletswalletIdauthorizationholds [GET]
 Retrieve list of active authorization holds only.
@@ -2397,7 +2393,7 @@ Retrieve list of active authorization holds only.
 
 
 
-## Authorization Holds By Id [/authorization-holds/{id}]
+## Authorization Holds By Id [/digitalwallets/v1/authorization-holds/{id}]
 
 + Parameters
     + id (string, required)
@@ -2439,7 +2435,7 @@ Expire an authorisation hold.
 
 
 
-## Payins [/payins]
+## Payins [/digitalwallets/v1/payins]
 
 ### getwalletwalletidpayin [POST]
 Create a new pay in to transfer funds from merchant's wallet account to customer's wallet.
@@ -2471,7 +2467,7 @@ Create a new pay in to transfer funds from merchant's wallet account to customer
 
 
 
-## Payouts [/payouts]
+## Payouts [/digitalwallets/v1/payouts]
 
 ### postwalletswalletidpayouts [POST]
 Create a new pay out to transfer funds from customer's wallet account to merchant's wallet or to another customer (peer) wallet.
@@ -2504,7 +2500,7 @@ Create a new pay out to transfer funds from customer's wallet account to merchan
 
 
 
-# Customers By CustomerId [/customers/{customerId}]
+# Customers By CustomerId [/digitalwallets/v1/customers/{customerId}]
 
 + Parameters
     + customerId (string, required)
@@ -2543,7 +2539,7 @@ Update customer information.
 
 
 
-# Identity Documents [/identity-documents{?customerId,limit,offset}]
+# Identity Documents [/digitalwallets/v1/identity-documents{?customerId,limit,offset}]
 
 ## getidentitydocuments [GET]
 Retrieve a list of identity documents
@@ -2570,7 +2566,7 @@ Retrieve a list of identity documents
 
 
 
-# Identity Documents By Id [/identity-documents/{id}]
+# Identity Documents By Id [/digitalwallets/v1/identity-documents/{id}]
 
 + Parameters
     + id (string, required)
