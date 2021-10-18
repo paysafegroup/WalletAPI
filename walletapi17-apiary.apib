@@ -2064,6 +2064,8 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
             }
             
 
+# Group Wallets
+
 ## Wallets [/wallets]
 
 ### CreateWallet [POST]
@@ -3159,6 +3161,7 @@ Get identity document by ID
     _Read Only, length<=36_
 + Include Profile
 + Include Billing Details
++ `wallet` : (walletRequest)
 + Include Merchant Descriptor
 + `returnLinks` (object) - The URL endpoints to redirect the customer to after a redirection to an alternative payment or 3D Secure site. You can customize the return URL based on the transaction status. 
     _Conditional_
@@ -3404,6 +3407,22 @@ Get identity document by ID
     + `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration. 
         _Read Only, length<=899_
 
+
+## `walletRequest`
+
++ id: `abc` (string) - The wallet id.
+            _length<=50_
++ fee: `400` (number) - The fee to be applied on this transactions.
+            _length<=50_
++ slipId: `123456` (string) - Wallet transaction id.
+            _Read Only _length<=50_            
++ customerAccount: (phcustomerAccountRequest) - Customer Wallet Account.
+
+## `phcustomerAccountRequest`
++ id: `abc` (string) - The customer wallet account id.
+            _length<=50_
+
+
 ## `Payment Instrument`
 
 + One of
@@ -3625,7 +3644,7 @@ Get identity document by ID
             _Read Only, length<=50_
         + currencyCode: `EUR` (string) - The currency code of the wallet customer account.
             _Read Only, length<=50_
-        + fx: `1` (number) - The currency code of the wallet customer account.
+        + fx: `1` (number) - The fx rate applied at wallet side. 
             _Read Only, length<=50_
         + `postings` : (array) - An array of postings      
 
