@@ -3,15 +3,77 @@ HOST: https://api2.test.paysafe.com/paymenthub/
 
 # Paysafe Payments & Wallets API 
 
->**IMPORTANT:**  Because the Paysafe Payments & Wallets API uses its [own unique API keys for request authentication](#apikey) and provides its own [Test and Production accounts](#goinglive), you should never click the **SIGN UP** or **LOGIN** buttons at the top right of the 
-Developer Center navigation, as these are used strictly for the other APIs on the Developer Center. Please contact your business relationship manager or reach out to <integrations@paysafe.com> for API keys and Test/Production accounts.
+Paysafe's digital wallet offering caters to merchants that need to implement **embedded finance services** into their products, such as marketplaces, e-commerce, electronic goods and more.
+
+By leveraging Paysafe's capabilities - ledger, multiple currencies within the same wallet, multiple region coverage, risk and AML monitoring and a multitude of payment options, a product can be easily enhanced with an out-of-the-box, compliant e-money wallet.
+
+Built on top of Paysafe's solid payment processing API infrastructure, digital wallet requires minimal enhancement in terms of integration, authentication and monitoring.
+
+The service can easily and securely process payments & wallet requests from your customers using one single API – The **Payments & Wallets API**.
+
+Paysafe's all-in-one [Business Portal](https://merchant.paysafe.com/portal) allows the merchant to access transaction analytics and manage the merchant account.
+
 
 <a name="paymentsoverview" title="Payments & Wallets API Overview"></a>
 # Overview
 
-You can easily and securely process payments & wallet requests from your customers using one single API – The **Payments & Wallets API**.   
 
-Paysafe also enables you to access your transaction analytics and manage accounts with our all-in-one [Business Portal](https://merchant.paysafe.com/portal). 
+## Concepts in Paysafe's digital wallet
+
+The digital wallet is a stored value financial service, and as such must adhere to certain regulations and data availability requirements.
+
+The **Wallet** is the cornerstone, which all other objects reference into. Every wallet must be associated with a single person (customer) or an enterprise (merchant).
+
+A **Wallet Account** is a ledger for a single currency. The multicurrency capability requires multiple accounts to be associated with the wallet.
+
+**Customer** is the physical person, associated with a wallet, and is the legal owner of the e-money stored in the accounts' ledger. Regulations require Paysafe to collect and assess KYC information, PEP checks, and in some instances - carry out EDD verifications on the customer.
+
+**Merchant** is a legal entity that provides services or goods to its customers. The merchant also has a wallet associated with it within the Paysafe Digital Wallet platform, and just as customers, KYB information must be collected and assessed.
+
+
+## Digital Wallet as a service
+
+On top of Paysafe regular wallet offering, the digital wallet can also be used purely as a backend service by operating a set of APIs.
+
+Merchant's responsibilities:
+
+  * Manage customer profiles
+  * Take the customer through KYC
+  * Integrate to DW via API
+  * Implement UI for customer journeys
+  * Provide merchant's fees per txn
+
+Paysafe Digital Walet responsibilities:
+
+  * E-money ledger
+  * End-customer details storage (regulatory)
+  * Risk & AML monitoring
+  * Payment methods integration
+  * Reporting
+  * Cover regulatory requirements
+
+
+### Customer wallet
+
+Each customer is assigned a CW, and it accounts for all transactions for that customer - deposits, withdrawals, pay-in m pay-out, exchange, etc. As mentioned above, a wallet can contain multiple accounts in different currencies.
+
+When the Merchant deems necessary, a new Customer wallet is created. Usually, a customer wallet is created when the customer registers in the Merchant's system and passess the KYC verifications, as agreed between the Merchant and Paysafe.
+
+> As the Merchant is managing all its users, Paysafe **only holds the customer personal details necessary for risk & compliance purposes** - Paysafe does not access or manage customer credentials, nor does it manage authentication and authorization. These details are associated with every wallet.
+
+
+### Merchant wallet
+
+The Merchant wallet, just as CW, provides ledger, transactional and multi-currency capabilities.
+
+The Merchant can access the Merchant Wallet via the Paysafe Merchant Portal. Access to this portal is provided during the merchant onboarding process.
+
+
+### Merchant Fees
+
+All Merchant fees that the Merchant needs to charge its customers, are **accumulated in the MW at time of customer transaction**. Paysafe's fees can either be deducted directly from the MW balance, or can be settled on a monthly/quarterly basis by invoicing the Merchant.
+
+To allow for the ultimate flexibility, all merchant fees **must be provided by the Merchant on a per-transaction basis**. This approach allows the Merchant to execute different pricing schemes based on regions, currency, customer loyalty levels, dynamic fee structures and other information that is only available to the Merchant.
 
 
 ## Payment Methods
@@ -143,15 +205,28 @@ You must use "**Simulator**" in the HTTP header of your request, which has the f
 
 ### Resource Patterns
 
-|Endpoint URL                                   |Description                            |Action |
-|---                                            |---                                    |---    |
-|/paymenthandles                                |Create a Customer Payment Handle       |POST   |
-|/paymenthandles/{payment_handle_id}            |Look Up a Payment Handle               |GET    |
-|/payments                                      |Submit a Payment Request               |POST   |
-|/payments/{payment_id}                         |Look Up a Payment                      |GET    |
-|/settlements/{settlement_id}                   |Look Up a Settlement                   |GET    |
-|/standalonecredits                             |Submit a Standalone Credit             |POST   |
-|/standalonecredits/{standalone_credit_id}      |Look Up a Standalone Credit            |GET    |
+| Endpoint URL                                             | Description                      | Action             |
+|----------------------------------------------------------|----------------------------------|--------------------|
+| /paymenthandles                                          | Create a Customer Payment Handle | POST               |
+| /paymenthandles/{payment_handle_id}                      | Look Up a Payment Handle         | GET                |
+| /payments                                                | Submit a Payment Request         | POST               |
+| /payments/{payment_id}                                   | Look Up a Payment                | GET                |
+| /settlements/{settlement_id}                             | Look Up a Settlement             | GET                |
+| /standalonecredits                                       | Submit a Standalone Credit       | POST               |
+| /standalonecredits/{standalone_credit_id}                | Look Up a Standalone Credit      | GET                |
+| /wallets                                                 | Wallets                          | POST               |
+| /customers/{customerId}                                  | Customers By CustomerId          | GET, PATCH, DELETE |
+| /identity-documents                                      | Identity Documents               | GET, POST          |
+| /identity-documents/{id}                                 | Identity Documents               | GET                |
+| /accounts{?customerId,limit,offset}                      | Accounts                         | GET                |
+| /accounts/{accountId}                                    | Accounts By AccountId            | GET                |
+| /transactions{?limit,offset,startDate,endDate,accountId} | Transactions                     | GET                |
+| /transactions/{transactionId}                            | Transactions By TransactionId    | GET                |
+| /authorization-holds                                     | Authorization Holds              | POST               |
+| /authorization-holds{?limit,offset,accountId}            | Authorization Holds              | GET                |
+| /authorization-holds/{id}                                | Authorization Holds By Id        | GET, DELETE        |
+| /payins                                                  | Payins                           | POST               |
+| /payouts                                                 | Payouts                          | POST               |
 
 
 <a name="paymentswebhooks" title="Payments Webhooks"></a>
@@ -1989,7 +2064,530 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
             }
             
 
+## Wallets [/wallets]
 
+### CreateWallet [POST]
+Create a new wallet.
+
++ Request (application/json)
+    + Headers
+
+            X-Signature:<<Add Header Value>>
+
+
+    + Attributes (Wallet)
+
+
+
++ Response 201 (application/json)
+
+        Created.
+
+    + Attributes (Wallet)
+
+
+
++ Response 400 (application/json)
+
+        Validation failed.
+
+    + Attributes (Error Details)
+
+
+
++ Response 409 (application/json)
+
+        Conflict. Check body for details.
+
+    + Attributes (Error Details)
+
+
+
+
+## Customers By CustomerId [/customers/{customerId}]
+
++ Parameters
+    + customerId (string, required)
+
+
+### getcustmerid [GET]
+Get a customer by ID.
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Customer)
+
+
+
++ Response 404
+
+        Customer with the requested ID was not found.
+
+
+
+
+### deletecustomersid [DELETE]
+Deactivates a customer.
+
++ Request
+    + Headers
+
+            X-Signature:<<Add Header Value>>
+
+
+
+
+
++ Response 200
+
+        OK
+
+
+
+
++ Response 404
+
+        Customer with the requested ID was not found.
+
+
+
+
++ Response 409
+
+        The customer with the requested ID has already been deactivated.
+
+
+
+
+
+## Identity Documents [/identity-documents]
+
+### postidentitydocuments [POST]
+Create a new identity document
+
++ Request (application/json)
+
+    + Attributes (IdentityDocument)
+
+
+
++ Response 201 (application/json)
+
+        Created
+
+    + Attributes (IdentityDocument)
+
+
+
++ Response 400 (application/json)
+
+        Validation failed. Check error response for details.
+
+    + Attributes (Error Details)
+
+
+
+
+
+# Group Accounts
+
+Every wallet has one or more accounts associated with it - one for every currency that the customer has funds in.
+
+
+## Accounts [/accounts{?customerId,limit,offset}]
+
+### getaccounts [GET]
+Get accounts
++ Parameters
+    + customerId (string, optional)
+
+        Filter by customer
+
+    + limit (number, optional)
+
+        This is the total number of records to return. Max = 50. Default = 10.
+
+    + offset (number, optional)
+
+        This is the starting position, where 0 is the first record. Default = 0.
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Accounts Response)
+
+
+
++ Response 200 (application/xml)
+
+        OK
+
+    + Attributes (array[Account])
+
+
+
++ Response 404
+
+        Wallet with the requested ID is not found.
+
+
+
+
+
+## Accounts By AccountId [/accounts/{accountId}]
+
++ Parameters
+    + accountId (string, required)
+
+
+### getaccountbyid [GET]
+Retrieve the account with the provided id. The list of accounts for a customer can be fetched by calling `/wallets/{wallet-id}/accounts`.
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Account)
+
+
+
++ Response 404
+
+        Account with the requested ID was not found.
+
+
+
+
+
+
+# Group Transactions
+
+Initiate and confirm transactions - deposit, withdrawal, transfer of funds, as well as transaction history functionality.
+
+
+## Transactions [/transactions{?limit,offset,startDate,endDate,accountId}]
+
+### gettransactionsbyaccount [GET]
+Retrieve transactions for an account, ordered by creationTime descending
++ Parameters
+    + limit (number, optional)
+
+        Limit number of results
+
+    + offset (number, optional)
+
+        Offset results by the specified number
+
+    + startDate (string, optional)
+
+        Filter by creation time
+
+        + Sample: 2021-10-05T14:43:33Z
+    + endDate (string, optional)
+
+        Filter by creationType after
+
+        + Sample: 2021-10-05T14:43:33Z
+    + accountId (string, optional)
+
+        Filter by account ID
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Transactions Response)
+
+
+
++ Response 200 (application/xml)
+
+        OK
+
+    + Attributes (object)
+
+
+
+
+## Transactions By TransactionId [/transactions/{transactionId}]
+
++ Parameters
+    + transactionId (string, required)
+
+
+### gettransactionsbyid [GET]
+Retrieve details on a transaction with the specified id. List of transactions can be fetched by calling `/accounts/{account-id}/transactions`.
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Transaction)
+
+
+
++ Response 404
+
+        Transaction with the requested ID was not found.
+
+
+
+
+
+## Authorization Holds [/authorization-holds]
+
+### postauthorizationholds [POST]
+Create a new authorization hold.
+
++ Request (application/json)
+
+    + Attributes (AuthorizationHold)
+
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (AuthorizationHold)
+
+
+
++ Response 400 (application/json)
+
+        Unable to process request due to validation or other errors.
+
+    + Attributes (Error Details)
+
+
+
+
+## Authorization Holds [/authorization-holds{?limit,offset,accountId}]
+
+### getwalletswalletIdauthorizationholds [GET]
+Retrieve list of active authorization holds only.
++ Parameters
+    + limit (number, optional)
+
+        Limit number of results
+
+    + offset (number, optional)
+
+        Offset results by the specified number
+
+    + accountId (string, optional)
+
+        Filter by Account ID
+
+        + Sample: 2021-10-05T14:43:33Z
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Authorization Holds Response)
+
+
+
+
+## Authorization Holds By Id [/authorization-holds/{id}]
+
++ Parameters
+    + id (string, required)
+
+
+### getauthorizationholdsid [GET]
+Retrieve details on an authorization hold by ID.
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (AuthorizationHold)
+
+
+
++ Response 404
+
+        Not Found
+
+
+
+
+### deleteauthorizationholdsid [DELETE]
+Expire an authorisation hold.
+
++ Response 200
+
+        OK
+
+
+
+
++ Response 404
+
+        Not Found
+
+
+
+
+
+## Payins [/payins]
+
+### getwalletwalletidpayin [POST]
+Create a new pay in to transfer funds from merchant's wallet account to customer's wallet.
+
++ Request (application/json)
+    + Headers
+
+            X-Signature:<<Add Header Value>>
+
+
+    + Attributes (Payin)
+
+
+
++ Response 201 (application/json)
+
+        Created
+
+    + Attributes (Payin)
+
+
+
++ Response 400 (application/json)
+
+        Validation failed or other type of business error.
+
+    + Attributes (Error Details)
+
+
+
+
+## Payouts [/payouts]
+
+### postwalletswalletidpayouts [POST]
+Create a new pay out to transfer funds from customer's wallet account to merchant's wallet or to another customer (peer) wallet.
+
++ Request (application/json)
+    + Headers
+
+            X-Signature:<<Add Header Value>>
+
+
+    + Attributes (Payout)
+
+
+
++ Response 201 (application/json)
+
+        Created
+
+    + Attributes (Payout)
+
+
+
++ Response 400 (application/json)
+
+        Validation failed or other type of business error.
+
+    + Attributes (Error Details)
+
+
+
+
+
+# Customers By CustomerId [/customers/{customerId}]
+
++ Parameters
+    + customerId (string, required)
+
+
+## patchcustomersid [PATCH]
+Update customer information.
+
++ Request (application/json)
+
+    + Attributes (Customer)
+
+
+
++ Response 202 (application/json)
+
+        Accepted
+
+    + Attributes (Customer)
+
+
+
++ Response 400 (application/json)
+
+        Bad Request
+
+    + Attributes (Error Details)
+
+
+
++ Response 404
+
+        Not Found
+
+
+
+
+
+# Identity Documents [/identity-documents{?customerId,limit,offset}]
+
+## getidentitydocuments [GET]
+Retrieve a list of identity documents
++ Parameters
+    + customerId (string, optional)
+
+        Filter by customer ID
+
+    + limit (number, optional)
+
+        This is the total number of records to return. Max = 50. Default = 10.
+
+    + offset (number, optional)
+
+        This is the starting position, where 0 is the first record. Default = 0.
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Identity Documents Response)
+
+
+
+
+# Identity Documents By Id [/identity-documents/{id}]
+
++ Parameters
+    + id (string, required)
+
+
+## getidentitydocumentsid [GET]
+Get identity document by ID
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (IdentityDocument)
+
+
+
++ Response 404
+
+        Not Found
 
 
 
@@ -2904,6 +3502,7 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
         + PENDING - The transaction awaiting payment service provider's response.
 + `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Payment request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
     _Mandatory, max=3_
++ Include wallet
 + Include Gateway Response
 + `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
 + Include Stored Credential
@@ -3014,6 +3613,62 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
         + Include Mandate
         + lastDigits:`11` (string) - These are the last two digits of the iban.
             _Read Only, length=2_
+
+
+## `customerAccount`
+
++ customerAccount (object) - Customer wallet account.
+
+    + Properties
+
+        + id: `gfdd` (string) - The customer wallet account id.
+            _Read Only, length<=50_
+        + currencyCode: `EUR` (string) - The currency code of the wallet customer account.
+            _Read Only, length<=50_
+        + fx: `1` (number) - The currency code of the wallet customer account.
+            _Read Only, length<=50_
+        + `postings` : (array) - An array of postings      
+
+
+## `postings`
+
++ type: `GROSS_AMOUNT` (string) - The type of the posting.
+            _Read Only, length<=50_
++ direction: `CREDIT` (string) - The direction of the amount. Valid options CREDIT, DEBIT.
+            _Read Only, length<=50_
++ amount: `500` (number) - Amount posted to/from wallet account.
+
+## `merchantAccount`
+
++ merchantAccount (object) - Merchant wallet account.
+
+    + Properties
+
+        + id: `gfdd` (string) - The merchant wallet account id.
+            _Read Only, length<=50_
+        + currencyCode: `EUR` (string) - The currency code of the merchant wallet account.
+            _Read Only, length<=50_
+        + fx: `1` (number) - The currency code of the wallet account.
+            _Read Only, length<=50_
+        + `postings` : (array) - An array of postings
+                
+
+## `wallet`
+
++ wallet (object) - wallet.
+
+    + Properties
+
+        + customerId: `abcd` (string) - The customer id.
+            _Read Only, length<=50_
+        + slipId: `123456` (string) - The transaction id at wallet side.
+            _Read Only, length<=50_
+        + fee: `400` (number) - The fee need to be applied on the transaction.
+            _Read Only, length<=50_
+        + Include customerAccount        
+        + Include merchantAccount
+
+
 
 ## settlementsArray
 + Include Metadata Object
@@ -3155,3 +3810,316 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
         + EXPIRED - The request expired.  
         + COMPLETED - The request is completed.
 + Include Metadata Object
+
+
+
+## Wallet (object)
+Wallet composite model
+
+### Properties
++ `customer` (Customer, required)
++ `accounts` (array[Account], required)
++ `identityDocuments` (array[IdentityDocument], required)
++ `termsAndConditionsAccepted` (boolean, required)
+
+
+## Customer (object)
+
+
+### Properties
++ `id` (string, optional)
++ `firstName` (string, required)
++ `lastName` (string, required)
++ `title` (string, optional) - Personal title, Mr., Dr., etc.
++ `email` (string, required) - Primary email address
++ `phone` (string, optional)
++ `mobile` (string, required)
++ `address1` (string, optional)
++ `address2` (string, optional)
++ `city` (string, optional)
++ `zip` (string, optional)
++ `state` (string, optional)
++ `countryCode` (string, optional) - ISO country code
++ `birthDate` (string, required)
++ `registrationIp` (string, optional) - IPv4 address from which the customer has registered.
++ `nationality` (string, required) - ISO country code for nationality of the customer
++ `externalId` (string, required) - ID of the customer in an external system
++ `kycStatus` (enum[string], optional) - KYC Status enumeration
+    + `NOT_COMPLETE`
+    + `IN_PROGRESS`
+    + `COMPLETE`
++ `type` (enum[string], optional) - Type of Customer
+    + `LEGAL_ENTITY`
+    + `PERSON`
++ `legalEntityName` (string, optional)
++ `legalEntityIdentifier` (string, optional)
+
+
+## Account (object)
+
+
+### Properties
++ `id` (string, required)
++ `customerId` (string, required)
++ `currency`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
++ `totalBalance` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `availableBalance` (Minor Units Amount, required) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `iban` (string, optional) - IBAN associated with this account.
++ `creationTime`: `2019-08-24T14:15:22Z` (string, optional)
++ `hasIban` (boolean, optional)
+
+
+## IdentityDocument (object)
+Personal identity document
+
+### Properties
++ `id` (string, optional)
++ `customerId` (string, required)
++ `type` (enum[string], required)
+    + `PASSPORT`
+    + `DRIVERS_LICENSE`
+    + `ID_CARD`
+    + `GOVERNMENT_NATIONAL_ID`
++ `documentNumber` (string, required)
++ `expirationDate` (string, optional)
++ `countryCode` (string, optional)
+
+
+## Transaction (object)
+
+
+### Properties
++ `type` (enum[string], optional)
+    + `DEPOSIT`
+    + `WITHDRAWAL`
+    + `CHARGEBACK_REVERSAL`
+    + `RETURNED_WITHDRAWAL`
+    + `CHARGEBACK`
+    + `PAY_OUT`
+    + `PAY_IN`
+    + `MERCHANT_FEE`
++ `accountId` (string, optional)
++ `id` (string, optional)
++ `accountType` (enum[string], optional)
+    + `FIAT`
+    + `CRYPTO`
++ `description` (string, optional)
++ `creationTime`: `2021-07-15T17:54:12Z` (string, optional)
++ `customerId` (string, optional)
++ `direction` (enum[string], optional)
+    + `IN`
+    + `OUT`
+    + `THROUGH`
++ `exchangeRate` (ExchangeRate, optional)
++ `feeAmount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `netAmount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `paymentDetails` (PaymentDetails, optional)
++ `status` (enum[string], optional)
+    + `PENDING`
+    + `PROCESSING`
+    + `COMPLETED`
+    + `FAILED`
+    + `CANCELLED`
++ `statusReason` (enum[string], optional)
+    + `ACTION_REQUIRED`
+    + `PENDING_KYC`
+    + `PENDING_REVIEW`
+    + `PENDING_SCREENING`
+    + `RECIPIENT_ACTION_REQUIRED`
+    + `WAITING_FOR_RECIPIENT_ACCOUNT`
++ `amount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `processorReferenceId` (string, optional)
++ `merchantReferenceId` (string, optional)
+
+
+## PaymentInstrument (object)
+Represents Payment Instrument base type.
+
+### Properties
++ `instrumentType` (string, optional)
+
+
+## Bank Account Payment Instrument (PaymentInstrument)
+Bank Account Payment Instrument
+
+### Properties
++ `bankName` (string, optional) - Bank Name (Read Only).
++ `accountHolderName` (string, optional) - This is the name of the customer or company that owns the bank account.
++ `iban` (string, optional) - The International Bank Account Number (IBAN) of the account.
++ `bic` (string, optional) - The Bank Acccount Bank Identifier Code (BIC) code. Also known as SWIFT code.
++ `country`: `DEU` (string, optional) - The ISO 3166-1 alpha-3 code for the consumer's bank (e.g., Germany = DEU, JPN=Japan, CAN=Canada).
+
+
+## CardPaymentInstrument (PaymentInstrument)
+Card Payment Instrument.
+
+### Properties
++ `pan` (string, required) - Card Number
++ `brand` (string, optional) - Card Brand (Read Only)
++ `cardHolderName` (string, optional) - Card holder name.
++ `expiryDate` (string, optional) - Expiry Date in "MM/YYYY" format.
++ `cardType` (string, optional) - Card type (Read Only).
++ `issuingCountry` (string, optional) - Issuing Country. Country ISO 3166-1 Alpha-3 country code. (Read Only).
++ `bankName` (string, optional) - Bank Name (Read Only).
++ `cardCurrency`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
++ `cvv` (string, optional) - Card CVV (Do not store)
+
+
+## PaymentDetails (object)
+
+
+### Properties
++ `bankName` (string, optional)
++ `instrumentBrand` (string, optional)
++ `instrumentId` (string, optional)
++ `obfuscatedInstrumentIdentifier` (string, optional)
++ `optionId` (string, optional)
++ `paymentType` (enum[string], optional)
+    + `CARD`
+    + `MOBILE_WALLET`
+    + `BANK`
+    + `ALTERNATIVE_PAYMENT_METHOD`
+
+
+## AuthorizationHold (object)
+
+
+### Properties
++ `id` (string, optional)
++ `amount` (Minor Units Amount, required) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `createdOn`: `2021-07-15T17:54:12Z` (string, optional)
++ `expiresOn`: `2021-07-15T17:54:12Z` (string, optional)
++ `status` (enum[string], optional)
+    + `ACTIVE`
+    + `EXPIRED`
++ `accountId` (string, optional)
++ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
+
+
+## Minor Units Amount (object)
+Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
+
+### Properties
++ `amount`: `0` (number, required) - Amount value in Currency minor units.
++ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
+
+
+## ExchangeRate (object)
+
+
+### Properties
++ `fromCurrency` (string, optional)
++ `rate` (string, optional)
++ `toCurrency` (string, optional)
+
+
+## DeviceInfo (object)
+Provides information about the device that the end-customer uses to access the service.
+
+### Properties
++ `sessionId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
++ `deviceId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
++ `ip`: `192.168.1.10` (string, optional)
++ `ipCountry` (string, optional)
++ `trueIp` (string, optional)
++ `trueIpCountry` (string, optional)
++ `type` (enum[string], optional)
+    + `BROWSER`
+    + `MOBILE_DEVICE`
+    + `SYSTEM`
+    + `UNKNOWN`
+
+
+## FieldError (object)
+Represents Field validation Error.
+
+### Properties
++ `field` (string, optional) - Identifies the JSON request field.
++ `error` (string, optional) - The problem associated with the field.
+
+
+## Error Details (object)
+Additional details about an error
+
+### Properties
++ `code` (string, optional) - The error code.
++ `message` (string, optional) - A description of the error.
++ `details` (array[string], optional) - Details of any parameter value errors.
++ `fieldErrors` (FieldError, optional) - Represents Field validation Error.
+
+
+## Payout (object)
+
+
+### Properties
++ `customerId` (string, optional)
++ `amount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `type` (enum[string], optional)
+    + `MERCHANT_FEE`
+    + `P2P_TRANSFER`
+    + `OWN_ACCOUNTS_TRANSFER`
+    + `PAYMENT_TO_MERCHANT`
++ `fee` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `description` (string, optional)
++ `authorizationHoldId` (string, optional)
++ `externalReferenceId` (string, optional)
++ `peerCustomerId` (string, optional)
++ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
++ `transactionId` (string, optional)
+
+
+## Payin (object)
+
+
+### Properties
++ `customerId` (string, optional)
++ `type` (enum[string], optional)
+    + `REFUND`
+    + `PAYMENT_FROM_MERCHANT`
++ `amount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `fee` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `description` (string, optional)
++ `externalReferenceId` (string, optional)
++ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
++ `transactionId` (string, optional)
+
+
+## PagingResultMeta (object)
+
+
+### Properties
++ `numberOfRecords` (number, optional)
++ `limit` (number, optional)
++ `page` (number, optional)
+
+
+## Accounts Response (object)
+
+
+### Properties
++ `accounts` (Account, optional)
++ `meta` (PagingResultMeta, optional)
+
+
+## Authorization Holds Response (object)
+
+
+### Properties
++ `meta` (PagingResultMeta, optional)
++ `authorizationHolds` (array[AuthorizationHold], optional)
+
+
+## Identity Documents Response (object)
+
+
+### Properties
++ `meta` (PagingResultMeta, optional)
++ `identityDocuments` (IdentityDocument, optional) - Personal identity document
+
+
+## Transactions Response (object)
+
+
+### Properties
++ `meta` (PagingResultMeta, optional)
++ `transactions` (array[Transaction], optional)
