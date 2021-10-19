@@ -1670,7 +1670,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                  "slipId" : "100753",
                  "fee": "400",
                  "customerAccount" : {
-                    "id":"abc",
+                    "id":"xyz",
                     "currencyCode" : "EUR",
                     "fx" : 1,
                     "postings" : [
@@ -1751,7 +1751,7 @@ Click **Get Payments** above to look up a Payment using the ID returned in the r
                  "slipId" : "100753",
                  "fee": "400",
                  "customerAccount" : {
-                    "id":"abc",
+                    "id":"xyz",
                     "currencyCode" : "EUR",
                     "fx" : 1,
                     "postings" : [
@@ -1976,8 +1976,48 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "customerIp": "204.91.0.12",
               "currencyCode": "GBP",
               "paymentType": "CARD",
-              "status": "PENDING",
-              "description": "Pay surplus"
+              "status": "COMPLETED",
+              "description": "Pay surplus",
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "10",
+                 "customerAccount" : {
+                    "id":"xyz",
+                    "currencyCode" : "EUR",
+                    "fx" : 1,
+                    "postings" : [
+                       {
+                          "type" : "GROSS_AMOUNT",
+                          "direction" : "CREDIT",
+                          "amount" : 40
+                       },
+                       {
+                          "type" : "TRANSACTION_FEE",
+                          "direction" : "DEBIT",
+                          "amount" : 10
+                       }
+                    ]
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                     "currencyCode" : 'EUR",
+                     "fx" : 1,
+                     "postings" : [
+                      {
+                        "type" : "GROSS_AMOUNT",
+                        "direction" : "DEBIT",
+                        "amount" : 40
+                       },
+                       {
+                         "type" : "TRANSACTION_FEE",
+                         "direction" : "DEBIT",
+                         "amount" : 10
+                       }
+                      ]
+                  }
+              }
+              
             }
             
 
@@ -2009,8 +2049,47 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
               "customerIp": "204.91.0.12",
               "currencyCode": "GBP",
               "paymentType": "CARD",
-              "status": "PENDING",
-              "description": "Pay surplus"
+              "status": "COMPLETED",
+              "description": "Pay surplus",
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "10",
+                 "customerAccount" : {
+                    "id":"xyz",
+                    "currencyCode" : "EUR",
+                    "fx" : 1,
+                    "postings" : [
+                       {
+                          "type" : "GROSS_AMOUNT",
+                          "direction" : "CREDIT",
+                          "amount" : 40
+                       },
+                       {
+                          "type" : "TRANSACTION_FEE",
+                          "direction" : "DEBIT",
+                          "amount" : 10
+                       }
+                    ]
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                     "currencyCode" : 'EUR",
+                     "fx" : 1,
+                     "postings" : [
+                      {
+                        "type" : "GROSS_AMOUNT",
+                        "direction" : "DEBIT",
+                        "amount" : 40
+                       },
+                       {
+                         "type" : "TRANSACTION_FEE",
+                         "direction" : "DEBIT",
+                         "amount" : 10
+                       }
+                      ]
+                  }
+              }
             }
             
 ### Get Standalone Credit Using Merchant Reference Number  [GET /paymenthub/v1/standalonecredits?merchantRefNum={merchant_ref_num}]
@@ -3060,6 +3139,7 @@ Expire an authorisation hold.
     _Read Only_
     + Members
         + CARD
++ Include wallet (object)
 + `status`: `PENDING` (enum) - This is the status of the transaction request.
     _Read Only_
     + Members
@@ -3405,7 +3485,7 @@ Expire an authorisation hold.
 
 ## `walletRequest`
 
-+ id: `abc` (string) - The wallet id.
++ customerId: `abc` (string) - The wallet id.
             _length<=50_
 + fee: `400` (number) - The fee to be applied on this transactions.
             _length<=50_
@@ -3414,7 +3494,8 @@ Expire an authorisation hold.
 + customerAccount: (phcustomerAccountRequest) - Customer Wallet Account.
 
 ## `phcustomerAccountRequest`
-+ id: `abc` (string) - The customer wallet account id.
++ id: `def` (string) - The customer wallet account id. If this is not provided, a wallet account id is automatically created in the processing currency. If provided, and processing currency specified is different than the wallet account currency, then an error is returned.
+                       In the case of Standalone Credits, this field is mandatory. If there is insufficient funds in the specified account, then an error is returned for Standalone Credit.
             _length<=50_
 
 
