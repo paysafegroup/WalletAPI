@@ -1989,7 +1989,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
                     "postings" : [
                        {
                           "type" : "GROSS_AMOUNT",
-                          "direction" : "CREDIT",
+                          "direction" : "DEBIT",
                           "amount" : 40
                        },
                        {
@@ -2006,13 +2006,13 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
                      "postings" : [
                       {
                         "type" : "GROSS_AMOUNT",
-                        "direction" : "DEBIT",
-                        "amount" : 40
+                        "direction" : "CREDIT",
+                        "amount" : 10
                        },
                        {
                          "type" : "TRANSACTION_FEE",
                          "direction" : "DEBIT",
-                         "amount" : 10
+                         "amount" : 5
                        }
                       ]
                   }
@@ -2062,7 +2062,7 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
                     "postings" : [
                        {
                           "type" : "GROSS_AMOUNT",
-                          "direction" : "CREDIT",
+                          "direction" : "DEBIT",
                           "amount" : 40
                        },
                        {
@@ -2079,17 +2079,16 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
                      "postings" : [
                       {
                         "type" : "GROSS_AMOUNT",
-                        "direction" : "DEBIT",
-                        "amount" : 40
+                        "direction" : "CREDIT",
+                        "amount" : 10
                        },
                        {
                          "type" : "TRANSACTION_FEE",
                          "direction" : "DEBIT",
-                         "amount" : 10
+                         "amount" : 5
                        }
                       ]
                   }
-              }
             }
             
 ### Get Standalone Credit Using Merchant Reference Number  [GET /paymenthub/v1/standalonecredits?merchantRefNum={merchant_ref_num}]
