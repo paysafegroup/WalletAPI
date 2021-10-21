@@ -84,6 +84,7 @@ The Payments API currently supports the following payment methods:
 - Card
 
  > **Note:** For payment methods using cards, we support both 3DS 1.0 and 3DS 2.0 
+- RAPID_TRANSFER
 
 
 ## Transaction Types Supported
@@ -92,6 +93,20 @@ Payments API supports the following transaction types:
   * [Payment Handles](#paymenthandlerequest)
   * [Payments](#paymentrequest)
   * [Standalone Credits](#standalonecreditrequest)
+
+
+## Payment Flows
+
+One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
+
+Only supports settleWithAuth=true
+For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate success or failure of the transaction request without having to do a separate lookup on the specific settlement.
+
+**Payment Flow**
+![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Payment_Flow.png)
+
+**Auto Settlement Payment**
+![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Auto_Settlement_Payment_Flow.png)
 
 # Before you begin
 ## Get your Secret API Key
@@ -455,6 +470,48 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
   }
 ```
 
+<a name="sepaobject" title="sepa Object"></a>
+## sepa
+
+| Element    | Type                            | Required    | Description                                                                                 |
+|------------|---------------------------------|-------------|---------------------------------------------------------------------------------------------|
+| nickName    | string <br/>`length<=50`       | Optional   | This is alias name for the bank account.                                               |
+| accountHolderName | string<br/>`length<32`           | Mandatory   | This is the name of the customer or company that owns the bank account.    |
+| bic        | string<br/>`length=8-11`         | Mandatory | This is the Bank Identifier Code for the consumer's bank account.. |
+| iban | string<br/>`length=8-34`        | Mandatory    | This is the International Bank Account Number for the costumer's bank account.                                                        |
+| lastDigits   | string<br/>`length=2`         | Read Only    | Last 2 digits of the iban.                                  |
+
+```apib
+    {
+    "sepa": {
+        "nickName": "Sally's Barclays Account",
+        "accountHolderName": "John Doe",
+        "bic": "ABNANL2APIP",
+        "iban": "DE89370400440532013000"
+      }
+    }
+```
+
+<a name="rapidtransferobject" title="rapidTransfer Object"></a>
+## rapidTransfer
+
+| Element    | Type                            | Required    | Description                                                                                 |
+|------------|---------------------------------|-------------|---------------------------------------------------------------------------------------------|
+|sepa         |[sepa](#sepaObject)|Mandatory|Sepa bank account.|
+
+```apib
+    {
+    "rapidTransfer" : {
+        "sepa": {
+           "nickName": "Sally's Barclays Account",
+           "accountHolderName": "John Doe",
+           "bic": "ABNANL2APIP",
+           "iban": "DE89370400440532013000"
+        }
+      }
+    }
+```
+
 
 <a name="cardobject" title="card Object"></a>
 ## card
@@ -644,7 +701,7 @@ This is a read-only raw response returned by an acquirer.
 | status                                                                          | Enumeration                   | Read Only                                                 | This is the status of the request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>INITIATED &ndash; The request was initiated with the downstream provider.</li><li>PAYABLE &ndash; The merchant can use the Payment Handle for a Payment request.</li><li>PROCESSING &ndash; The Payment Handle was authorized by customer, awaiting PSP response.</li><li>FAILED &ndash; The transaction failed due to an error or got declined.</li><li>EXPIRED &ndash; The Payment Handle expired because the merchant did not proceed with the Payment transaction.</li><li>COMPLETED &ndash; The Payment request was initiated successfully using the Payment Handle.</li><li>ERROR &ndash; The Payment Handle has errored. The reason for this state might be because of some system or environmental issues. </li></ul> By default, PaymentHandles will EXPIRE after 15 mins unless in a PROCESSING status.  Once the transaction flow has been initiated by the customer, the time permitted for the customer to complete authorization is dependent upon the payment type. PaymentHandles that lapse the permitted processing will be marked EXPIRED.If the customer is required to complete authorization as part of a redirect flow, the PaymentHandle is updated to have a PROCESSING status and the expiration time is extended to allow this additional time for the customer to complete these activities.For payment types where there is automatic settlement (settleWithAuth=true), if the PAYABLE Payment Handle has EXPIRED,  the corresponding Payment/Settlement resources will be auto created.  IF the PSP supports refunds, they will be auto refunded to the customer. |
 | statusReason                                                                    | Enumeration                   | Read Only                                                 | <ul><li>AUTH_VOIDED - Authorization was cancelled (voided).</li><li> USER_CANCELLED - User cancelled the transaction </li><li>AUTH_EXPIRED - Authorization has expired and no settlements were completed.</ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | usage                                                                           | Enumeration                   | Read Only                                                 | This specifies how the Payment Handle will be used for Payments. Possible values are:<ul><li>SINGLE_USE &ndash; The Payment Handle can be used for only one transaction and expires if not used.</li><li>MULTI_USE &ndash; The Payment Handle can be used multiple times.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| paymentType                                                                     | Enumeration                   | Mandatory                                                 | This is the payment type associated with this Payment Handle. Possible values are:<ul><li>CARD</li>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| paymentType                                                                     | Enumeration                   | Mandatory                                                 | This is the payment type associated with this Payment Handle. Possible values are:<ul><li>CARD</li><li>RAPID_TRANSFER</li>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | action                                                                          | Enumeration                   | Read Only                                                 | This specifies the next step of the user journey once they proceed to the Payment. Possible values are:<ul><li>NONE &ndash; No action is required, for example, for a standard credit card payment.</li><li>REDIRECT &ndash; The user must be redirected to complete a Payment, for example, when an alternate payment method like Paysafecard is used.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | executionMode                                                                   | Enumeration                   | Read Only                                                 | This specifies the action of the merchant server to complete the Payment. Possible values are:<ul><li>SYNCHRONOUS &ndash; The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.</li><li>ASYNCHRONOUS &ndash; The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | amount                                                                          | number <br/>`max=99999999999` | Mandatory                                                 | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process US $109.9, this value should be 10990.<br/>**Note:** This field is mandatory if *transactionType* is included. <br/>The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
@@ -835,7 +892,7 @@ This is a read-only raw response returned by an acquirer.
 
 
 <a name="standalonecreditsobject" title="standalonecredits Object"></a>
-## standalonecredits
+## Standalone Credit
 
 | Element                                                                                                          | Type                                                                                                                                                                                                                                                                             | Required  | Description                                                                                                                                                                                                                                                                                                                          |
 |------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -844,7 +901,7 @@ This is a read-only raw response returned by an acquirer.
 | merchantRefNum                                                                                                   | string <br/>`length<=255`                                                                                                                                                                                                                                                        | Mandatory | This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.                                                                                                                                                                                              |
 | paymentHandleToken                                                                                               | string                                                                                                                                                                                                                                                                           | Mandatory | This is the payment token generated by Paysafe that will be used by merchants for Standalone Credit requests.                                                                                                                                                                                                                        |
 | currencyCode                                                                                                     | string<br/>`length=3`                                                                                                                                                                                                                                                            | Mandatory | This is the currency of the merchant account, for example, USD or CAD, returned in the request response. See [Currency Codes](#currencycodes). <br/>**Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken. |
-| card \| paysafecard \| paysafecash \| sightline \| vippreferred \| skrill \| instant ACH \| Interac \| ACH \|EFT | [card](#cardobject) \| [paysafecard](#paysafecardobject)\| [paysafecash](#paysafecashobject) \|[sightline](#sightlineobject) \| [vippreferred](#vippreferredobject) \| [skrill](#skrillobject) \| [instant ACH](#instantachobject)  \| [ACH](#achobject)    \| [EFT](#eftobject) | Read Only | These are the details of the payment method used.                                                                                                                                                                                                                                                                                    |
+| card \|rapidTransfer | [card](#cardobject) \| [rapidtransfer](#rapidtransferobject)] | Read Only | These are the details of the payment method used.                                                                                                                                                                                                                                                                                    |
 | billingDetails                                                                                                   | [billingDetails](#billingdetailsobject)                                                                                                                                                                                                                                          | Optional  | These are the billing details for the request.                                                                                                                                                                                                                                                                                       |
 | customerIp                                                                                                       | string<br/>`length<=39`                                                                                                                                                                                                                                                          | Optional  | This is the customer's IP address.                                                                                                                                                                                                                                                                                                   |
 | description                                                                                                      | string<br/>`length<=255`                                                                                                                                                                                                                                                         | Optional  | This is a description of the transaction, provided by the merchant.                                                                                                                                                                                                                                                                  |
@@ -1121,7 +1178,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
  > **Note:** The *status* of Payment Handles will remain INITIATED  for the following cases:
 * When the customer is redirected to a *redirect_payment* URL until the customer verifies the payment instrument.
 * When the requested amount is more than the maximum amount configured in the Business Portal.
-* When Alternate Payment Methods like Paysafecash, Paysafecards are selected by the customer.
+* When Alternate Payment Methods like RapidTransfer, Paysafecash, Paysafecards are selected by the customer.
 
 + Attributes 
     + Include PaymentHandleRequest
@@ -1148,7 +1205,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                     "holderName": "poorna"
                 },
                 "wallet":{
-                   "id" : "GGG",
+                   "customerId" : "GGG",
                    "fee" : 400,
                    "customerAccount" : {
                        "id":"abc"
@@ -1214,7 +1271,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "lastDigits": "4415"
               },
               "wallet":{
-                   "id" : "GGG",
+                   "customerId" : "GGG",
                    "fee" : 400,
                    "slipId" : "100753",
                    "customerAccount" : {
@@ -1270,7 +1327,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                     "country": "CA"
                 },
                 "wallet":{
-                   "id" : "GGG",
+                   "customerId" : "GGG",
                    "fee" : 400,
                    "customerAccount" : {
                        "id":"abc"
@@ -1324,7 +1381,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                     "lastDigits": "0003"
                 },
                 "wallet":{
-                   "id" : "GGG",
+                   "customerId" : "GGG",
                    "slipId" : "100753",
                    "fee" : 400,
                    "customerAccount" : {
@@ -1351,6 +1408,119 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "transactionType": "PAYMENT"
             }
 
++ Request Create Payment Handle for Rapid Transfer for Payment (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Body
+
+            {
+                "merchantRefNum": "merchantRefNum-124",
+                "transactionType": "PAYMENT",
+                "rapidTransfer" : {
+                   "sepa": {
+                       "nickName": "Sally's Barclays Account",
+                       "accountHolderName": "John Doe",
+                       "bic": "ABNANL2APIP",
+                       "iban": "DE89370400440532013000"
+                    }  
+                },
+                "paymentType": "RAPID_TRANSFER",
+                "amount": 3000,
+                "currencyCode": "GBP",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "wallet":{
+                   "customerId" : "GGG",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
+                    }
+                ]
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+                "amount": 3000,
+                "merchantRefNum": "merchantRefNum-124",
+                "action": "REDIRECT",
+                "currencyCode": "GBP",
+                "usage": "SINGLE_USE",
+                "status": "INITIATED",
+                "paymentType": "RAPID_TRANSFER",
+                "executionMode": "SYNCHRONOUS",
+                "customerIp": "172.0.0.1",
+                "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "rapidTransfer" : {
+                   "sepa": {
+                       "nickName": "Sally's Barclays Account",
+                       "accountHolderName": "John Doe",
+                       "bic": "ABNANL2APIP",
+                       "lastDigits": "00"
+                    }  
+                },
+                "wallet":{
+                   "customerId" : "GGG",
+                   "slipId" : "100753",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
+                    }
+                ],
+                "links": [{
+                    "rel": "redirect_payment",
+                    "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+                    "method": "GET"
+                }],
+                "timeToLiveSeconds": 899,
+                "transactionType": "PAYMENT"
+            }
+
+
 
 
 + Request Create Payment Handle for Card for Standalone Credit (application/json)
@@ -1375,7 +1545,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "holderName": "poorna"
               },
               "wallet":{
-                   "id" : "GGG",
+                   "customerId" : "GGG",
                    "fee" : 400,
                    "customerAccount" : {
                        "id":"abc"                   
@@ -1420,7 +1590,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "zip": "M5H 2N2"
               },
               "wallet":{
-                   "id" : "GGG",
+                   "customerId" : "GGG",
                    "fee" : 400,
                    "slipId" : "100753",
                    "customerAccount" : {
@@ -1485,7 +1655,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "zip": "M5H 2N2"
               },
               "wallet":{
-                   "id" : "GGG",
+                   "customerId" : "GGG",
                    "fee" : 400,
                    "slipId" : "100753",
                    "customerAccount" : {
@@ -1575,7 +1745,7 @@ Click **Get Payment Handle Using Merchant Reference Number** above to look up a 
                         "zip": "M5H 2N2"
                     },
                     "wallet":{
-                       "id" : "GGG",
+                       "customerId" : "GGG",
                        "fee" : 400,
                        "slipId" : "100753",
                         "customerAccount" : {
@@ -1660,6 +1830,16 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
               "paymentType": "CARD",
               "status": "COMPLETED",
               "availableToSettle": 0,
+              "card": {
+                "cardExpiry": {
+                    "month": "10",
+                    "year": "2020"
+                },
+                "holderName": "poorna",
+                "cardType": "VI",
+                "cardBin": "453826",
+                "lastDigits": "0003"
+              },
               "gatewayResponse": {
                 "authCode": "135880",
                 "avsResponse": "MATCH",
@@ -1670,7 +1850,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                  "slipId" : "100753",
                  "fee": "400",
                  "customerAccount" : {
-                    "id":"abc",
+                    "id":"xyz",
                     "currencyCode" : "EUR",
                     "fx" : 1,
                     "postings" : [
@@ -1705,6 +1885,99 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                   }
               }
             }
+
+
++ Request Process a Rapid Transfer Payment Including Settlement (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+    
+    + Body
+
+            {
+              "merchantRefNum": "merchantRefNum-108",
+              "amount": 1000,
+              "currencyCode": "GBP",
+              "settleWithAuth": true,
+              "paymentHandleToken": "SCZJg09GWSv36NLB",
+              "customerIp": "10.10.12.64",
+              "description": "Magazine subscription"
+            }
+            
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+              "gatewayReconciliationId" : "3aeb9c63-6386-46a3-9f8e-f452e722228b",
+              "amount": 1000,
+              "merchantRefNum": "merchantRefNum-108",
+              "settleWithAuth": true,
+              "paymentHandleToken": "SCZJg09GWSv36NLB",
+              "txnTime": "2018-12-14T15:12:18Z",
+              "customerIp": "10.10.12.64",
+              "dupCheck": true,
+              "description": "Magazine subscription",
+              "currencyCode": "GBP",
+              "paymentType": "RAPID_TRANSFER",
+              "status": "COMPLETED",
+              "availableToSettle": 0,
+              "gatewayResponse": {
+                "id": "135880",
+              },
+              "rapidTransfer" : {
+                   "sepa": {
+                       "nickName": "Sally's Barclays Account",
+                       "accountHolderName": "John Doe",
+                       "bic": "ABNANL2APIP",
+                       "lastDigits": "00"
+                    }  
+              },
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "400",
+                 "customerAccount" : {
+                    "id":"xyz",
+                    "currencyCode" : "EUR",
+                    "fx" : 1,
+                    "postings" : [
+                       {
+                          "type" : "GROSS_AMOUNT",
+                          "direction" : "CREDIT",
+                          "amount" : 1000
+                       },
+                       {
+                          "type" : "TRANSACTION_FEE",
+                          "direction" : "DEBIT",
+                          "amount" : 400
+                       }
+                    ]
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                     "currencyCode" : 'EUR",
+                     "fx" : 1,
+                     "postings" : [
+                      {
+                        "type" : "GROSS_AMOUNT",
+                        "direction" : "CREDIT",
+                        "amount" : 400
+                       },
+                       {
+                         "type" : "TRANSACTION_FEE",
+                         "direction" : "DEBIT",
+                         "amount" : 100
+                       }
+                      ]
+                  }
+              }
+            }
+
+
 
 
 ### Get Payments [GET /paymenthub/v1/payments/{payment_id}]
@@ -1751,7 +2024,7 @@ Click **Get Payments** above to look up a Payment using the ID returned in the r
                  "slipId" : "100753",
                  "fee": "400",
                  "customerAccount" : {
-                    "id":"abc",
+                    "id":"xyz",
                     "currencyCode" : "EUR",
                     "fx" : 1,
                     "postings" : [
@@ -1976,8 +2249,48 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "customerIp": "204.91.0.12",
               "currencyCode": "GBP",
               "paymentType": "CARD",
-              "status": "PENDING",
-              "description": "Pay surplus"
+              "status": "COMPLETED",
+              "description": "Pay surplus",
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "10",
+                 "customerAccount" : {
+                    "id":"xyz",
+                    "currencyCode" : "EUR",
+                    "fx" : 1,
+                    "postings" : [
+                       {
+                          "type" : "GROSS_AMOUNT",
+                          "direction" : "DEBIT",
+                          "amount" : 40
+                       },
+                       {
+                          "type" : "TRANSACTION_FEE",
+                          "direction" : "DEBIT",
+                          "amount" : 10
+                       }
+                    ]
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                     "currencyCode" : 'EUR",
+                     "fx" : 1,
+                     "postings" : [
+                      {
+                        "type" : "GROSS_AMOUNT",
+                        "direction" : "CREDIT",
+                        "amount" : 10
+                       },
+                       {
+                         "type" : "TRANSACTION_FEE",
+                         "direction" : "DEBIT",
+                         "amount" : 5
+                       }
+                      ]
+                  }
+              }
+              
             }
             
 
@@ -2009,8 +2322,46 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
               "customerIp": "204.91.0.12",
               "currencyCode": "GBP",
               "paymentType": "CARD",
-              "status": "PENDING",
-              "description": "Pay surplus"
+              "status": "COMPLETED",
+              "description": "Pay surplus",
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "10",
+                 "customerAccount" : {
+                    "id":"xyz",
+                    "currencyCode" : "EUR",
+                    "fx" : 1,
+                    "postings" : [
+                       {
+                          "type" : "GROSS_AMOUNT",
+                          "direction" : "DEBIT",
+                          "amount" : 40
+                       },
+                       {
+                          "type" : "TRANSACTION_FEE",
+                          "direction" : "DEBIT",
+                          "amount" : 10
+                       }
+                    ]
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                     "currencyCode" : 'EUR",
+                     "fx" : 1,
+                     "postings" : [
+                      {
+                        "type" : "GROSS_AMOUNT",
+                        "direction" : "CREDIT",
+                        "amount" : 10
+                       },
+                       {
+                         "type" : "TRANSACTION_FEE",
+                         "direction" : "DEBIT",
+                         "amount" : 5
+                       }
+                      ]
+                  }
             }
             
 ### Get Standalone Credit Using Merchant Reference Number  [GET /paymenthub/v1/standalonecredits?merchantRefNum={merchant_ref_num}]
@@ -2915,6 +3266,8 @@ Expire an authorisation hold.
     + Properties
         + code (string) - This is acquirer identification code, such as DJN, CRX, etc.
             _Read Only_
+        + id (string) - This is transaction id at PSP side, in case of APMs.
+            _Read Only_
         + responseCode (string) - This is the raw response returned by the acquirer.
             _Read Only_
         + avsCode (string) - This is the raw AVS code returned by the acquirer.
@@ -3060,6 +3413,39 @@ Expire an authorisation hold.
     _Read Only_
     + Members
         + CARD
+        + CARD
++ Include wallet (object)
++ One of
+
+    + card (object) - These are the details of the [card](#cardobject) used for the request. Only one payment instrument object (for example, *card* or *paysafecash* or *sightline*) can be included in the request.
+
+        + Properties
+
+            + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
+                _Read Only_
+                + month:12 (number) - This is the card expiry month.
+                    _length=2_
+                + year:2020 (number) - This is the card expiry year.
+                    _length=4_
+            + holdername:`Jane Smith` (string) - This is the name of the card holder.
+                _Read Only_
+            + cardType (enum) - This is type of card used for the request.
+                _Read Only_
+                - AM – American Express
+                - DI – Discover
+                - JC – JCB
+                - MC – Mastercard
+                - MD – Maestro
+                - SO – Solo
+                - VI – Visa
+                - VD – Visa Debit
+                - VE – Visa Electron
+            + lastDigits:`1111` (string) - These are the last four digits of the card used for the request.
+                _Read Only, length=4_
+            + nickName:`Jane's Card` (string) - This is the nickname the merchant has for the card holder.
+                _Read Only, length<=50_
+            + cardBin:`411111` (string) - This is the card BIN (typically the first 6 digits).
+                _Read Only, length=6_
 + `status`: `PENDING` (enum) - This is the status of the transaction request.
     _Read Only_
     + Members
@@ -3135,6 +3521,7 @@ Expire an authorisation hold.
     _Mandatory_
     + Members
          + CARD
+         + RAPID_TRANSFER
 + Include Payment Instrument
 + `action`:`NONE` (enum) - This specifies the next step of the user journey once they proceed to the Payment.
     _Read Only_
@@ -3405,7 +3792,7 @@ Expire an authorisation hold.
 
 ## `walletRequest`
 
-+ id: `abc` (string) - The wallet id.
++ customerId: `abc` (string) - The wallet id.
             _length<=50_
 + fee: `400` (number) - The fee to be applied on this transactions.
             _length<=50_
@@ -3414,8 +3801,28 @@ Expire an authorisation hold.
 + customerAccount: (phcustomerAccountRequest) - Customer Wallet Account.
 
 ## `phcustomerAccountRequest`
-+ id: `abc` (string) - The customer wallet account id.
++ id: `def` (string) - The customer wallet account id. If this is not provided, a wallet account id is automatically created in the processing currency. If provided, and processing currency specified is different than the wallet account currency, then an error is returned.
+                       In the case of Standalone Credits, this field is mandatory. If there is insufficient funds in the specified account, then an error is returned for Standalone Credit.
             _length<=50_
+
+## `Sepa`
+
++ sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+
+    + Properties
+
+        + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+            _Optional, length<=50_
+        + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
+            _Mandatory, length<=32_
+        + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
+            _Optional, length=8-11_
+        + iban: `DE89370400440532013000` (string) - This is the International Bank Account Number for the costumer's bank account.
+            _Mandatory, length=8-34_
+        
+        + lastDigits:`11` (string) - These are the last two digits of the iban.
+            _Read Only, length=2_
+
 
 
 ## `Payment Instrument`
@@ -3455,8 +3862,25 @@ Expire an authorisation hold.
                 _Optional, length<=50_
             + cardBin:`411111` (string) - This is the card BIN (typically the first 6 digits).
                 _Read Only, length=6_
-            + threeDs: (string) - Indicates the threeDs object.
-                _Optional_
+
+    + rapidTranfer (object) - These are the details of the Rapid Transfer.    
+        
+        + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+
+            + Properties
+
+                + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+            _Optional, length<=50_
+                + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
+            _Mandatory, length<=32_
+                + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
+            _Optional, length=8-11_
+                + iban: `DE89370400440532013000` (string) - This is the International Bank Account Number for the costumer's bank account.
+            _Mandatory, length=8-34_
+        
+                + lastDigits:`11` (string) - These are the last two digits of the iban.
+            _Read Only, length=2_
+
         
     
 ## `Payment Instrument Customer`
@@ -3505,6 +3929,7 @@ Expire an authorisation hold.
     _Read Only_
     + Members
         + CARD
+        + RAPID_TRANSFER
 + `status`: `HELD`(enum) - This is the status of the transaction request.
     _Read Only_
     + Members
@@ -3517,6 +3942,52 @@ Expire an authorisation hold.
 + `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Payment request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
     _Mandatory, max=3_
 + Include wallet
++ One of
+
+    + card (object) - These are the details of the [card](#cardobject) used for the request. Only one payment instrument object (for example, *card* or *paysafecash* or *sightline*) can be included in the request.
+
+        + Properties
+
+            + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
+                _Read Only_
+                + month:12 (number) - This is the card expiry month.
+                    _length=2_
+                + year:2020 (number) - This is the card expiry year.
+                    _length=4_
+            + holdername:`Jane Smith` (string) - This is the name of the card holder.
+                _Read Only_
+            + cardType (enum) - This is type of card used for the request.
+                _Read Only_
+                - AM – American Express
+                - DI – Discover
+                - JC – JCB
+                - MC – Mastercard
+                - MD – Maestro
+                - SO – Solo
+                - VI – Visa
+                - VD – Visa Debit
+                - VE – Visa Electron
+            + lastDigits:`1111` (string) - These are the last four digits of the card used for the request.
+                _Read Only, length=4_
+            + nickName:`Jane's Card` (string) - This is the nickname the merchant has for the card holder.
+                _Read Only, length<=50_
+            + cardBin:`411111` (string) - This is the card BIN (typically the first 6 digits).
+                _Read Only, length=6_
+
+    + rapidTranfer (object) - These are the details of the Rapid Transfer.    
+        
+        + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+
+            + Properties
+
+                + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+            _Read Only, length<=50_
+                + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
+            _Read Only, length<=32_
+                + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
+            _Read Only, length=8-11_
+                + lastDigits:`11` (string) - These are the last two digits of the iban.
+            _Read Only, length=2_
 + Include Gateway Response
 + `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
 + Include Stored Credential
@@ -3609,25 +4080,6 @@ Expire an authorisation hold.
     _Read Only_
 + Include Gateway Response
 + Include Metadata Object
-
-## `Sepa`
-
-+ sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
-
-    + Properties
-
-        + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
-            _Optional, length<=50_
-        + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
-            _Mandatory, length<=32_
-        + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
-            _Optional, length=8-11_
-        + iban: `DE89370400440532013000` (string) - This is the International Bank Account Number for the costumer's bank account.
-            _Mandatory, length=8-34_
-        + Include Mandate
-        + lastDigits:`11` (string) - These are the last two digits of the iban.
-            _Read Only, length=2_
-
 
 ## `customerAccount`
 
