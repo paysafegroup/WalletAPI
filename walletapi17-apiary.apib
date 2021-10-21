@@ -279,9 +279,9 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 
 ## Wallet
 
-### Onboard a customer 
+### Onboard a customer
 
-Onboarding a customer requires a new wallet to be created on the Paysafe side. 
+Onboarding a customer requires a new wallet to be created on the Paysafe side.
 
 Business requirements for creating a new wallet:
 
@@ -290,7 +290,7 @@ Business requirements for creating a new wallet:
 
 **Steps:**
 
-Call [Create Wallet](#reference/wallets/create-wallet/create-wallet):
+Call [Create Wallet](#reference/wallets/create-wallet/create-wallet), with the following requirements for the data being passed in the body of the request:
 
 * `customer` - all required fields must be fully populated - Paysafe needs this information for regulatory purposes.
 
@@ -298,26 +298,39 @@ Call [Create Wallet](#reference/wallets/create-wallet/create-wallet):
     * when creating a new wallet, `totalBalance` and `availableBalance` must be equal
     * when `hasIban == true`, a new Virtual IBAN will be allocated for this customer for that account & currency
 
-* `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process 
+* `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process
 
-When creating a wallet for an newly signed-up customer, the `totalBalance` and `availableBalance` fields for all `account` objects must be set to 0.
+When creating a wallet for an **newly signed-up customer**, the `totalBalance` and `availableBalance` fields for all `account` objects must be set to 0.
 
-If the wallet is created for an existing customer, with 
+If the wallet is created for an existing customer with an existing balance, the fields `totalBalance` and `availableBalance` must both be populated with the same amount that represents the desired initial balance for this customer. When creating the wallets, Paysafe will debit the amounts specified from the Merchant wallet, and credit these amounts into the customer's wallet.
 
-- existing customer with balance
-- newly signed up customer
 
-### Update wallet 
+### Update wallet
+
+Customer's details could be updated on the Merchant's app/portal, and these updates must be reflected on the Paysafe side, for regulatory purposes.
+
+Customer profile information can be updated by calling [Update Customer](#reference/customers/get-customer/update-customer).
+
+The following fields cannot be updated, and an attempt to do so will result in an error:
+
+* id
+* registrationIp
 
 
 ### Deactivate a wallet
 
+When a customer closes their account with the Merchant, the digital wallet on the Paysafe side must be deactivated.
+
+The API [Deactivate Customer](#reference/customers/get-customer/deactivate-customer) must be used to achieve that.
+
 
 ### Accounts
 
-- fetch accounts and balance 
-- (?) transaction history
-- 
+Account information can be retrieved with the following APIs:
+
+* Get a list of all accounts for a customer - [Get Account List](#reference/wallets/get-account-list/get-account-list)
+* Get details and current balance for an account - [Get Account](#reference/wallets/get-account/get-account)
+
 
 
 ## Deposits
