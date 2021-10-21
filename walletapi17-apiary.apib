@@ -270,6 +270,74 @@ ISO standards add value by providing the common business process data semantics 
 
 Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-payments-api/payments-api/miscellaneous/) for Global Invalid Characters, ISO Standards, Currency Codes, Province Codes, State Codes, Country Codes.
 
+
+
+<a name="walletoperations" title="Wallet Operations"></a>
+
+# Digital Wallet operations
+
+
+## Wallet
+
+### Onboard a customer 
+
+Onboarding a customer requires a new wallet to be created on the Paysafe side. 
+
+Business requirements for creating a new wallet:
+
+* KYC verifications passed - a flag must be passed when creating a customer wallet that denotes that, and is the proof that Paysafe accepts that the customer was indeed verified. If the value of this flag is different than ``, the wallet creation will fail
+* Terms and conditions accepted - this flag is needed as proof that the Merchant has presented the Paysafe T&Cs to the customer, and the customer has accepted these T&Cs. If this flag has a value different than `true`, the wallet creation will fail.
+
+**Steps:**
+
+Call [Create Wallet](#reference/wallets/create-wallet/create-wallet):
+
+* `customer` - all required fields must be fully populated - Paysafe needs this information for regulatory purposes.
+
+* `accounts` - at least one account object has to be populated; please refer to Merchant's agreement with Paysafe for a list of supported wallet currencies. If an unsupported currency is passed, or if two Account objects with the same currency are provided, creating the wallet will fail.
+    * when creating a new wallet, `totalBalance` and `availableBalance` must be equal
+    * when `hasIban == true`, a new Virtual IBAN will be allocated for this customer for that account & currency
+
+* `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process 
+
+When creating a wallet for an newly signed-up customer, the `totalBalance` and `availableBalance` fields for all `account` objects must be set to 0.
+
+If the wallet is created for an existing customer, with 
+
+- existing customer with balance
+- newly signed up customer
+
+### Update wallet 
+
+
+### Deactivate a wallet
+
+
+### Accounts
+
+- fetch accounts and balance 
+- (?) transaction history
+- 
+
+
+## Deposits
+
+
+## Place holds on a balance
+
+
+## Withdrawals
+
+
+## Transfer from/to a customer wallet
+
+- in
+- out
+
+
+
+
+
 # Common Objects
 
 
