@@ -94,6 +94,20 @@ Payments API supports the following transaction types:
   * [Payments](#paymentrequest)
   * [Standalone Credits](#standalonecreditrequest)
 
+
+## Payment Flows
+
+One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
+
+Only supports settleWithAuth=true
+For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate success or failure of the transaction request without having to do a separate lookup on the specific settlement.
+
+**Payment Flow**
+![](https://github.com/SwathiBirlangi/Paysafegroup-images/Payment_Flow.png)
+
+**Auto Settlement Payment Flow**
+![](https://github.com/SwathiBirlangi/Paysafegroup-images/Paysafegroup-images/Auto_Settlement_Payment_Flow.png)
+
 # Before you begin
 ## Get your Secret API Key
 <a name="apikeys" title="Get your API Keys"></a>
