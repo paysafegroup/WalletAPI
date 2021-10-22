@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://api2.test.paysafe.com/
 
-# Paysafe Payments & Wallets API 
+# Paysafe  handles & Wallets API 
 
 Paysafe's digital wallet offering caters to merchants that need to implement **embedded finance services** into their products, such as marketplaces, e-commerce, electronic goods and more.
 
@@ -327,7 +327,7 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 | nickName | string<br/>`length<=50` | Optional  | This is the nickname the merchant has for the billing address.                                                                                                                                                |
 | street   | string<br/>`length<=50` | Mandatory | This is the first line of the customer's street address.                                                                                                                                                      |
 | street2  | string<br/>`length<=50` | Optional  | This is the second line of the customer's street address, if required (for example, apartment number).                                                                                                        |
-| city     | string<br/>`length<=40` | Mandatory | This is the city where the address is located.                                                                                                                                                                |
+| city     | string<br/>`length<=40` | add | This is the city where the address is located.                                                                                                                                                                |
 | state    | string<br/>`length<=40` | Optional  | This is the state/province/region in which the customer lives. For Canada, see [Province Codes](#provincecodes). For the United States, see [State Codes](#statecodes). Other countries have no restrictions. |
 | zip      | string<br/>`length<=10` | Mandatory | This is the zip, postal, or postcode of the customer's address.                                                                                                                                               |
 | country  | string<br/>`length=2`   | Mandatory | This is the country where the address is located. See [Country Codes](#countrycodes).                                                                                                                         |
@@ -1692,8 +1692,8 @@ Click **Get Payment Handle Using Merchant Reference Number** above to look up a 
 
 + Parameter
 
-    + merchant_ref_num : `13995817730005389` - This is the *merchantRefNum* used in the original Payment Handle creation request.
-         _Mandatory_
+    + merchant_ref_num : `13995817730005389` (required) - This is the *merchantRefNum* used in the original Payment Handle creation request.
+         
     + limit : `32` (number) - This is the total number of records to return. Default = 10.
         _Optional_ _Max=50_
     + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
@@ -2067,8 +2067,8 @@ Click **Get Payment Using Merchant Reference Number** above to look up a Payment
 
 + Parameter
 
-   + merchant_ref_num : `merchantRefNum-145` - This is the merchant reference number created by the merchant and submitted as part of the Payments request.
-    _Mandatory_
+   + merchant_ref_num : `merchantRefNum-145` (required) - This is the merchant reference number created by the merchant and submitted as part of the Payments request.
+    
     + limit : `32` (number) - This is the total number of records to return. Default = 10.
         _Optional_ _Max=50_
     + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
@@ -2159,8 +2159,8 @@ Click **Get Settlements Using Merchant Reference Number** above to look up a Set
 
 + Parameter
 
-   + merchant_ref_num : `merchantRefNum-144` - This is the merchant reference number created by the merchant and submitted as part of the request.
-        _Mandatory_
+   + merchant_ref_num : `merchantRefNum-144` (required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        
    + limit : `32` (number) - This is the total number of records to return. Default = 10.
         _Optional_ _Max=50_
    + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
@@ -2371,8 +2371,8 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
 
 + Parameter
 
-   + merchantRefNum : `merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
-        _Mandatory_
+   + merchantRefNum : `merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+        
     + limit : `32` (number) - This is the total number of records to return. Default = 10.
         _Optional_ _Max=50_
     + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
@@ -2961,16 +2961,16 @@ Expire an authorisation hold.
     _Read Only, length<=36_
 + nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
     _Optional, length<=50_
-+ street:`100 Queen` (string) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
-    _Mandatory, length<=50_
++ street:`100 Queen` (string, required) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
+    length<=50_
 + street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
     __Optional, length<=50_
-+ city:`Toronto` (string) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
-    _Mandatory, length<=40_
-+ zip:`M5H 2N2` (string) - This is the zip, postal, or post code of the customer's address.
-    _Mandatory, length<=10_
-+ country:`CA` (string) - This is the country where the address is located. See [Country Codes](#countrycodes).
-    _Mandatory, length=2_
++ city:`Toronto` (string, required) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
+    length<=40_
++ zip:`M5H 2N2` (string, required) - This is the zip, postal, or post code of the customer's address.
+     length<=10_
++ country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
+    length=2_
 + state:`ON` (string) - This is the state/province/region in which the customer lives.
     _Optional, length<=2_
 + phone:`647-788-3901` (string) - This is the customer's phone number.
@@ -2991,16 +2991,16 @@ Expire an authorisation hold.
                 _Read Only, length<=36_
             + nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
                 _Optional, length<=50_
-            + street:`100 Queen` (string) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
-                _Mandatory, length<=50_
+            + street:`100 Queen` (string, required) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
+                 length<=50_
             + street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
                 _Optional, length<=50_
-            + city:`Toronto` (string) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
-                _Mandatory, length<=40_
-            + zip:`M5H 2N2` (string) - This is the zip, postal, or post code of the customer's address.
-                _Mandatory, length<=10_
-            + country:`CA` (string) - This is the country where the address is located. See [Country Codes](#countrycodes).
-                _Mandatory, length=2_
+            + city:`Toronto` (string, required) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
+                 length<=40_
+            + zip:`M5H 2N2` (string, required) - This is the zip, postal, or post code of the customer's address.
+                length<=10_
+            + country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
+                length=2_
             + state:`ON` (string) - This is the state/province/region in which the customer lives.
                 _Optional, length<=40_
             + phone:`647-788-3901` (string) - This is the customer's phone number.
@@ -3063,28 +3063,28 @@ Expire an authorisation hold.
 
         + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
             _Optional, length<=50_
-        + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
-            _Mandatory, length<=18_
-        + accountNumber: `98877219` (string) - This is the bank account number.
-            _Mandatory, length=8_
-        + sortCode:`Jane's Card` (string) - This is the 6-digit sort code that identifies the financial institution and branch of the customer’s bank.
-            _Mandatory, length=6_
+        + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+             _length<=18_
+        + accountNumber: `98877219` (string, required) - This is the bank account number.
+             _length=8_
+        + sortCode:`Jane's Card` (string, required) - This is the 6-digit sort code that identifies the financial institution and branch of the customer’s bank.
+            _length=6_
         + Include Mandate
         + lastDigits: `11` (string) - These are the last two digits of the account number.
             _Read Only, length=2_
 
 ## Billing Details
 + billingDetails (object) - These are the customer's billing details. **Note:** For single-use Payment Handles, this address information will be ignored if the *paymentHandleTokenFrom* parameter is included in the Payment Handle creation request and there is already address information associated with that customer.
-    + street:`100 Queen` (string)  - This is the first line of the street address in the billing address.
-        _Mandatory, length<=50_
+    + street:`100 Queen` (string, required)  - This is the first line of the street address in the billing address.
+         _length<=50_
     + street2:`Unit 201` (string) - This is the second line of the street address in the billing address, if required (for example, apartment number).
         _Optional, length<=50_
-    + city:`Toronto` (string) - This is the city in the billing address.
-        _Mandatory, length<=40_
-    + zip:`MSH 2N2` (string) - This is the postal/zip code in the billing address.
-        _Mandatory, length<=10_
-    + country:`CA` (string) - This is the country where the address is located. See [Country Codes](#countrycodes).
-        _Mandatory, length=2_
+    + city:`Toronto` (string, required) - This is the city in the billing address.
+         _length<=40_
+    + zip:`MSH 2N2` (string, required) - This is the postal/zip code in the billing address.
+         _length<=10_
+    + country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
+         _length=2_
     + state:`ON` (string) - This is the state or province of the billing address. For Canada see [Province Codes](#provincecodes). For the United States see [State Codes](#statecodes). Other countries have no restrictions.
         _Optional, length<=40_
     + phone:`444-9999` (string) - This is the customer's telephone number.
@@ -3121,10 +3121,10 @@ Expire an authorisation hold.
 
     + Properties
 
-        + cardNum:`4111111111111111` (string) - This is the card number used for the request.
-            _Mandatory, length=8-20_
-        + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
-            _Mandatory_
+        + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
+             _length=8-20_
+        + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+            
             + month:12 (number) - This is the card expiry month.
                 _length=2_
             + year:2020 (number) - This is the card expiry year.
@@ -3158,10 +3158,10 @@ Expire an authorisation hold.
 
     + Properties
 
-        + cardNum:`4111111111111111` (string) - This is the card number used for the request.
-            _Mandatory, length=8-20_
-        + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
-            __Mandatory_
+        + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
+             _length=8-20_
+        + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+           
             + month:12 (number) - This is the card expiry month.
                 _length=2_
             + year:2020 (number) - This is the card expiry year.
@@ -3178,8 +3178,8 @@ Expire an authorisation hold.
 
     + Properties
 
-        + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
-        _Mandatory_
+        + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
+        
             + month:12 (number) - This is the card expiry month.
                 _length=2_
             + year:2020 (number) - This is the card expiry year.
@@ -3192,10 +3192,10 @@ Expire an authorisation hold.
 ## Customer Base
 + `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of the request, returned in the response.
     _Read Only, length<=36_
-+ merchantCustomerId:`mycustomer10` (string) - This is a customer ID that the merchant provides with the request for their own internal customer identification. This value must be unique for each customer belonging to a merchant.
-    _Mandatory, length<=100_
-+ locale: `en_US` (enum) - This indicates the language of the customer.
-    _Mandatory_
++ merchantCustomerId:`mycustomer10` (string, required) - This is a customer ID that the merchant provides with the request for their own internal customer identification. This value must be unique for each customer belonging to a merchant.
+   _length<=100_
++ locale: `en_US` (enum, required) - This indicates the language of the customer.
+   
     - en_US
     - fr_CA
     - en_GB
@@ -3228,15 +3228,15 @@ Expire an authorisation hold.
 + Include Metadata Object
 
 ## Date of Birth
-+ `dateOfBirth` (object) - This is the customer's date of birth. 
-    _Mandatory_
++ `dateOfBirth` (object, required) - This is the customer's date of birth. 
+   
     + Properties
-        + `day`:`29` (number) - This is the day of birth.
-            _Mandatory, length=2_
-        + `month`:`12` (number) - This is the month of birth.
-            _Mandatory, length=2_
-        + `year`:`2020` (number) - This is the year of birth. Minimum value for this property is 1900. 
-            _Mandatory, length=4_ 
+        + `day`:`29` (number, required) - This is the day of birth.
+             _length=2_
+        + `month`:`12` (number, required) - This is the month of birth.
+            _length=2_
+        + `year`:`2020` (number, required) - This is the year of birth. Minimum value for this property is 1900. 
+           _length=4_ 
 
 ## Error Attributes
 + `error` (object) 
@@ -3352,14 +3352,14 @@ Expire an authorisation hold.
         _length<=99999999999_
 
 ## Mandate
-+ `mandate` (object) - This object contains mandate information like id, reference and status of mandate.
-    _Mandatory_
++ `mandate` (object, required) - This object contains mandate information like id, reference and status of mandate.
+    
 
     + Properties
         + `id`: `abcdc28d-486e-4b0a-bbf9-314033863542` (string) - This is the id of the mandate that got created.
              _Read Only_
-        + `reference`: `ABCDEF0796` (string) - This is the identifier of the mandate in the banking system.
-            _Mandatory_
+        + `reference`: `ABCDEF0796` (string, required) - This is the identifier of the mandate in the banking system.
+            
         + `status`: `PENDING` (string) - This is the status of the mandate.
              _Read Only_
 
@@ -3399,14 +3399,14 @@ Expire an authorisation hold.
 ## OriginalCreditResponse (object)
 + `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
     _Read Only, length<=36_
-+ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-    _Mandatory, length<=255_
-+ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string) - This is the payment token generated by Paysafe that will be used for the request.
-    __Mandatory, length<=36_
-+ `amount`:`1000` (string) - This is the amount of the request, in minor units. **Note:** The *amount* specified in the Credit request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
-    _Mandatory, Max =99999999999_
-+ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
-    _Mandatory, max=3_
++ `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _length<=255_
++ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string, required) - This is the payment token generated by Paysafe that will be used for the request.
+    _length<=36_
++ `amount`:`1000` (string, required) - This is the amount of the request, in minor units. **Note:** The *amount* specified in the Credit request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _Max =99999999999_
++ `currencyCode`:`CAD` (string, required) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _max=3_
 + `txnTime`:`2018-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
     _Read Only_
 + `paymentType`: `CARD` (enum) - This is the payment type associated with the Payment Handle used for this request.
@@ -3495,10 +3495,10 @@ Expire an authorisation hold.
 
 + `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, to look up the Payment Handle. 
     _Read Only, length<=36_
-+ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-    _Mandatory, length<=255_
-+ `transactionType`: `PAYMENT` (enum) - This specifies the transaction type for which the Payment Handle is created.
-    _Mandatory_
++ `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _length<=255_
++ `transactionType`: `PAYMENT` (enum, required) - This specifies the transaction type for which the Payment Handle is created.
+    
     + Members
         + PAYMENT - Payment Handle is created to continue the Payment.
         + STANDALONE_CREDIT - Payment Handle is created to continue the Standalone Credit.
@@ -3517,8 +3517,8 @@ Expire an authorisation hold.
     _Read Only_
     + Members
         + SINGLE_USE - The Payment Handle can be used for one transaction only and expires if not used.
-+ `paymentType`: `CARD` (enum) - This is the payment type associated with this Payment Handle. If applicable, you need to pass the corresponding payment type object as listed after this parameter.
-    _Mandatory_
++ `paymentType`: `CARD` (enum, required) - This is the payment type associated with this Payment Handle. If applicable, you need to pass the corresponding payment type object as listed after this parameter.
+    
     + Members
          + CARD
          + RAPID_TRANSFER
@@ -3533,10 +3533,10 @@ Expire an authorisation hold.
     + Members
         + ASYNCHRONOUS - The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.
         + SYNCHRONOUS - The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.
-+ `amount`:`1000` (string) - This is the amount of the request, in minor units. **Note:** This field is mandatory if *transactionType* is included. The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.
-    _Mandatory, Max =99999999999_
-+ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** This field is mandatory if *transactionType* is included. The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.
-    __Mandatory, max=3_
++ `amount`:`1000` (string, required) - This is the amount of the request, in minor units. **Note:** This field is mandatory if *transactionType* is included. The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.
+    _Max =99999999999_
++ `currencyCode`:`CAD` (string, required) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** This field is mandatory if *transactionType* is included. The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.
+    _max=3_
 + `paymentHandleTokenFrom`:`SCyGZDlUuZ9zxjyd` (string) - This is an [existing Customer Payment Handle](#createcustomerpaymenthandlerequest), from which the payment instrument and profile details are retrieved. If this parameter is included you can omit the *billingDetails* object.
     _Optional, length<=36_
 + `paymentHandleToken`:`SCO3wKcIyLoQbQvw` (string) - This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.
@@ -3576,8 +3576,8 @@ Expire an authorisation hold.
 
 + `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, to look up the Payment Handle. 
     _Read Only, length<=36_
-+ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-    _Mandatory, length<=255_
++ `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _length<=255_
 + `status`:`PAYABLE` (enum) - This is the status of the transaction request.
     _Read Only_
     + Members
@@ -3591,8 +3591,8 @@ Expire an authorisation hold.
     _Read Only_
     + Members
         + MULTI_USE - The Payment Handle can be used multiple times.
-+ `paymentType`: `CARD`(enum) - This is the payment type associated with this Payment Handle.
-    _Mandatory_
++ `paymentType`: `CARD`(enum, required) - This is the payment type associated with this Payment Handle.
+    
     + Members
         + CARD
         + ACH
@@ -3813,12 +3813,12 @@ Expire an authorisation hold.
 
         + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
             _Optional, length<=50_
-        + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
-            _Mandatory, length<=32_
+        + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+            _length<=32_
         + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
             _Optional, length=8-11_
-        + iban: `DE89370400440532013000` (string) - This is the International Bank Account Number for the costumer's bank account.
-            _Mandatory, length=8-34_
+        + iban: `DE89370400440532013000` (string, required) - This is the International Bank Account Number for the costumer's bank account.
+            _length=8-34_
         
         + lastDigits:`11` (string) - These are the last two digits of the iban.
             _Read Only, length=2_
@@ -3833,10 +3833,10 @@ Expire an authorisation hold.
 
         + Properties
 
-            + cardNum:`4111111111111111` (string) - This is the card number used for the request.
-                _Mandatory, length=8-20_
+            + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
+                _length=8-20_
             + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
-                __Mandatory_
+                
                 + month:12 (number) - This is the card expiry month.
                     _length=2_
                 + year:2020 (number) - This is the card expiry year.
@@ -3871,12 +3871,12 @@ Expire an authorisation hold.
 
                 + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
             _Optional, length<=50_
-                + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
-            _Mandatory, length<=32_
+                + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+            _length<=32_
                 + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
             _Optional, length=8-11_
-                + iban: `DE89370400440532013000` (string) - This is the International Bank Account Number for the costumer's bank account.
-            _Mandatory, length=8-34_
+                + iban: `DE89370400440532013000` (string, required) - This is the International Bank Account Number for the costumer's bank account.
+            _length=8-34_
         
                 + lastDigits:`11` (string) - These are the last two digits of the iban.
             _Read Only, length=2_
@@ -3891,10 +3891,10 @@ Expire an authorisation hold.
        
         + Properties
 
-            + cardNum:`4111111111111111` (string) - This is the card number used for the request.
-                _Mandatory, length=8-20_
+            + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
+                _length=8-20_
             + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
-                __Mandatory_
+               
                 + month:12 (number) - This is the card expiry month.
                     _length=2_
                 + year:2020 (number) - This is the card expiry year.
@@ -3909,14 +3909,14 @@ Expire an authorisation hold.
 
 + `id`:`3aeb9c63-6386-46a3-9f8e-f452e722228a` (string) - This is the ID returned in the response. This ID can be used for future associated requests, for example, looking up the Payment. 
     _Read Only, length<=36_
-+ `merchantRefNum`:`merchantRefNum-101` (string) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-    _Mandatory, length<=255_
-+ `amount`:`1000` (number) - This is the amount of the request, in minor units. **Note:** The *amount* specified in the Payment request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
-    _Mandatory, max=99999999999_
++ `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _length<=255_
++ `amount`:`1000` (number, required) - This is the amount of the request, in minor units. **Note:** The *amount* specified in the Payment request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _max=99999999999_
 + `settleWithAuth`:`true` (boolean) - This indicates whether the request is an Authorization only (no Settlement) or a Purchase (Authorization and Settlement). Default: true
     _Optional_
 + `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string, required) - This is the payment token generated by Paysafe that will be used for the Payment request.
-    _Mandatory, length<=36_
+    _length<=36_
 + `availableToSettle`:`0` (number) - This is the amount of the Authorization remaining to settle, in minor units.
     _Read Only_
 + `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
@@ -3939,8 +3939,8 @@ Expire an authorisation hold.
         + FAILED - The transaction failed, due to either an error or being declined.
         + CANCELLED - The request has been reversed.
         + PENDING - The transaction awaiting payment service provider's response.
-+ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Payment request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
-    _Mandatory, max=3_
++ `currencyCode`:`CAD` (string, required) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Payment request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
+    _max=3_
 + Include wallet
 + One of
 
@@ -4053,8 +4053,8 @@ Expire an authorisation hold.
 ## Refunds
 + `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. You can use this ID for future associated requests.
     _Read Only, length<=36_
-+ `merchantRefNum`:`P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
-    _Mandatory, length<=255_
++ `merchantRefNum`:`P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    _length<=255_
 + `amount`:`100` (number) - This is the amount of the request, in minor units. If this value is not provided, the full remaining amount on the Settlement will be refunded. 
     _Optional, max=99999999999_
 + `dupCheck`:`true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
@@ -4143,8 +4143,8 @@ Expire an authorisation hold.
 ## Settlements
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. You can use this ID for future associated requests.
     _Read Only, length<=36_
-+ `merchantRefNum`: `P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
-    _Mandatory, length<=255_
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    _length<=255_
 + `amount`: `100` (number) - This is the amount of the request, in minor units. If this value is not provided, the full remaining amount will be settled. 
     _Optional, max=99999999999_
 + `dupCheck`: `true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
@@ -4213,10 +4213,10 @@ Expire an authorisation hold.
 ## VerificationResponse (object)
 + `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. You can use this ID for future associated requests.
     _Read Only, length<=36_
-+ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string) - This is the payment token generated by Paysafe that will be used for the verification request.
-    _Mandatory, length<=36_
-+ `merchantRefNum`:`P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
-    _Mandatory, length<=255_
++ `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string, required) - This is the payment token generated by Paysafe that will be used for the verification request.
+    _length<=36_
++ `merchantRefNum`:`P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+    _length<=255_
 + `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
     _Optional, length<=39_
 + `dupCheck`:`true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
