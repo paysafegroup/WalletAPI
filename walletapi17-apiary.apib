@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://api2.test.paysafe.com/
 
-# Paysafe Payments & Wallets API 
+# Paysafe  handles & Wallets API 
 
 Paysafe's digital wallet offering caters to merchants that need to implement **embedded finance services** into their products, such as marketplaces, e-commerce, electronic goods and more.
 
@@ -327,7 +327,7 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 | nickName | string<br/>`length<=50` | Optional  | This is the nickname the merchant has for the billing address.                                                                                                                                                |
 | street   | string<br/>`length<=50` | Mandatory | This is the first line of the customer's street address.                                                                                                                                                      |
 | street2  | string<br/>`length<=50` | Optional  | This is the second line of the customer's street address, if required (for example, apartment number).                                                                                                        |
-| city     | string<br/>`length<=40` | Mandatory | This is the city where the address is located.                                                                                                                                                                |
+| city     | string<br/>`length<=40` | add | This is the city where the address is located.                                                                                                                                                                |
 | state    | string<br/>`length<=40` | Optional  | This is the state/province/region in which the customer lives. For Canada, see [Province Codes](#provincecodes). For the United States, see [State Codes](#statecodes). Other countries have no restrictions. |
 | zip      | string<br/>`length<=10` | Mandatory | This is the zip, postal, or postcode of the customer's address.                                                                                                                                               |
 | country  | string<br/>`length=2`   | Mandatory | This is the country where the address is located. See [Country Codes](#countrycodes).                                                                                                                         |
@@ -1692,7 +1692,7 @@ Click **Get Payment Handle Using Merchant Reference Number** above to look up a 
 
 + Parameter
 
-    + merchant_ref_num : `13995817730005389`(required) - This is the *merchantRefNum* used in the original Payment Handle creation request.
+    + merchant_ref_num : `13995817730005389` (required) - This is the *merchantRefNum* used in the original Payment Handle creation request.
          
     + limit : `32` (number) - This is the total number of records to return. Default = 10.
         _Optional_ _Max=50_
@@ -2067,6 +2067,7 @@ Click **Get Payment Using Merchant Reference Number** above to look up a Payment
 
 + Parameter
 
+
    + merchant_ref_num : `merchantRefNum-145`(required) - This is the merchant reference number created by the merchant and submitted as part of the Payments request.
     
     + limit : `32` (number) - This is the total number of records to return. Default = 10.
@@ -2158,6 +2159,7 @@ Click **Get Settlements** above to look up a Settlement using the ID returned in
 Click **Get Settlements Using Merchant Reference Number** above to look up a Settlement using the merchant reference number used in the original request.
 
 + Parameter
+
 
    + merchant_ref_num : `merchantRefNum-144`(required) - This is the merchant reference number created by the merchant and submitted as part of the request.
         
@@ -2962,15 +2964,16 @@ Expire an authorisation hold.
 + nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
     _Optional, length<=50_
 + street:`100 Queen` (string, required) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
-    _length<=50_
+    length<=50_
 + street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
     __Optional, length<=50_
 + city:`Toronto` (string, required) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
-    _length<=40_
+    length<=40_
 + zip:`M5H 2N2` (string, required) - This is the zip, postal, or post code of the customer's address.
-    _length<=10_
+     length<=10_
 + country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
-    _length=2_
+    length=2_
+
 + state:`ON` (string) - This is the state/province/region in which the customer lives.
     _Optional, length<=2_
 + phone:`647-788-3901` (string) - This is the customer's phone number.
@@ -2992,15 +2995,18 @@ Expire an authorisation hold.
             + nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
                 _Optional, length<=50_
             + street:`100 Queen` (string, required) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
-                _length<=50_
+
+               
+                 length<=50_
             + street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
                 _Optional, length<=50_
             + city:`Toronto` (string, required) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
-                _length<=40_
+                 length<=40_
             + zip:`M5H 2N2` (string, required) - This is the zip, postal, or post code of the customer's address.
-                _length<=10_
+                length<=10_
             + country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
-                _length=2_
+                length=2_
+                
             + state:`ON` (string) - This is the state/province/region in which the customer lives.
                 _Optional, length<=40_
             + phone:`647-788-3901` (string) - This is the customer's phone number.
@@ -3064,9 +3070,11 @@ Expire an authorisation hold.
         + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
             _Optional, length<=50_
         + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
-            _length<=18_
+
+             _length<=18_
         + accountNumber: `98877219` (string, required) - This is the bank account number.
-            _length=8_
+             _length=8_
+
         + sortCode:`Jane's Card` (string, required) - This is the 6-digit sort code that identifies the financial institution and branch of the customer’s bank.
             _length=6_
         + Include Mandate
@@ -3076,15 +3084,17 @@ Expire an authorisation hold.
 ## Billing Details
 + billingDetails (object) - These are the customer's billing details. **Note:** For single-use Payment Handles, this address information will be ignored if the *paymentHandleTokenFrom* parameter is included in the Payment Handle creation request and there is already address information associated with that customer.
     + street:`100 Queen` (string, required)  - This is the first line of the street address in the billing address.
-        _length<=50_
+
+         _length<=50_
     + street2:`Unit 201` (string) - This is the second line of the street address in the billing address, if required (for example, apartment number).
         _Optional, length<=50_
     + city:`Toronto` (string, required) - This is the city in the billing address.
-        _length<=40_
+         _length<=40_
     + zip:`MSH 2N2` (string, required) - This is the postal/zip code in the billing address.
-        _length<=10_
+         _length<=10_
     + country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
-        _length=2_
+         _length=2_
+
     + state:`ON` (string) - This is the state or province of the billing address. For Canada see [Province Codes](#provincecodes). For the United States see [State Codes](#statecodes). Other countries have no restrictions.
         _Optional, length<=40_
     + phone:`444-9999` (string) - This is the customer's telephone number.
@@ -3122,7 +3132,8 @@ Expire an authorisation hold.
     + Properties
 
         + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
-            _length=8-20_
+             _length=8-20_
+
         + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
             
             + month:12 (number) - This is the card expiry month.
@@ -3159,9 +3170,8 @@ Expire an authorisation hold.
     + Properties
 
         + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
-            _length=8-20_
+             _length=8-20_
         + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
-            
             + month:12 (number) - This is the card expiry month.
                 _length=2_
             + year:2020 (number) - This is the card expiry year.
@@ -3179,7 +3189,7 @@ Expire an authorisation hold.
     + Properties
 
         + cardExpiry (object, required) - This is the card's [expiry date](#cardexpiryobject).
-      
+
             + month:12 (number) - This is the card expiry month.
                 _length=2_
             + year:2020 (number) - This is the card expiry year.
@@ -3193,9 +3203,8 @@ Expire an authorisation hold.
 + `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of the request, returned in the response.
     _Read Only, length<=36_
 + merchantCustomerId:`mycustomer10` (string, required) - This is a customer ID that the merchant provides with the request for their own internal customer identification. This value must be unique for each customer belonging to a merchant.
-    _length<=100_
-+ locale: `en_US` (enum) - This indicates the language of the customer.
-   
+   _length<=100_
++ locale: `en_US` (enum, required) - This indicates the language of the customer.
     - en_US
     - fr_CA
     - en_GB
@@ -3228,15 +3237,15 @@ Expire an authorisation hold.
 + Include Metadata Object
 
 ## Date of Birth
-+ `dateOfBirth` (object, required) - This is the customer's date of birth. 
-    
++ `dateOfBirth` (object) - This is the customer's date of birth. 
+
     + Properties
         + `day`:`29` (number, required) - This is the day of birth.
-            _length=2_
+             _length=2_
         + `month`:`12` (number, required) - This is the month of birth.
             _length=2_
         + `year`:`2020` (number, required) - This is the year of birth. Minimum value for this property is 1900. 
-            _length=4_ 
+           _length=4_ 
 
 ## Error Attributes
 + `error` (object) 
@@ -3353,13 +3362,12 @@ Expire an authorisation hold.
 
 ## Mandate
 + `mandate` (object, required) - This object contains mandate information like id, reference and status of mandate.
-   
 
     + Properties
         + `id`: `abcdc28d-486e-4b0a-bbf9-314033863542` (string) - This is the id of the mandate that got created.
              _Read Only_
         + `reference`: `ABCDEF0796` (string, required) - This is the identifier of the mandate in the banking system.
-           
+
         + `status`: `PENDING` (string) - This is the status of the mandate.
              _Read Only_
 
@@ -3400,7 +3408,8 @@ Expire an authorisation hold.
 + `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
     _Read Only, length<=36_
 + `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-    _Mandatory, length<=255_
+    _length<=255_
+
 + `paymentHandleToken`:`842778a0-03a2-11e9-8eb2-f2801f1b9fd1` (string, required) - This is the payment token generated by Paysafe that will be used for the request.
     _length<=36_
 + `amount`:`1000` (string, required) - This is the amount of the request, in minor units. **Note:** The *amount* specified in the Credit request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
@@ -3518,7 +3527,7 @@ Expire an authorisation hold.
     + Members
         + SINGLE_USE - The Payment Handle can be used for one transaction only and expires if not used.
 + `paymentType`: `CARD` (enum, required) - This is the payment type associated with this Payment Handle. If applicable, you need to pass the corresponding payment type object as listed after this parameter.
-   
+
     + Members
          + CARD
          + RAPID_TRANSFER
@@ -3592,7 +3601,7 @@ Expire an authorisation hold.
     + Members
         + MULTI_USE - The Payment Handle can be used multiple times.
 + `paymentType`: `CARD`(enum, required) - This is the payment type associated with this Payment Handle.
-   
+
     + Members
         + CARD
         + ACH
@@ -3836,7 +3845,7 @@ Expire an authorisation hold.
             + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
                 _length=8-20_
             + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
-              
+
                 + month:12 (number) - This is the card expiry month.
                     _length=2_
                 + year:2020 (number) - This is the card expiry year.
@@ -3894,7 +3903,7 @@ Expire an authorisation hold.
             + cardNum:`4111111111111111` (string, required) - This is the card number used for the request.
                 _length=8-20_
             + cardExpiry (object) - This is the card's [expiry date](#cardexpiryobject).
-                
+
                 + month:12 (number) - This is the card expiry month.
                     _length=2_
                 + year:2020 (number) - This is the card expiry year.
