@@ -3764,7 +3764,7 @@ Expire an authorisation hold.
     _Read Only_
     + Members
         + CARD
-        + CARD
+        + BANK_TRANSFER
 + Include wallet (object)
 + One of
 
@@ -3797,6 +3797,23 @@ Expire an authorisation hold.
                 _Read Only, length<=50_
             + cardBin:`411111` (string) - This is the card BIN (typically the first 6 digits).
                 _Read Only, length=6_
+                
+    + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+
+        + Properties
+
+            + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+            _Optional, length<=50_
+            + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+            _length<=32_
+            + bic: `ABNANL2APIP` (string, required) - This is the Bank Identifier Code for the consumer's bank account.
+            _Optional, length=8-11_
+            + iban: `DE89370400440532013000` (string, required) - This is the International Bank Account Number for the costumer's bank account.
+            _length=8-34_
+        
+            + lastDigits:`11` (string) - These are the last two digits of the iban.
+            _Read Only, length=2_
+                
 + `status`: `PENDING` (enum) - This is the status of the transaction request.
     _Read Only_
     + Members
@@ -3873,6 +3890,7 @@ Expire an authorisation hold.
     + Members
          + CARD
          + RAPID_TRANSFER
+         + BANK_TRANSFER
 + Include Payment Instrument
 + `action`:`NONE` (enum) - This specifies the next step of the user journey once they proceed to the Payment.
     _Read Only_
@@ -4232,6 +4250,21 @@ Expire an authorisation hold.
                 + lastDigits:`11` (string) - These are the last two digits of the iban.
             _Read Only, length=2_
 
+    + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+
+        + Properties
+
+            + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+            _Optional, length<=50_
+            + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+            _length<=32_
+            + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
+            _Optional, length=8-11_
+            + iban: `DE89370400440532013000` (string, required) - This is the International Bank Account Number for the costumer's bank account.
+            _length=8-34_
+            + lastDigits:`11` (string) - These are the last two digits of the iban.
+            _Read Only, length=2_
+
         
     
 ## `Payment Instrument Customer`
@@ -4440,14 +4473,10 @@ Expire an authorisation hold.
 
         + id: `gfdd` (string) - The customer wallet account id.
             _Read Only, length<=50_
-        + currencyCode: `EUR` (string) - The currency code of the wallet customer account.
-            _Read Only, length<=50_
-        + fx: `1` (number) - The fx rate applied at wallet side. 
-            _Read Only, length<=50_
-        + `postings` : (array) - An array of postings      
+        + `transactions` : (array) - An array of transactions      
 
 
-## `postings`
+## `transactions`
 
 + type: `GROSS_AMOUNT` (string) - The type of the posting.
             _Read Only, length<=50_
@@ -4463,11 +4492,7 @@ Expire an authorisation hold.
 
         + id: `gfdd` (string) - The merchant wallet account id.
             _Read Only, length<=50_
-        + currencyCode: `EUR` (string) - The currency code of the merchant wallet account.
-            _Read Only, length<=50_
-        + fx: `1` (number) - The currency code of the wallet account.
-            _Read Only, length<=50_
-        + `postings` : (array) - An array of postings
+        + `transactions` : (array) - An array of transactions
                 
 
 ## `wallet`
