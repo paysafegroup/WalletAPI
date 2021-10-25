@@ -1656,6 +1656,88 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "timeToLiveSeconds": 899,
               "transactionType": "STANDALONE_CREDIT"
             }
+
++ Request Create Payment Handle for Bank Wire Transfer for Standalone Credit (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Body
+
+            {
+                "merchantRefNum": "merchantRefNum-124",
+                "transactionType": "STANDALONE_CREDIT",
+                "sepa": {
+                    "nickName": "Sally's Barclays Account",
+                    "accountHolderName": "John Doe",
+                    "bic": "ABNANL2APIP",
+                    "iban": "DE89370400440532013000"
+                    },
+                "paymentType": "BANK_TRANSFER",
+                "amount": 3000,
+                "currencyCode": "EUR",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "wallet":{
+                   "customerId" : "GGG",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                }
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+                "amount": 3000,
+                "merchantRefNum": "merchantRefNum-124",
+                "action": "NONE",
+                "currencyCode": "EUR",
+                "usage": "SINGLE_USE",
+                "status": "INITIATED",
+                "paymentType": "BANK_TRANSFER",
+                "executionMode": "SYNCHRONOUS",
+                "customerIp": "172.0.0.1",
+                "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "sepa": {
+                    "nickName": "Sally's Barclays Account",
+                    "accountHolderName": "John Doe",
+                    "bic": "ABNANL2APIP",
+                    "lastDigits": "00"
+                }  
+                "wallet":{
+                   "customerId" : "GGG",
+                   "slipId" : "100753",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "timeToLiveSeconds": 899,
+                "transactionType": "STANDALONE_CREDIT"
+            }
+
             
 
 
@@ -1897,37 +1979,57 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                  "fee": "400",
                  "customerAccount" : {
                     "id":"xyz",
-                    "currencyCode" : "EUR",
-                    "fx" : 1,
-                    "postings" : [
-                       {
-                          "type" : "GROSS_AMOUNT",
-                          "direction" : "CREDIT",
-                          "amount" : 1000
-                       },
-                       {
-                          "type" : "TRANSACTION_FEE",
-                          "direction" : "DEBIT",
-                          "amount" : 400
-                       }
-                    ]
+                    "transactions": [{
+                    "id": "12321",
+                    "type": "DEPOSIT",
+                    "amount": 1000,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "CREDIT",
+                    "fee": 400,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "string"
+                }, {
+                    "id": "12322",
+                    "type": "MERCHANT_FEE",
+                    "amount": 400,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "DEBIT",
+                    "fee": 0,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "testTran"
+                }
+            ]
                    },
                   "merchantAccount" : {
                      "id": "def",
-                     "currencyCode" : 'EUR",
-                     "fx" : 1,
-                     "postings" : [
-                      {
-                        "type" : "GROSS_AMOUNT",
-                        "direction" : "CREDIT",
-                        "amount" : 400
-                       },
-                       {
-                         "type" : "TRANSACTION_FEE",
-                         "direction" : "DEBIT",
-                         "amount" : 100
-                       }
-                      ]
+                     "transactions": [{
+                    "id": "12323",
+                    "type": "MERCHANT_FEE",
+                    "amount": 400,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "CREDIT",
+                    "fee": 0,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "testTran"
+                }, {
+                    "id": "12324",
+                    "type": "FEE",
+                    "amount": 40,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "DEBIT",
+                    "fee": 0,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "testTran"
+                }
+            ]
                   }
               }
             }
@@ -1975,12 +2077,12 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                 "id": "135880",
               },
               "rapidTransfer" : {
-                   "sepa": {
-                       "nickName": "Sally's Barclays Account",
-                       "accountHolderName": "John Doe",
-                       "bic": "ABNANL2APIP",
-                       "lastDigits": "00"
-                    }  
+                "sepa": {
+                    "nickName": "Sally's Barclays Account",
+                    "accountHolderName": "John Doe",
+                    "bic": "ABNANL2APIP",
+                    "lastDigits": "00"
+                }  
               },
               "wallet":{
                  "customerId" : "abc",
@@ -1988,39 +2090,62 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                  "fee": "400",
                  "customerAccount" : {
                     "id":"xyz",
-                    "currencyCode" : "EUR",
-                    "fx" : 1,
-                    "postings" : [
-                       {
-                          "type" : "GROSS_AMOUNT",
-                          "direction" : "CREDIT",
-                          "amount" : 1000
-                       },
-                       {
-                          "type" : "TRANSACTION_FEE",
-                          "direction" : "DEBIT",
-                          "amount" : 400
-                       }
-                    ]
-                   },
+                    "transactions": [{
+                      "id": "12321",
+                      "type": "DEPOSIT",
+                      "amount": 1000,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "CREDIT",
+                      "fee": 400,
+                      "paymentType": "RAPID_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     }, 
+                     {
+                      "id": "12322",
+                      "type": "MERCHANT_FEE",
+                      "amount": 400,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "RAPID_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
+                 },
                   "merchantAccount" : {
                      "id": "def",
-                     "currencyCode" : 'EUR",
-                     "fx" : 1,
-                     "postings" : [
+                     "transactions": [
                       {
-                        "type" : "GROSS_AMOUNT",
-                        "direction" : "CREDIT",
-                        "amount" : 400
-                       },
-                       {
-                         "type" : "TRANSACTION_FEE",
-                         "direction" : "DEBIT",
-                         "amount" : 100
-                       }
-                      ]
+                       "id": "12323",
+                       "type": "MERCHANT_FEE",
+                       "amount": 400,
+                       "currencyCode": "GBP",
+                       "creationTime": "2021-07-15T17:54:12Z",
+                       "direction": "CREDIT",
+                       "fee": 0,
+                       "paymentType": "RAPID_TRANSFER",
+                       "status": "COMPLETED",
+                       "merchantRefNum": "testTran"
+                      },
+                      {
+                       "id": "12324",
+                       "type": "FEE",
+                       "amount": 40,
+                       "currencyCode": "GBP",
+                       "creationTime": "2021-07-15T17:54:12Z",
+                       "direction": "DEBIT",
+                       "fee": 0,
+                       "paymentType": "RAPID_TRANSFER",
+                       "status": "COMPLETED",
+                       "merchantRefNum": "testTran"
+                      }
+                    ]
                   }
-              }
+               }
             }
 
 
@@ -2065,43 +2190,63 @@ Click **Get Payments** above to look up a Payment using the ID returned in the r
                 "avsResponse": "MATCH",
                 "cvvVerification": "MATCH"
               },
-              "wallet":{
+                            "wallet":{
                  "customerId" : "abc",
                  "slipId" : "100753",
                  "fee": "400",
                  "customerAccount" : {
                     "id":"xyz",
-                    "currencyCode" : "EUR",
-                    "fx" : 1,
-                    "postings" : [
-                       {
-                          "type" : "GROSS_AMOUNT",
-                          "direction" : "CREDIT",
-                          "amount" : 1000
-                       },
-                       {
-                          "type" : "TRANSACTION_FEE",
-                          "direction" : "DEBIT",
-                          "amount" : 400
-                       }
-                    ]
+                    "transactions": [{
+                    "id": "12321",
+                    "type": "DEPOSIT",
+                    "amount": 1000,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "CREDIT",
+                    "fee": 400,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "string"
+                }, {
+                    "id": "12322",
+                    "type": "MERCHANT_FEE",
+                    "amount": 400,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "DEBIT",
+                    "fee": 0,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "testTran"
+                }
+            ]
                    },
                   "merchantAccount" : {
                      "id": "def",
-                     "currencyCode" : 'EUR",
-                     "fx" : 1,
-                     "postings" : [
-                      {
-                        "type" : "GROSS_AMOUNT",
-                        "direction" : "CREDIT",
-                        "amount" : 400
-                       },
-                       {
-                         "type" : "TRANSACTION_FEE",
-                         "direction" : "DEBIT",
-                         "amount" : 100
-                       }
-                      ]
+                     "transactions": [{
+                    "id": "12323",
+                    "type": "MERCHANT_FEE",
+                    "amount": 400,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "CREDIT",
+                    "fee": 0,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "testTran"
+                }, {
+                    "id": "12324",
+                    "type": "FEE",
+                    "amount": 40,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "direction": "DEBIT",
+                    "fee": 0,
+                    "paymentType": "CARD",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "testTran"
+                }
+            ]
                   }
               }
             }
@@ -2305,37 +2450,163 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
                  "fee": "10",
                  "customerAccount" : {
                     "id":"xyz",
-                    "currencyCode" : "EUR",
-                    "fx" : 1,
-                    "postings" : [
-                       {
-                          "type" : "GROSS_AMOUNT",
-                          "direction" : "DEBIT",
-                          "amount" : 40
-                       },
-                       {
-                          "type" : "TRANSACTION_FEE",
-                          "direction" : "DEBIT",
-                          "amount" : 10
-                       }
-                    ]
+                    "transactions": [{
+                      "id": "12321",
+                      "type": "DEPOSIT",
+                      "amount": 40,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 10,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     }, 
+                     {
+                      "id": "12322",
+                      "type": "MERCHANT_FEE",
+                      "amount": 10,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
+
                    },
                   "merchantAccount" : {
                      "id": "def",
-                     "currencyCode" : 'EUR",
-                     "fx" : 1,
-                     "postings" : [
-                      {
-                        "type" : "GROSS_AMOUNT",
-                        "direction" : "CREDIT",
-                        "amount" : 10
-                       },
-                       {
-                         "type" : "TRANSACTION_FEE",
-                         "direction" : "DEBIT",
-                         "amount" : 5
-                       }
-                      ]
+                    "transactions": [{
+                      "id": "12323",
+                      "type": "DEPOSIT",
+                      "amount": 10,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "CREDIT",
+                      "fee": 5,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     }, 
+                     {
+                      "id": "12324",
+                      "type": "FEE",
+                      "amount": 5,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
+                  }
+              }
+              
+            }
+
++ Request Process a Standalone Credit Using a Bank wire Transfer Payment Handle Token (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Body
+
+            {
+              "amount": 40,
+              "merchantRefNum": "merchantRefNum-151",
+              "currencyCode": "GBP",
+              "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+              "customerIp": "204.91.0.12",
+              "description": "Pay surplus"
+            }    
+            
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "e075f2ae-dfc4-4f6d-8d89-61158367b6a6",
+              "amount": 40,
+              "merchantRefNum": "merchantRefNum-151",
+              "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+              "customerIp": "204.91.0.12",
+              "currencyCode": "GBP",
+              "paymentType": "BANK_TRANSFER",
+              "status": "COMPLETED",
+              "description": "Pay surplus",
+              "sepa": {
+                       "nickName": "Sally's Barclays Account",
+                       "accountHolderName": "John Doe",
+                       "bic": "ABNANL2APIP",
+                       "lastDigits": "00"
+              },  
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "10",
+                 "customerAccount" : {
+                    "id":"xyz",
+                    "transactions": [{
+                      "id": "12321",
+                      "type": "DEPOSIT",
+                      "amount": 40,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 10,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     }, 
+                     {
+                      "id": "12322",
+                      "type": "MERCHANT_FEE",
+                      "amount": 10,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
+
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                    "transactions": [{
+                      "id": "12323",
+                      "type": "DEPOSIT",
+                      "amount": 10,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "CREDIT",
+                      "fee": 5,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     }, 
+                     {
+                      "id": "12324",
+                      "type": "FEE",
+                      "amount": 5,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
                   }
               }
               
@@ -2378,38 +2649,62 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
                  "fee": "10",
                  "customerAccount" : {
                     "id":"xyz",
-                    "currencyCode" : "EUR",
-                    "fx" : 1,
-                    "postings" : [
-                       {
-                          "type" : "GROSS_AMOUNT",
-                          "direction" : "DEBIT",
-                          "amount" : 40
-                       },
-                       {
-                          "type" : "TRANSACTION_FEE",
-                          "direction" : "DEBIT",
-                          "amount" : 10
-                       }
-                    ]
+                    "transactions": [{
+                      "id": "12321",
+                      "type": "DEPOSIT",
+                      "amount": 40,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 10,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     }, 
+                     {
+                      "id": "12322",
+                      "type": "MERCHANT_FEE",
+                      "amount": 10,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
+
                    },
                   "merchantAccount" : {
                      "id": "def",
-                     "currencyCode" : 'EUR",
-                     "fx" : 1,
-                     "postings" : [
-                      {
-                        "type" : "GROSS_AMOUNT",
-                        "direction" : "CREDIT",
-                        "amount" : 10
-                       },
-                       {
-                         "type" : "TRANSACTION_FEE",
-                         "direction" : "DEBIT",
-                         "amount" : 5
-                       }
-                      ]
+                    "transactions": [{
+                      "id": "12323",
+                      "type": "DEPOSIT",
+                      "amount": 10,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "CREDIT",
+                      "fee": 5,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     }, 
+                     {
+                      "id": "12324",
+                      "type": "FEE",
+                      "amount": 5,
+                      "currencyCode": "GBP",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "CARD",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
                   }
+              }
             }
             
 ### Get Standalone Credit Using Merchant Reference Number  [GET /paymenthub/v1/standalonecredits?merchantRefNum={merchant_ref_num}]
