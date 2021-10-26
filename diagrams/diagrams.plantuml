@@ -369,7 +369,7 @@
 @startuml "6-Transfers-customer-to-customer"
     !theme cerulean-outline
 
-    skinparam dpi 50
+    skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
