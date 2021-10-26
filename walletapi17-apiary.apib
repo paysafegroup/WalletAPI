@@ -3118,10 +3118,12 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
             }
 
 
+
 # Group Customers
 
-## Create wallet [POST /wallets]
-Create a new wallet.
+## Onboard a customer [/digitalwallets/v1/wallets]
+
+### Create customer's wallet [POST]
 
 + Request (application/json)
     + Headers
@@ -3157,8 +3159,7 @@ Create a new wallet.
 
 
 
-
-## Customers [/customers/{customerId}]
+## Customers [/digitalwallets/v1/customers/{customerId}]
 
 + Parameters
     + customerId (string, required)
@@ -3166,7 +3167,7 @@ Create a new wallet.
         Customer id
 
 
-### Get customer by id [GET]
+### Get customer [GET]
 Get a customer by ID.
 
 + Response 200 (application/json)
@@ -3180,8 +3181,6 @@ Get a customer by ID.
 + Response 404
 
         Customer with the requested ID was not found.
-
-
 
 
 ### Deactivate customer [DELETE]
@@ -3247,7 +3246,356 @@ Update customer information.
 
 
 
+# Group Accounts
 
+Every wallet has one or more accounts associated with it - one for every currency that the customer has funds in.
+
+## Account information [/digitalwallets/v1/accounts]
+
+### Get accounts for a customer [GET /digitalwallets/v1/accounts{?customerId,limit,offset}]
+
+Get all accounts for a customer.
+
++ Parameters
+    + customerId (string, required)
+
+        Filter by customer
+
+    + limit (number, optional)
+
+        This is the total number of records to return. Max = 50. Default = 10.
+
+    + offset (number, optional)
+
+        This is the starting position, where 0 is the first record. Default = 0.
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (AccountList)
+
+
+
++ Response 200 (application/xml)
+
+        OK
+
+    + Attributes (array[Account])
+
+
+
++ Response 404
+
+        Wallet with the requested ID is not found.
+
+
+### Get account [GET /digitalwallets/v1/accounts/{accountId}]
+
+Retrieve the account with the provided id. 
+
++ Parameters
+    + accountId (string, required)
+
+        Account id.
+
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Account)
+
+
+
++ Response 404
+
+        Account with the requested ID was not found.
+
+
+## Transactions [/digitalwallets/v1/transactions{?accountId,limit,offset,startDate,endDate}]
+
+### Get transactions list [GET]
+
+Retrieve transactions for an account, ordered by creationTime descending
+
++ Parameters
+    + accountId (string, required)
+
+        Filter by account ID
+    + limit (number, optional)
+
+        Limit number of results
+
+    + offset (number, optional)
+
+        Offset results by the specified number
+
+    + startDate (string, optional)
+
+        Filter by creation time
+
+        + Sample: 2021-10-05T14:43:33Z
+    + endDate (string, optional)
+
+        Filter by creationType after
+
+        + Sample: 2021-10-05T14:43:33Z
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (TransactionList)
+
+
+
+### Get transaction details [GET /digitalwallets/v1/transactions/{transactionId}]
+
+Retrieve details on a transaction with the specified id. List of transactions can be fetched by calling `/accounts/{account-id}/transactions`.
+
++ Parameters
+    + transactionId (string, required)
+
+        Transaction id
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Transaction)
+
+
+
++ Response 404
+
+        Transaction with the requested ID was not found.
+
+
+# Group Authorization holds 
+
+## Manage [/digitalwallets/v1/authorization-holds]
+
+### Create new authorization hold [POST /digitalwallets/v1/authorization-holds]
+
+Create a new authorization hold.
+
++ Request (application/json)
+
+    + Attributes (AuthorizationHold)
+
+
+    + Body
+
+            {
+                "accountId": "12345",
+                "amount": 10000,
+                "currencyCode": "EUR"
+            }
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (AuthorizationHold)
+
+
+
++ Response 400 (application/json)
+
+        Unable to process request due to validation or other errors.
+
+    + Attributes (Error Details)
+
+### Release authorization hold [DELETE /digitalwallets/v1/authorization-holds/{id}]
+
++ Parameters
+    + id (string, required)
+
+        Authorization hold id.
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (AuthorizationHold)
+
+
+
++ Response 404 
+
+        Not Found
+
+## Details [/digitalwallets/v1/authorization-holds/]
+
+### Get active holds for account [GET /digitalwallets/v1/authorization-holds{?accountId,limit,offset}]
+
+Retrieve list of active authorization holds only.
+
++ Parameters
+    + accountId (string, required)
+
+        Filter by Account ID
+
+    + limit (number, optional)
+
+        Limit number of results
+
+    + offset (number, optional)
+
+        Offset results by the specified number
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (AuthorizationHoldList)
+
+### Get details for Authorization Hold [GET /authorization-holds/{id}]
+
+Retrieve details on an authorization hold by ID.
+
++ Parameters
+    + id (string, required)
+
+        Authorization hold id.
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (AuthorizationHold)
+
+
+
++ Response 404
+
+        Not Found
+
+
+
+
+# Group Transfers
+
+## Transfers [/transfers]
+
+### Initiate transfer [POST]
+Use this to transfer funds from Merchant account to Customer and vice versa.
+
+For all Transfer of Funds you need to allocate the required funds from **Sender**
+
+
+* Transfer funds to Customer from Merchange Wallet
+
+* Transfer funds from Merchant to Customer Wallet
+
+* Transfer funds from Customer to another Customer Wallet
+
+
++ Request (application/json)
+
+    + Attributes (Transfer)
+
+
++ Response 201 (application/json)
+
+        Created
+
+    + Attributes (Transfer)
+
+
+    + Body
+
+            {
+                "slipId": "5009964049",
+                "amount": 1000,
+                "fee": 100,
+                "currencyCode": "GBP",
+                "authorizationHoldId": "50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe",
+                "merchant": {
+                    "customerId": "99999",
+                    "customerAccountId": "999991",
+                    "transactions": [
+                        {
+                            "id": "5040057608",
+                            "slipId": "121345",
+                            "customerId": "99999",
+                            "customerAccountId": "999991",
+                            "type": "TRANSFER_OUT",
+                            "amount": 1000,
+                            "currencyCode": "GBP",
+                            "fee": 40,
+                            "creationTime": "2021-07-15T17:54:12Z",
+                            "direction": "CREDIT",
+                            "paymentType": "TRANSFER",
+                            "description": "Transaction description.",
+                            "status": "COMPLETED",
+                            "merchantRefNum": "abcd1234"
+                        },
+                        {
+                            "id": "5040057609",
+                            "slipId": "121345",
+                            "customerId": "99999",
+                            "customerAccountId": "999991",
+                            "type": "TRANSACTION_FEE",
+                            "amount": 4,
+                            "currencyCode": "GBP",
+                            "creationTime": "2021-07-15T17:54:12Z",
+                            "direction": "DEBIT",
+                            "fee": 0,
+                            "paymentType": "TRANSFER",
+                            "status": "COMPLETED",
+                            "merchantRefNum": "abcd1234"
+                        }
+                    ]
+                },
+                "recipient": {
+                    "customerId": "500014306996",
+                    "customerAccountId": "5014567344",
+                    "transactions": [
+                        {
+                            "id": "5040057610",
+                            "slipId": "5009964049",
+                            "customerId": "500014306996",
+                            "customerAccountId": "212345",
+                            "type": "TRANSFER_IN",
+                            "amount": 1000,
+                            "currencyCode": "GBP",
+                            "fee": 40,
+                            "creationTime": "2021-07-15T17:54:12Z",
+                            "direction": "CREDIT",
+                            "paymentType": "TRANSFER",
+                            "description": "Transaction description.",
+                            "status": "COMPLETED",
+                            "merchantRefNum": "abcd1234"
+                        },
+                        {
+                            "id": "5040057611",
+                            "type": "MERCHANT_FEE",
+                            "amount": 40,
+                            "currencyCode": "GBP",
+                            "creationTime": "2021-07-15T17:54:12Z",
+                            "direction": "DEBIT",
+                            "fee": 0,
+                            "paymentType": "TRANSFER",
+                            "status": "COMPLETED",
+                            "processorRefId": "string",
+                            "merchantRefNum": "string"
+                        }
+                    ]
+                },
+                "description": "Transfer description.",
+                "merchantRefNum": "abcd1234",
+                "status": "COMPLETED"
+            }
 
 
 
