@@ -53,10 +53,12 @@
     }
 
     participant Merchant
-    participant "Paysafe API" as PaysafeAPI
-    participant "Merchant\ncustomer wallet" as CW
-    participant "Merchant\nmerchant wallet" as BW
-    participant "3DS auth with issuer\nor Payment Provider" as PSP
+    box "Paysafe"
+        participant "Paysafe API" as PaysafeAPI
+        participant "Customer wallet" as CW
+        participant "Merchant wallet" as MW
+    end box
+    participant "3DS auth" as PSP
 
     note left of Merchant: Customer wallet created
 
@@ -65,7 +67,7 @@
     alt "3DS is required"
         Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
 
-        Merchant --> PSP: Redirect Customer to provider (3D Secure or PSP/APM)
+        Merchant --> PSP: Redirect Customer to 3D Secure
         Merchant <-- PSP: Redirect Customer back to Merchant's system
     else "3DS is NOT required"
         Merchant <-- PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE
@@ -84,8 +86,8 @@
 
         PaysafeAPI [#FF0000]-> CW: Credit deposited amount\nto customer wallet
         PaysafeAPI <-[#FF0000] CW: Debit merchant's fee\nfrom the customer wallet\n(if fee is specified)
-        PaysafeAPI [#FF0000]-> BW: Credit merchant's fee\ninto the Merchant wallet
-        PaysafeAPI <-[#FF0000] BW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
+        PaysafeAPI [#FF0000]-> MW: Credit merchant's fee\ninto the Merchant wallet
+        PaysafeAPI <-[#FF0000] MW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
 
         Merchant <-- PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
     deactivate PaysafeAPI
