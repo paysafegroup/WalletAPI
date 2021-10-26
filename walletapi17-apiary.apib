@@ -45,7 +45,7 @@ Paysafe Digital Walet responsibilities:
   * Maintain e-money ledger
   * Maintain customer details for regulatory purposes
   * Monitor for Risk & AML
-  * Integrate additional payment methods 
+  * Integrate additional payment methods
   * Provide reporting capabilities
 
 
@@ -226,7 +226,7 @@ Call [Create Wallet](#reference/wallets/create-wallet/create-wallet), with the f
 
 * `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process
 
-![Diagram: Onboarding a customer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/0-Wallet-create.png)
+![Diagram: Onboarding a customer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/0-Wallet-create.svg)
 
 When creating a wallet for an **newly signed-up customer**, the `totalBalance` and `availableBalance` fields for all `account` objects must be set to 0.
 
@@ -237,8 +237,8 @@ If the wallet is created for an existing customer with an existing balance, the 
 In case the email provided is not unique and a wallet is already created
 using this email address, the creation of a new wallet will fail.
 
-After creating the wallet, the customer could be restricted on Paysafe side 
-based on regulatory and risk checks. 
+After creating the wallet, the customer could be restricted on Paysafe side
+based on regulatory and risk checks.
 
 
 ### Update customer details
@@ -272,38 +272,50 @@ Direct update and delete acounts is not supported via API.
 
 ## Deposit with a card
 
-![Diagram: Deposit with a card](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-card.png)
+![Diagram: Deposit with a card](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-card.svg)
 
 
 ## Deposit with instant bank transfer - RapidTransfer
 
 > TODO: Marketing explanation
 
-![Diagram: Deposit with RapidTransfer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-rapid-transfer.png)
+![Diagram: Deposit with RapidTransfer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-rapid-transfer.svg)
 
 
+## Deposit with a bank transfer
 
-## Place authorization holds on a balance
+![Diagram: Deposit with RapidTransfer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-bank-transfer.svg)
 
+
+## Authorization holds on a balance
+
+![Diagram: Authorization holds](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/4-AuthorizationHold.svg)
 
 
 ## Withdrawal to bank account
 
-
-![Diagram: Withdraw to a bank account](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/3-Withdraw-bank-account.png)
+![Diagram: Withdraw to a bank account](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/3-Withdraw-bank-account.svg)
 
 ## Withdrawal to a card
 
-
-![Diagram: Withdraw to a card](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/3-Withdraw-card.png)
-
+![Diagram: Withdraw to a card](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/3-Withdraw-card.svg)
 
 
-## Transfer from/to a customer wallet
 
-- in
-- out
+## Transfer merchant to customer (crypto sell)
 
+![Diagram: Transfer customer to merchant](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/6-Transfers-merchant-to-customer.svg)
+
+
+## Transfer customer to merchant (crypto buy)
+
+![Diagram: Transfer customer to merchant](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/6-Transfers-customer-to-merchant.svg)
+
+
+## Transfer customer to customer (trading pairs)
+
+
+![Diagram: Transfer customer to customer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/6-Transfers-customer-to-customer.svg)
 
 
 
