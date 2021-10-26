@@ -233,6 +233,7 @@
         participant "Customer wallet" as CW
         participant "Merchant wallet" as MW
     end box
+    participant "Card Schemes\nVisa" as CardSchemes
 
     note left of Merchant: Customer wallet created
 
@@ -245,7 +246,7 @@
     activate PaysafeAPI
 
         PaysafeAPI <-[#FF0000] CW: Debit amount to withdraw\nfrom Customer wallet
-        PaysafeAPI -> PaysafeAPI: Schedule execution of standalone credit\nto customer's card
+        PaysafeAPI [#FF0000]-> CardSchemes: Execute standalone credit\nwith the card schemes
         PaysafeAPI <-[#FF0000] CW: (if fee is specified)\nDebit merchant's fee\nfrom the Customer wallet
         PaysafeAPI [#FF0000]-> MW: (if fee is specified)\nCredit merchant's fee\ninto the Merchant wallet
         PaysafeAPI <-[#FF0000] MW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
