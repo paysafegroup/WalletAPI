@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="1569px" preserveAspectRatio="none" style="width:1268px;height:1569px;background:#FFFFFF;" version="1.1" viewBox="0 0 1268 1569" width="1268.25px" zoomAndPan="magnify"><defs/><g><rect fill="none" height="1560.1923" rx="3" ry="3" style="stroke:#868E96;stroke-width:0.75;" width="582" x="493.125" y="4.5"/><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="39.75" x="764.25" y="17.2983">Paysafe</text><rect fill="#FFFFFF" height="539.369" style="stroke:#FBC9D6;stroke-width:0.75;" width="7.5" x="568.875" y="880.5758"/><rect fill="#FFFFFF" height="464.9736" rx="3" ry="3" style="stroke:#868E96;stroke-width:1.5;" width="1248.375" x="7.5" y="261.3838"/><path d="M7.5,595.4465 L1255.875,595.4465 L1255.875,723.3574 A3,3 0 0 1 1252.875,726.3574 L10.5,726.3574 A3,3 0 0 1 7.5,723.3574 L7.5,595.4465 " fill="#FFFFFF" style="stroke:none;stroke-width:0.75;"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="83.25" x2="83.25" y1="60.1835" y2="731.6074"/><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:1.0,4.0;" x1="83.25" x2="83.25" y1="731.6074" y2="760.1074"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="83.25" x2="83.25" y1="760.1074" y2="1528.1968"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="572.625" x2="572.625" y1="60.1835" y2="731.6074"/><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:1.0,4.0;" x1="572.625" x2="572.625" y1="731.6074" y2="760.1074"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="572.625" x2="572.625" y1="760.1074" y2="1528.1968"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="793.125" x2="793.125" y1="60.1835" y2="731.6074"/><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:1.0,4.0;" x1="793.125" x2="793.125" y1="731.6074" y2="760.1074"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="793.125" x2="793.125" y1="760.1074" y2="1528.1968"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="982.125" x2="982.125" y1="60.1835" y2="731.6074"/><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:1.0,4.0;" x1="982.125" x2="982.125" y1="731.6074" y2="760.1074"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="982.125" x2="982.125" y1="760.1074" y2="1528.1968"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="1178.625" x2="1178.625" y1="60.1835" y2="731.6074"/><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:1.0,4.0;" x1="1178.625" x2="1178.625" y1="731.6074" y2="760.1074"/><line style="stroke:#FBC9D6;stroke-width:0.75;" x1="1178.625" x2="1178.625" y1="760.1074" y2="1528.1968"/><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="77.25" x="45" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="59.25" x="54" y="47.7565">Merchant</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="77.25" x="45" y="1527.4468"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="59.25" x="54" y="1549.2653">Merchant</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="93" x="526.125" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="75" x="535.125" y="47.7565">Paysafe API</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="93" x="526.125" y="1527.4468"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="75" x="535.125" y="1549.2653">Paysafe API</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="123" x="731.625" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="105" x="740.625" y="47.7565">Customer wallet</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="123" x="731.625" y="1527.4468"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="105" x="740.625" y="1549.2653">Customer wallet</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="120" x="922.125" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="102" x="931.125" y="47.7565">Merchant wallet</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="120" x="922.125" y="1527.4468"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="102" x="931.125" y="1549.2653">Merchant wallet</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="78.75" x="1139.625" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="60.75" x="1148.625" y="47.7565">3DS auth</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="78.75" x="1139.625" y="1527.4468"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="60.75" x="1148.625" y="1549.2653">3DS auth</text><rect fill="#FFFFFF" height="539.369" style="stroke:#FBC9D6;stroke-width:0.75;" width="7.5" x="568.875" y="880.5758"/><polygon fill="#282828" points="563.625,247.1338,571.125,250.1338,563.625,253.1338,566.625,250.1338" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="83.625" x2="568.125" y1="250.1338" y2="250.1338"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="92.625" y="164.7294">1</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="228" x="112.125" y="87.252">Create a customer payment handle</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="293.25" x="112.125" y="102.7474">POST /paymenthub/v1/paymenthandles</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="0" x="116.625" y="118.2429"/><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="113.25" x="112.125" y="133.7384">merchantRefNum</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="108.75" x="112.125" y="149.2339">transactionType:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="69" x="225.375" y="149.2339">PAYMENT</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="93.75" x="112.125" y="164.7294">paymentType:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="39" x="210.375" y="164.7294">CARD</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="308.25" x="112.125" y="180.2249">card: {cardNum, cardExpiry, cvv, holderName}</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="234" x="112.125" y="195.7203">billingDetails: {street, country, zip}</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="49.5" x="112.125" y="211.2158">amount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="124.5" x="112.125" y="226.7113">currencyCode: EUR</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="167.25" x="112.125" y="242.2068">wallet: {customerId, fee}</text><path d="M10.5,261.3838 L61.5,261.3838 L61.5,273.3838 L54,280.8838 L7.5,280.8838 L7.5,264.3838 A3,3 0 0 1 10.5,261.3838 " fill="#EEEEEE" style="stroke:#868E96;stroke-width:0.75;"/><rect fill="none" height="464.9736" rx="3" ry="3" style="stroke:#868E96;stroke-width:1.5;" width="1248.375" x="7.5" y="261.3838"/><text fill="#033C73" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="12.75" x="22.5" y="274.9321">alt</text><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="88.5" x="76.5" y="275.6821">[3DS is required]</text><polygon fill="#282828" points="91.875,374.9872,84.375,377.9872,91.875,380.9872,88.875,377.9872" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="87.375" x2="571.875" y1="377.9872" y2="377.9872"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="100.125" y="339.0692">2</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="296.25" x="119.625" y="308.0782">Return Payment Handle (Action = REDIRECT)</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="12" x="119.625" y="323.5737">id</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="213.75" x="119.625" y="339.0692">paymentHandleToken: XXXXXXX</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="45.75" x="119.625" y="354.5647">status:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="78" x="169.875" y="354.5647">INITIATED</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="442.5" x="119.625" y="370.0602">links: [{rel: redirect_payment, href: https://...., method: GET}, ...]</text><polygon fill="#282828" points="1170,408.4827,1177.5,411.4827,1170,414.4827,1173,411.4827" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="83.625" x2="1174.5" y1="411.4827" y2="411.4827"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="92.625" y="403.5557">3</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="208.5" x="112.125" y="403.5557">Redirect Customer to 3D Secure</text><polygon fill="#282828" points="91.875,441.9781,84.375,444.9781,91.875,447.9781,88.875,444.9781" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="87.375" x2="1178.25" y1="444.9781" y2="444.9781"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="100.125" y="437.0511">4</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="297" x="119.625" y="437.0511">Redirect Customer back to Merchant's system</text><polygon fill="#282828" points="563.625,490.9691,571.125,493.9691,563.625,496.9691,566.625,493.9691" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="83.625" x2="568.125" y1="493.9691" y2="493.9691"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="92.625" y="478.2944">5</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="172.5" x="112.125" y="470.5466">Get PaymentHandle status</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="444" x="112.125" y="486.0421">GET /paymenthub/v1/paymenthandles/{paymenthandle_id}</text><path d="M576,465.5046 L576,485.0046 A3,3 0 0 0 579,488.0046 L747.75,488.0046 A3,3 0 0 0 750.75,485.0046 L750.75,470.0046 L743.25,462.5046 L579,462.5046 A3,3 0 0 0 576,465.5046 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><path d="M743.25,462.5046 L743.25,468.5046 A1.5,1.5 0 0 0 744.75,470.0046 L750.75,470.0046 L743.25,462.5046 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><text fill="#033C73" font-family="Verdana" font-size="9" lengthAdjust="spacing" textLength="151.5" x="584.25" y="479.053">Only needed if status != PAYABLE</text><polygon fill="#282828" points="91.875,586.4465,84.375,589.4465,91.875,592.4465,88.875,589.4465" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="87.375" x2="571.875" y1="589.4465" y2="589.4465"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="100.125" y="550.5286">6</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="296.25" x="119.625" y="519.5376">Return Payment Handle (Action = REDIRECT)</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="12" x="119.625" y="535.0331">id</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="213.75" x="119.625" y="550.5286">paymentHandleToken: XXXXXXX</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="45.75" x="119.625" y="566.024">status:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="65.25" x="169.875" y="566.024">PAYABLE</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="22.5" x="119.625" y="581.5195">. . .</text><line style="stroke:#868E96;stroke-width:0.75;stroke-dasharray:2.0,2.0;" x1="7.5" x2="1255.875" y1="596.1965" y2="596.1965"/><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="112.5" x="15" y="608.9949">[3DS is NOT required]</text><polygon fill="#282828" points="91.875,717.3574,84.375,720.3574,91.875,723.3574,88.875,720.3574" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="87.375" x2="571.875" y1="720.3574" y2="720.3574"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="100.125" y="673.6917">7</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="153.75" x="119.625" y="634.953">Return Payment Handle</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="12" x="119.625" y="650.4485">id</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="87" x="119.625" y="665.944">action: NONE</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="213.75" x="119.625" y="681.4395">paymentHandleToken: XXXXXXX</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="107.25" x="119.625" y="696.9349">status: PAYABLE</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="160.5" x="119.625" y="712.4304">3DS auth details (if any)</text><polygon fill="#282828" points="559.875,877.5758,567.375,880.5758,559.875,883.5758,562.875,880.5758" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="83.625" x2="564.375" y1="880.5758" y2="880.5758"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="92.625" y="826.1624">8</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="109.5" x="112.125" y="779.6759">Process payment</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="245.25" x="112.125" y="795.1714">POST /paymenthub/v1/payments</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="113.25" x="112.125" y="810.6669">merchantRefNum</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="49.5" x="112.125" y="826.1624">amount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="87.75" x="112.125" y="841.6578">currencyCode</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="140.25" x="112.125" y="857.1533">paymentHandleToken</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="102.75" x="112.125" y="872.6488">settleWithAuth:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="29.25" x="219.375" y="872.6488">true</text><polygon fill="#FF0000" points="784.125,926.5668,791.625,929.5668,784.125,932.5668,787.125,929.5668" style="stroke:#FF0000;stroke-width:0.75;"/><line style="stroke:#FF0000;stroke-width:2.25;" x1="576.375" x2="788.625" y1="929.5668" y2="929.5668"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="585.375" y="913.892">9</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="160.5" x="604.875" y="906.1443">Credit deposited amount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="120" x="604.875" y="921.6398">to customer wallet</text><polygon fill="#FF0000" points="584.625,991.0532,577.125,994.0532,584.625,997.0532,581.625,994.0532" style="stroke:#FF0000;stroke-width:0.75;"/><line style="stroke:#FF0000;stroke-width:2.25;" x1="580.125" x2="792.375" y1="994.0532" y2="994.0532"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="18" x="592.875" y="970.6307">10</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="135" x="621.375" y="955.1353">Debit merchant's fee</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="162.75" x="621.375" y="970.6307">from the customer wallet</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="120.75" x="621.375" y="986.1262">(if fee is specified)</text><polygon fill="#FF0000" points="973.125,1040.0442,980.625,1043.0442,973.125,1046.0442,976.125,1043.0442" style="stroke:#FF0000;stroke-width:0.75;"/><line style="stroke:#FF0000;stroke-width:2.25;" x1="576.375" x2="977.625" y1="1043.0442" y2="1043.0442"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="18" x="585.375" y="1027.3694">11</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="139.5" x="613.875" y="1019.6217">Credit merchant's fee</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="156.75" x="613.875" y="1035.1172">into the Merchant wallet</text><polygon fill="#FF0000" points="584.625,1089.0352,577.125,1092.0352,584.625,1095.0352,581.625,1092.0352" style="stroke:#FF0000;stroke-width:0.75;"/><line style="stroke:#FF0000;stroke-width:2.25;" x1="580.125" x2="981.375" y1="1092.0352" y2="1092.0352"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="18" x="592.875" y="1076.3604">12</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="90" x="621.375" y="1068.6127">(if applicable)</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="295.5" x="621.375" y="1084.1082">Debit Paysafe's fees from the Merchant wallet</text><polygon fill="#282828" points="91.875,1416.9448,84.375,1419.9448,91.875,1422.9448,88.875,1419.9448" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="87.375" x2="571.875" y1="1419.9448" y2="1419.9448"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="18" x="100.125" y="1264.8107">13</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="216.75" x="128.625" y="1117.6036">Return executed Payment Handle</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="12" x="128.625" y="1133.0991">id</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="127.5" x="128.625" y="1148.5946">status: COMPLETED</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="44.25" x="128.625" y="1164.0901">wallet:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="111.75" x="146.625" y="1179.5856">customerAccount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="96.75" x="164.625" y="1195.0811">transactions[]:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="12" x="182.625" y="1210.5765">id</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="39.75" x="182.625" y="1226.072">status</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="28.5" x="182.625" y="1241.5675">type</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="56.25" x="182.625" y="1257.063">direction</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="49.5" x="182.625" y="1272.5585">amount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="19.5" x="182.625" y="1288.054">fee</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="113.25" x="146.625" y="1303.5494">merchantAccount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="96.75" x="164.625" y="1319.0449">transactions[]:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="12" x="182.625" y="1334.5404">id</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="39.75" x="182.625" y="1350.0359">status</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="28.5" x="182.625" y="1365.5314">type</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="56.25" x="182.625" y="1381.0269">direction</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="49.5" x="182.625" y="1396.5223">amount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="19.5" x="182.625" y="1412.0178">fee</text><rect fill="#FFFFFF" height="2.25" style="stroke:#FFFFFF;stroke-width:0.75;" width="1263.375" x="0" y="1444.9138"/><line style="stroke:#868E96;stroke-width:0.75;" x1="0" x2="1263.375" y1="1444.9138" y2="1444.9138"/><line style="stroke:#868E96;stroke-width:0.75;" x1="0" x2="1263.375" y1="1447.1638" y2="1447.1638"/><rect fill="#FFFFFF" height="24.438" style="stroke:#868E96;stroke-width:1.5;" width="47.25" x="608.0625" y="1433.4448"/><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="26.25" x="616.3125" y="1449.2432">T + 1</text><polygon fill="#282828" points="91.875,1508.5353,84.375,1511.5353,91.875,1514.5353,88.875,1511.5353" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="87.375" x2="571.875" y1="1511.5353" y2="1511.5353"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="18" x="100.125" y="1495.8605">14</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="132.75" x="128.625" y="1488.1128">Reconciliation report</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="220.5" x="128.625" y="1503.6083">transport protocol to be discussed</text><path d="M576,1472.1328 L576,1513.3828 A3,3 0 0 0 579,1516.3828 L757.5,1516.3828 A3,3 0 0 0 760.5,1513.3828 L760.5,1476.6328 L753,1469.1328 L579,1469.1328 A3,3 0 0 0 576,1472.1328 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><path d="M753,1469.1328 L753,1475.1328 A1.5,1.5 0 0 0 754.5,1476.6328 L760.5,1476.6328 L753,1469.1328 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><text fill="#033C73" font-family="Verdana" font-size="9" lengthAdjust="spacing" textLength="119.25" x="584.25" y="1485.6812">Inlcudes transactions from</text><text fill="#033C73" font-family="Verdana" font-size="9" lengthAdjust="spacing" textLength="117.75" x="584.25" y="1496.6191">Merchant merchant wallet</text><text fill="#033C73" font-family="Verdana" font-size="9" lengthAdjust="spacing" textLength="161.25" x="584.25" y="1507.5571">and all customer wallet transactions</text><!--MD5=[e95e62dc157ee72f74cd5edf55e2b302]
+@startuml "2-Deposit-card"
+    !theme cerulean-outline
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant Merchant
+    box "Paysafe"
+        participant "Paysafe API" as PaysafeAPI
+        participant "Customer wallet" as CW
+        participant "Merchant wallet" as MW
+    end box
+    participant "3DS auth" as PSP
+
+    autonumber
+
+    Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount\ncurrencyCode: EUR\nwallet: {customerId, fee}
+
+    alt 3DS is required
+        Merchant <- - PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
+
+        Merchant - -> PSP: Redirect Customer to 3D Secure
+        Merchant <- - PSP: Redirect Customer back to Merchant's system
+
+        Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
+        note right: Only needed if status != PAYABLE
+        Merchant <- - PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
+
+    else 3DS is NOT required
+        Merchant <- - PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE\n3DS auth details (if any)
+    end alt
+
+    ...
+
+
+    Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
+    activate PaysafeAPI
+
+        PaysafeAPI [#FF0000]-> CW: Credit deposited amount\nto customer wallet
+        PaysafeAPI <-[#FF0000] CW: Debit merchant's fee\nfrom the customer wallet\n(if fee is specified)
+        PaysafeAPI [#FF0000]-> MW: Credit merchant's fee\ninto the Merchant wallet
+        PaysafeAPI <-[#FF0000] MW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
+
+        Merchant <- - PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
+    deactivate PaysafeAPI
+
+	== T + 1 ==
+
+ 	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+@enduml
+
+@startuml "2-Deposit-card"
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             false
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               5
+skinparam ArrowColor            #868E96
+skinparam stereotype {
+    CBackgroundColor #EDF0F2
+    CBorderColor #BABDBF
+    ABackgroundColor #8FB961
+    ABorderColor $SUCCESS_DARK
+    IBackgroundColor #D2494E
+    IBorderColor $DANGER_DARK
+    EBackgroundColor #E47833
+    EBorderColor $WARNING_DARK
+    NBackgroundColor #35638F
+    NBorderColor $INFO_DARK
+}
+skinparam title {
+	FontColor	                 #2FA4E7
+	BorderColor	                 #BABDBF
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              transparent
+}
+
+skinparam legend {
+	BackgroundColor transparent
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam swimlane {
+	BorderColor #033C73
+	BorderThickness 2
+	TitleBackgroundColor  #EDF0F2-#E9ECEF
+	TitleFontColor #2FA4E7
+}
+
+
+skinparam activity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BarColor #73A839
+	StartColor #033C73
+	EndColor #033C73
+	DiamondBackgroundColor transparent
+  	DiamondBorderColor #BABDBF
+	DiamondFontColor #BABDBF
+}
+
+
+skinparam participant {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2FA4E7
+	FontColor #343A40
+}
+
+
+skinparam sequence {
+	BorderColor #2FA4E7
+	TitleFontColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #2FA4E7
+	EndColor #2FA4E7
+	BoxBackgroundColor transparent
+	BoxBorderColor #868E96
+	BoxFontColor #343A40
+	DelayFontColor #343A40
+	LifeLineBorderColor #BABDBF
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor transparent
+	GroupBorderColor #868E96
+	GroupFontColor #343A40
+	GroupHeaderFontColor #033C73
+	DividerBackgroundColor transparent
+    DividerBorderColor #868E96
+    DividerBorderThickness 2
+    DividerFontColor #343A40
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #868E96
+	ReferenceFontColor #343A40
+	ReferenceHeaderFontColor #033C73
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam partition {
+	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam control {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam entity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam boundary {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam agent {
+	BackgroundColor transparent
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam artifact {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam component {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam interface {
+	BackgroundColor  transparent
+	BorderColor  #C71C22
+	FontColor #343A40
+}
+
+
+skinparam storage {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+}
+
+
+skinparam node {
+	BackgroundColor transparent
+	BorderColor #343A40
+	FontColor #343A40
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #343A40
+}
+
+
+skinparam database {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam class {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	FontColor #F8F9FA
+	HeaderBackgroundColor #2FA4E7-#2683B9
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam rectangle {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam package {
+	BackgroundColor transparent
+  	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor transparent
+  	BorderColor #033C73
+	FontColor #033C73
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #033C73
+	EndColor #033C73
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam card {
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam file {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam stack {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant Merchant
+    box "Paysafe"
+        participant "Paysafe API" as PaysafeAPI
+        participant "Customer wallet" as CW
+        participant "Merchant wallet" as MW
+    end box
+    participant "3DS auth" as PSP
+
+    autonumber
+
+    Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount\ncurrencyCode: EUR\nwallet: {customerId, fee}
+
+    alt 3DS is required
+        Merchant <- - PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
+
+        Merchant - -> PSP: Redirect Customer to 3D Secure
+        Merchant <- - PSP: Redirect Customer back to Merchant's system
+
+        Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
+        note right: Only needed if status != PAYABLE
+        Merchant <- - PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
+
+    else 3DS is NOT required
+        Merchant <- - PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE\n3DS auth details (if any)
+    end alt
+
+    ...
+
+
+    Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
+    activate PaysafeAPI
+
+        PaysafeAPI [#FF0000]-> CW: Credit deposited amount\nto customer wallet
+        PaysafeAPI <-[#FF0000] CW: Debit merchant's fee\nfrom the customer wallet\n(if fee is specified)
+        PaysafeAPI [#FF0000]-> MW: Credit merchant's fee\ninto the Merchant wallet
+        PaysafeAPI <-[#FF0000] MW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
+
+        Merchant <- - PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
+    deactivate PaysafeAPI
+
+	== T + 1 ==
+
+ 	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+@enduml
+
+PlantUML version 1.2021.12(Tue Oct 05 19:01:58 EEST 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: BG
+--></g></svg>

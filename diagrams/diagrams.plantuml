@@ -1,17 +1,16 @@
 @startuml "0-Wallet-Create"
-    title "Onboard a customer"
-
     !theme cerulean-outline
 
     skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
-        ParticipantBorderColor #FFFFFF
-        ParticipantBackgroundColor #FFFFFF
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
         ParticipantFontSize 17
-        ParticipantFontColor #282828
+        ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -19,16 +18,18 @@
     participant "Paysafe API" as PaysafeAPI
     participant "Customer Wallet" as CW
 
-    note left of Merchant: Customer signed up\nKYC complete
-    Merchant -> PaysafeAPI: POST /digitalwallets/v1/wallet\ncustomer: {}\naccounts: []\nidentityDocuments: []\ntermsAndConditionsAccepted: true
+    autonumber
+
+    note right of Merchant:  * Customer signed up in Merchant's platform\n* KYC complete
+    Merchant -> PaysafeAPI: **POST /digitalwallets/v1/wallet**\ncustomer: {...}\naccounts: [...]\nidentityDocuments: [...]\ntermsAndConditionsAccepted: true
     activate PaysafeAPI
         PaysafeAPI -> PaysafeAPI: Internal verifications
         PaysafeAPI -> PaysafeAPI: Risk & Compliance\ncontrols
-        alt "Verifications, Risk & Compliance controls passed successfully"
+        alt Customer wallet created successfully
             PaysafeAPI -> CW **: Create customer wallet
-            Merchant <-- PaysafeAPI: 201 Created\ncustomer: {}\naccounts: []\nidentityDocuments: []
-        else "Verifications, Risk or Compliance controls failed"
-            Merchant <-- PaysafeAPI: Error\nerror details
+            Merchant <-- PaysafeAPI: **201 Created**\ncustomer: {...}\naccounts: [...]\nidentityDocuments: [...]
+        else Invalid input data provided
+            Merchant <-- PaysafeAPI: **Error**\nError details
             note right: Customer wallet is not created
         end if
     deactivate PaysafeAPI
@@ -37,19 +38,18 @@
 
 
 @startuml "2-Deposit-card"
-    title "Deposit with a card"
-
     !theme cerulean-outline
 
     skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
-        ParticipantBorderColor #FFFFFF
-        ParticipantBackgroundColor #FFFFFF
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
         ParticipantFontSize 17
-        ParticipantFontColor #282828
+        ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -61,13 +61,11 @@
     end box
     participant "3DS auth" as PSP
 
-    note left of Merchant: Customer wallet created
-
     autonumber
 
     Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount\ncurrencyCode: EUR\nwallet: {customerId, fee}
 
-    alt "3DS is required"
+    alt 3DS is required
         Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
 
         Merchant --> PSP: Redirect Customer to 3D Secure
@@ -77,7 +75,7 @@
         note right: Only needed if status != PAYABLE
         Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
 
-    else "3DS is NOT required"
+    else 3DS is NOT required
         Merchant <-- PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE\n3DS auth details (if any)
     end alt
 
@@ -98,25 +96,24 @@
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
-    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
 
 
 
 @startuml "2-Deposit-rapid-transfer"
-    title "Deposit with RapidTransfer\ninstant bank transfer"
-
     !theme cerulean-outline
 
     skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
-        ParticipantBorderColor #FFFFFF
-        ParticipantBackgroundColor #FFFFFF
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
         ParticipantFontSize 17
-        ParticipantFontColor #282828
+        ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -128,7 +125,7 @@
     end box
     participant "Rapid Transfer" as PSP
 
-    note left of Merchant: Customer wallet created
+    autonumber
 
     Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **RAPID_TRANSFER**\nrapidTransfer:\n    sepa:\n        {accountHolderName, bic, iban}\nbillingDetails: {street, country, zip}\namount: 100000\ncurrencyCode: EUR\nwallet: {customerId, fee}
     Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
@@ -141,6 +138,8 @@
     Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
     note right: Only needed if status != PAYABLE
     Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
+
+    |||
 
     Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
     activate PaysafeAPI
@@ -156,25 +155,24 @@
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
-    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
 
 
 
 @startuml "3-Withdraw-bank-account"
-    title "Withdraw to a bank account"
-
     !theme cerulean-outline
 
     skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
-        ParticipantBorderColor #FFFFFF
-        ParticipantBackgroundColor #FFFFFF
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
         ParticipantFontSize 17
-        ParticipantFontColor #282828
+        ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -186,7 +184,7 @@
     end box
     participant "Customer's Bank Account" as CBA
 
-    note left of Merchant: Customer wallet created
+    autonumber
 
     Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **STANDALONE_CREDIT**\npaymentType: **BANK_TRANSFER**\nsepa:\n    {accountHolderName, bic, iban}\namount: 100000\ncurrencyCode: EUR\nwallet: \n    customerId\n    fee\n    customerAccount:\n        id
     Merchant <-- PaysafeAPI: Return Payment Handle (Action = NONE)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**
@@ -212,25 +210,24 @@
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
-    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
 
 
 
 @startuml "3-Withdraw-card"
-    title "Withdraw to a card"
-
     !theme cerulean-outline
 
     skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
-        ParticipantBorderColor #FFFFFF
-        ParticipantBackgroundColor #FFFFFF
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
         ParticipantFontSize 17
-        ParticipantFontColor #282828
+        ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -242,7 +239,7 @@
     end box
     participant "Card Schemes" as CardSchemes
 
-    note left of Merchant: Customer wallet created
+    autonumber
 
     Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **STANDALONE_CREDIT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount: 100000\ncurrencyCode: EUR\nwallet:\n    customerId\n    fee\n    customerAccount\n        id
     Merchant <-- PaysafeAPI: Return Payment Handle (Action = NONE)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**
@@ -264,25 +261,24 @@
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
-    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
 
 
 
 @startuml "6-Transfers-customer-to-merchant"
-    title "Transfer of funds customer to merchant\ne.g. buy crypto"
-
     !theme cerulean-outline
 
     skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
-        ParticipantBorderColor #FFFFFF
-        ParticipantBackgroundColor #FFFFFF
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
         ParticipantFontSize 17
-        ParticipantFontColor #282828
+        ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -293,7 +289,7 @@
         participant "Merchant wallet" as MW
     end box
 
-    note left of Merchant: Customer wallet created
+    autonumber
 
     group Optional
         Merchant -> PaysafeAPI: Create authorization hold\n**POST /digitalwallets/v1/authorizationholds**\ncustomerAccountId\namount: 100000\ncurrencyCode: EUR\ndeviceInfo: {}
@@ -317,24 +313,23 @@
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
-    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
 
 
 @startuml "6-Transfers-merchant-to-customer"
-    title "Transfer of funds merchant to customer\ne.g. sell crypto"
-
     !theme cerulean-outline
 
     skinparam dpi 72
     skinparam shadowing false
     skinparam backgroundColor #FFFFFF
     skinparam Sequence {
-        ParticipantBorderColor #FFFFFF
-        ParticipantBackgroundColor #FFFFFF
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
         ParticipantFontSize 17
-        ParticipantFontColor #282828
+        ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -345,7 +340,7 @@
         participant "Merchant wallet" as MW
     end box
 
-    note left of Merchant: Customer wallet created
+    autonumber
 
     Merchant -> PaysafeAPI: Transfer funds from merchant to customer\n**POST /digitalwallets/v1/transfers**\n\nmerchantRefNum\namount\ncurrencyCode\nfee\nrecipient:\n    customerId\n    customerAccount\ndeviceInfo: {}
         activate PaysafeAPI
@@ -362,7 +357,7 @@
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
-    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
 
 
@@ -378,6 +373,7 @@
         ParticipantFontSize 17
         ParticipantFontColor #FFFFFF
         ArrowColor #282828
+        ArrowFontSize 17
         LifeLineBorderColor #FBC9D6
     }
 
@@ -388,6 +384,8 @@
         participant "Seller\nCustomer wallet" as CW_Seller
         participant "Merchant wallet\n" as MW
     end box
+
+    autonumber
 
     Merchant -> PaysafeAPI: Transfer funds from customer to customer\n**POST /digitalwallets/v1/transfers**\n\nmerchantRefNum\namount\ncurrencyCode\nfee\nsender:\n    customerId\n    customerAccount\nrecipient:\n    customerId\n    customerAccount\ndeviceInfo: {}
         activate PaysafeAPI

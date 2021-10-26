@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="560.25px" preserveAspectRatio="none" style="width:752px;height:560px;background:#FFFFFF;" version="1.1" viewBox="0 0 752 560" width="752.25px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="336.2688" style="stroke:#FBC9D6;stroke-width:0.75;" width="7.5" x="352.875" y="179.3489"/><rect fill="#FFFFFF" height="217.7823" rx="3" ry="3" style="stroke:#868E96;stroke-width:1.5;" width="739.875" x="7.5" y="292.5853"/><path d="M7.5,441.4387 L747.375,441.4387 L747.375,507.3677 A3,3 0 0 1 744.375,510.3677 L10.5,510.3677 A3,3 0 0 1 7.5,507.3677 L7.5,441.4387 " fill="#FFFFFF" style="stroke:none;stroke-width:0.75;"/><line style="stroke:#FBC9D6;stroke-width:1.5;stroke-dasharray:5.0,5.0;" x1="83.25" x2="83.25" y1="37.9955" y2="523.1177"/><line style="stroke:#FBC9D6;stroke-width:1.5;stroke-dasharray:5.0,5.0;" x1="356.625" x2="356.625" y1="37.9955" y2="523.1177"/><line style="stroke:#FBC9D6;stroke-width:1.5;stroke-dasharray:5.0,5.0;" x1="646.875" x2="646.875" y1="348.084" y2="523.1177"/><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="77.25" x="45" y="3.75"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="59.25" x="54" y="25.5685">Merchant</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="77.25" x="45" y="522.3677"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="59.25" x="54" y="544.1862">Merchant</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="93" x="310.125" y="3.75"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="75" x="319.125" y="25.5685">Paysafe API</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="93" x="310.125" y="522.3677"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="75" x="319.125" y="544.1862">Paysafe API</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="125.25" x="584.625" y="522.3677"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="107.25" x="593.625" y="544.1862">Customer Wallet</text><rect fill="#FFFFFF" height="336.2688" style="stroke:#FBC9D6;stroke-width:0.75;" width="7.5" x="352.875" y="179.3489"/><path d="M87,52.2455 L87,82.9955 A3,3 0 0 0 90,85.9955 L309,85.9955 A3,3 0 0 0 312,82.9955 L312,56.7455 L304.5,49.2455 L90,49.2455 A3,3 0 0 0 87,52.2455 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><path d="M304.5,49.2455 L304.5,55.2455 A1.5,1.5 0 0 0 306,56.7455 L312,56.7455 L304.5,49.2455 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><ellipse cx="99.375" cy="62.0585" fill="#033C73" rx="1.875" ry="1.875" style="stroke:#033C73;stroke-width:0.0;"/><text fill="#033C73" font-family="Verdana" font-size="9" lengthAdjust="spacing" textLength="192.75" x="104.25" y="65.7938">Customer signed up in Merchant's platform</text><ellipse cx="99.375" cy="72.9965" fill="#033C73" rx="1.875" ry="1.875" style="stroke:#033C73;stroke-width:0.0;"/><text fill="#033C73" font-family="Verdana" font-size="9" lengthAdjust="spacing" textLength="60.75" x="104.25" y="76.7318">KYC complete</text><polygon fill="#282828" points="343.875,176.3489,351.375,179.3489,343.875,182.3489,346.875,179.3489" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="83.625" x2="348.375" y1="179.3489" y2="179.3489"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="92.625" y="140.4309">1</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="228" x="112.125" y="109.4399">POST /digitalwallets/v1/wallet</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="100.5" x="112.125" y="124.9354">customer: {...}</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="93" x="112.125" y="140.4309">accounts: [...]</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="158.25" x="112.125" y="155.9264">identityDocuments: [...]</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="227.25" x="112.125" y="171.4219">termsAndConditionsAccepted: true</text><line style="stroke:#282828;stroke-width:2.25;" x1="360.375" x2="391.875" y1="212.8444" y2="212.8444"/><line style="stroke:#282828;stroke-width:2.25;" x1="391.875" x2="391.875" y1="212.8444" y2="222.5944"/><line style="stroke:#282828;stroke-width:2.25;" x1="361.125" x2="391.875" y1="222.5944" y2="222.5944"/><polygon fill="#282828" points="368.625,219.5944,361.125,222.5944,368.625,225.5944,365.625,222.5944" style="stroke:#282828;stroke-width:0.75;"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="369.375" y="204.9174">2</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="133.5" x="388.875" y="204.9174">Internal verifications</text><line style="stroke:#282828;stroke-width:2.25;" x1="360.375" x2="391.875" y1="271.5853" y2="271.5853"/><line style="stroke:#282828;stroke-width:2.25;" x1="391.875" x2="391.875" y1="271.5853" y2="281.3353"/><line style="stroke:#282828;stroke-width:2.25;" x1="361.125" x2="391.875" y1="281.3353" y2="281.3353"/><polygon fill="#282828" points="368.625,278.3353,361.125,281.3353,368.625,284.3353,365.625,281.3353" style="stroke:#282828;stroke-width:0.75;"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="369.375" y="255.9106">3</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="120" x="388.875" y="248.1628">Risk &amp; Compliance</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="51" x="388.875" y="263.6583">controls</text><path d="M10.5,292.5853 L61.5,292.5853 L61.5,304.5853 L54,312.0853 L7.5,312.0853 L7.5,295.5853 A3,3 0 0 1 10.5,292.5853 " fill="#EEEEEE" style="stroke:#868E96;stroke-width:0.75;"/><rect fill="none" height="217.7823" rx="3" ry="3" style="stroke:#868E96;stroke-width:1.5;" width="739.875" x="7.5" y="292.5853"/><text fill="#033C73" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="12.75" x="22.5" y="306.1337">alt</text><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="198" x="76.5" y="306.8837">[Customer wallet created successfully]</text><polygon fill="#282828" points="575.625,344.2068,583.125,347.2068,575.625,350.2068,578.625,347.2068" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="360.375" x2="580.125" y1="347.2068" y2="347.2068"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="369.375" y="339.2798">4</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="149.25" x="388.875" y="339.2798">Create customer wallet</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="125.25" x="584.625" y="319.7113"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="107.25" x="593.625" y="341.5298">Customer Wallet</text><polygon fill="#282828" points="91.875,432.4387,84.375,435.4387,91.875,438.4387,88.875,435.4387" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="87.375" x2="352.125" y1="435.4387" y2="435.4387"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="100.125" y="404.2685">5</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="86.25" x="119.625" y="381.0253">201 Created</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="100.5" x="119.625" y="396.5208">customer: {...}</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="93" x="119.625" y="412.0162">accounts: [...]</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="158.25" x="119.625" y="427.5117">identityDocuments: [...]</text><line style="stroke:#868E96;stroke-width:0.75;stroke-dasharray:2.0,2.0;" x1="7.5" x2="747.375" y1="442.1887" y2="442.1887"/><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="147" x="15" y="454.9871">[Invalid input data provided]</text><polygon fill="#282828" points="91.875,501.3677,84.375,504.3677,91.875,507.3677,88.875,504.3677" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="87.375" x2="352.125" y1="504.3677" y2="504.3677"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="100.125" y="488.6929">6</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="36" x="119.625" y="480.9452">Error</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="78.75" x="119.625" y="496.4407">Error details</text><path d="M363.75,475.9032 L363.75,495.4032 A3,3 0 0 0 366.75,498.4032 L520.5,498.4032 A3,3 0 0 0 523.5,495.4032 L523.5,480.4032 L516,472.9032 L366.75,472.9032 A3,3 0 0 0 363.75,475.9032 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><path d="M516,472.9032 L516,478.9032 A1.5,1.5 0 0 0 517.5,480.4032 L523.5,480.4032 L516,472.9032 " fill="#FFFFFF" style="stroke:#033C73;stroke-width:0.75;"/><text fill="#033C73" font-family="Verdana" font-size="9" lengthAdjust="spacing" textLength="136.5" x="372" y="489.4515">Customer wallet is not created</text><!--MD5=[4223aa76174fafede81db757389f76da]
+@startuml "0-Wallet-Create"
+    !theme cerulean-outline
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant "Merchant" as Merchant
+    participant "Paysafe API" as PaysafeAPI
+    participant "Customer Wallet" as CW
+
+    autonumber
+
+    note right of Merchant:  * Customer signed up in Merchant's platform\n* KYC complete
+    Merchant -> PaysafeAPI: **POST /digitalwallets/v1/wallet**\ncustomer: {...}\naccounts: [...]\nidentityDocuments: [...]\ntermsAndConditionsAccepted: true
+    activate PaysafeAPI
+        PaysafeAPI -> PaysafeAPI: Internal verifications
+        PaysafeAPI -> PaysafeAPI: Risk & Compliance\ncontrols
+        alt Customer wallet created successfully
+            PaysafeAPI -> CW **: Create customer wallet
+            Merchant <- - PaysafeAPI: **201 Created**\ncustomer: {...}\naccounts: [...]\nidentityDocuments: [...]
+        else Invalid input data provided
+            Merchant <- - PaysafeAPI: **Error**\nError details
+            note right: Customer wallet is not created
+        end if
+    deactivate PaysafeAPI
+@enduml
+
+@startuml "0-Wallet-Create"
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             false
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               5
+skinparam ArrowColor            #868E96
+skinparam stereotype {
+    CBackgroundColor #EDF0F2
+    CBorderColor #BABDBF
+    ABackgroundColor #8FB961
+    ABorderColor $SUCCESS_DARK
+    IBackgroundColor #D2494E
+    IBorderColor $DANGER_DARK
+    EBackgroundColor #E47833
+    EBorderColor $WARNING_DARK
+    NBackgroundColor #35638F
+    NBorderColor $INFO_DARK
+}
+skinparam title {
+	FontColor	                 #2FA4E7
+	BorderColor	                 #BABDBF
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              transparent
+}
+
+skinparam legend {
+	BackgroundColor transparent
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam swimlane {
+	BorderColor #033C73
+	BorderThickness 2
+	TitleBackgroundColor  #EDF0F2-#E9ECEF
+	TitleFontColor #2FA4E7
+}
+
+
+skinparam activity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BarColor #73A839
+	StartColor #033C73
+	EndColor #033C73
+	DiamondBackgroundColor transparent
+  	DiamondBorderColor #BABDBF
+	DiamondFontColor #BABDBF
+}
+
+
+skinparam participant {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2FA4E7
+	FontColor #343A40
+}
+
+
+skinparam sequence {
+	BorderColor #2FA4E7
+	TitleFontColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #2FA4E7
+	EndColor #2FA4E7
+	BoxBackgroundColor transparent
+	BoxBorderColor #868E96
+	BoxFontColor #343A40
+	DelayFontColor #343A40
+	LifeLineBorderColor #BABDBF
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor transparent
+	GroupBorderColor #868E96
+	GroupFontColor #343A40
+	GroupHeaderFontColor #033C73
+	DividerBackgroundColor transparent
+    DividerBorderColor #868E96
+    DividerBorderThickness 2
+    DividerFontColor #343A40
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #868E96
+	ReferenceFontColor #343A40
+	ReferenceHeaderFontColor #033C73
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam partition {
+	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam control {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam entity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam boundary {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam agent {
+	BackgroundColor transparent
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam artifact {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam component {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam interface {
+	BackgroundColor  transparent
+	BorderColor  #C71C22
+	FontColor #343A40
+}
+
+
+skinparam storage {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+}
+
+
+skinparam node {
+	BackgroundColor transparent
+	BorderColor #343A40
+	FontColor #343A40
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #343A40
+}
+
+
+skinparam database {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam class {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	FontColor #F8F9FA
+	HeaderBackgroundColor #2FA4E7-#2683B9
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam rectangle {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam package {
+	BackgroundColor transparent
+  	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor transparent
+  	BorderColor #033C73
+	FontColor #033C73
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #033C73
+	EndColor #033C73
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam card {
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam file {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam stack {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant "Merchant" as Merchant
+    participant "Paysafe API" as PaysafeAPI
+    participant "Customer Wallet" as CW
+
+    autonumber
+
+    note right of Merchant:  * Customer signed up in Merchant's platform\n* KYC complete
+    Merchant -> PaysafeAPI: **POST /digitalwallets/v1/wallet**\ncustomer: {...}\naccounts: [...]\nidentityDocuments: [...]\ntermsAndConditionsAccepted: true
+    activate PaysafeAPI
+        PaysafeAPI -> PaysafeAPI: Internal verifications
+        PaysafeAPI -> PaysafeAPI: Risk & Compliance\ncontrols
+        alt Customer wallet created successfully
+            PaysafeAPI -> CW **: Create customer wallet
+            Merchant <- - PaysafeAPI: **201 Created**\ncustomer: {...}\naccounts: [...]\nidentityDocuments: [...]
+        else Invalid input data provided
+            Merchant <- - PaysafeAPI: **Error**\nError details
+            note right: Customer wallet is not created
+        end if
+    deactivate PaysafeAPI
+@enduml
+
+PlantUML version 1.2021.12(Tue Oct 05 19:01:58 EEST 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: BG
+--></g></svg>
