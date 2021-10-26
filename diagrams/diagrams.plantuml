@@ -1,0 +1,74 @@
+@startuml "0-Wallet-Create"
+    title "Create a customer wallet"
+
+    !theme cerulean-outline
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #FFFFFF
+        ParticipantBackgroundColor #FFFFFF
+        ParticipantFontSize 17
+        ParticipantFontColor #282828
+        ArrowColor #282828
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant "Merchant" as Merchant
+    participant "Paysafe API" as PaysafeAPI
+    participant "Customer Wallet" as CW
+
+    note left of Merchant: Customer signed up\nKYC complete
+    Merchant -> PaysafeAPI: POST /digitalwallets/v1/wallet\ncustomer: {}\naccounts: []\nidentityDocuments: []\ntermsAndConditionsAccepted: true
+    activate PaysafeAPI
+        PaysafeAPI -> PaysafeAPI: Internal verifications
+        PaysafeAPI -> PaysafeAPI: Risk & Compliance\ncontrols
+        alt "Verifications, Risk & Compliance controls passed successfully"
+            PaysafeAPI -> CW **: Create customer wallet
+            Merchant <-- PaysafeAPI: 201 Created\ncustomer: {}\naccounts: []\nidentityDocuments: []
+        else "Verifications, Risk or Compliance controls failed"
+            Merchant <-- PaysafeAPI: Error\nerror details
+            note right: Customer wallet is not created
+        end if
+    deactivate PaysafeAPI
+@enduml
+
+
+@startuml "2-Deposit-card"
+    title "Deposit with a card"
+
+    !theme cerulean-outline
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #FFFFFF
+        ParticipantBackgroundColor #FFFFFF
+        ParticipantFontSize 17
+        ParticipantFontColor #282828
+        ArrowColor #282828
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant "Merchant" as Merchant
+    participant "Paysafe API" as PaysafeAPI
+    participant "Customer Wallet" as CW
+
+    note left of Merchant: Customer wallet created
+    Merchant -> PaysafeAPI: POST /digitalwallets/v1/wallet\ncustomer: {}\naccounts: []\nidentityDocuments: []\ntermsAndConditionsAccepted: true
+    activate PaysafeAPI
+        PaysafeAPI -> PaysafeAPI: Internal verifications
+        PaysafeAPI -> PaysafeAPI: Risk & Compliance\ncontrols
+        alt "Verifications, Risk & Compliance controls passed successfully"
+            PaysafeAPI -> CW **: Create customer wallet
+            Merchant <-- PaysafeAPI: 201 Created\ncustomer: {}\naccounts: []\nidentityDocuments: []
+        else "Verifications, Risk or Compliance controls failed"
+            Merchant <-- PaysafeAPI: Error\nerror details
+            note right: Customer wallet is not created
+        end if
+    deactivate PaysafeAPI
+@enduml
+
+
