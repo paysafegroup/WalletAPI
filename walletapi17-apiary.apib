@@ -36,19 +36,17 @@ On top of Paysafe regular wallet offering, the digital wallet can also be used p
 Merchant's responsibilities:
 
   * Manage customer profiles
-  * Take the customer through KYC, and share the information with Paysafe for regulatory purposes
-  * Integrate to DW via API
-  * Implement UI for customer journeys
-  * Provide merchant's fees per txn
+  * Take the customer through KYC (Know Your Customer), and share the information with Paysafe for regulatory purposes
+  * Implement UI for all customer journeys
+  * Integrate into the Paysafe's Payments and Digital Wallets API
 
 Paysafe Digital Walet responsibilities:
 
-  * E-money ledger
-  * End-customer details storage (regulatory)
-  * Risk & AML monitoring
-  * Payment methods integration
-  * Reporting
-  * Cover regulatory requirements
+  * Maintain e-money ledger
+  * Maintain customer details for regulatory purposes
+  * Monitor for Risk & AML
+  * Integrate additional payment methods 
+  * Provide reporting capabilities
 
 
 ### Customer wallet
@@ -79,11 +77,14 @@ To allow for the ultimate flexibility, all merchant fees **must be provided by t
 Payment Methods represent your customer's payment instruments. They are used to collect payments or store instrument details for future payments.
 The Payments API currently supports the following payment methods:
 
-- Card
-- RAPID_TRANSFER
-> **Note:** RAPID_TRANSFER is only supported for Payments.
-- BANK_TRANSFER
-> **Note:** BANK_TRANSFER is only supported for Standalone Credits.
+- Cards - credit and debit
+- Rapid Transfer
+- Bank transfers
+
+> **Note:** Rapid Transfer is only supported for Payments.
+
+> **Note:** Bank transfers is only supported for Standalone Credits.
+
 
 ## Transaction Types Supported
 Payments API supports the following transaction types:
@@ -231,7 +232,13 @@ When creating a wallet for an **newly signed-up customer**, the `totalBalance` a
 
 If the wallet is created for an existing customer with an existing balance, the fields `totalBalance` and `availableBalance` must both be populated with the same amount that represents the desired initial balance for this customer. When creating the wallets, Paysafe will debit the amounts specified from the Merchant wallet, and credit these amounts into the customer's wallet.
 
-It is possible that Paysafe can refuse to open a wallet for a customer, or after creating the wallet, the customer can be restricted on Paysafe side. The Merchant must be prepared to handle these rejections gracefully.
+> TODO: Better wording for cases when creating a wallet can fail
+
+In case the email provided is not unique and a wallet is already created
+using this email address, the creation of a new wallet will fail.
+
+After creating the wallet, the customer could be restricted on Paysafe side 
+based on regulatory and risk checks. 
 
 
 ### Update customer details
@@ -261,7 +268,6 @@ Account information can be retrieved with the following APIs:
 * Get details and current balance for an account - [Get Account](#reference/wallets/get-account/get-account)
 
 Direct update and delete acounts is not supported via API.
-tions
 
 
 ## Deposit with a card
@@ -269,13 +275,15 @@ tions
 ![Diagram: Deposit with a card](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-card.png)
 
 
-## Deposit with RapidTransfer (instant bank transfer)
+## Deposit with instant bank transfer - RapidTransfer
+
+> TODO: Marketing explanation
 
 ![Diagram: Deposit with RapidTransfer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-rapid-transfer.png)
 
 
 
-## Place holds on a balance
+## Place authorization holds on a balance
 
 
 
