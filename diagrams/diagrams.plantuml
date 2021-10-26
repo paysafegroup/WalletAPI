@@ -389,8 +389,6 @@
         participant "Merchant wallet\n" as MW
     end box
 
-    note left of Merchant: Customer wallet created
-
     Merchant -> PaysafeAPI: Transfer funds from customer to customer\n**POST /digitalwallets/v1/transfers**\n\nmerchantRefNum\namount\ncurrencyCode\nfee\nsender:\n    customerId\n    customerAccount\nrecipient:\n    customerId\n    customerAccount\ndeviceInfo: {}
         activate PaysafeAPI
 
@@ -408,5 +406,5 @@
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
-    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
