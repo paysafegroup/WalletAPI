@@ -35,6 +35,7 @@
 @enduml
 
 
+
 @startuml "2-Deposit-card"
     title "Deposit with a card"
 
@@ -62,22 +63,26 @@
 
     note left of Merchant: Customer wallet created
 
-    Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount: 100000\ncurrencyCode: EUR\nwallet: {customerId, fee}
+    autonumber
+
+    Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount\ncurrencyCode: EUR\nwallet: {customerId, fee}
 
     alt "3DS is required"
         Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
 
         Merchant --> PSP: Redirect Customer to 3D Secure
         Merchant <-- PSP: Redirect Customer back to Merchant's system
+
+        Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
+        note right: Only needed if status != PAYABLE
+        Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
+
     else "3DS is NOT required"
-        Merchant <-- PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE
+        Merchant <-- PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE\n3DS auth details (if any)
     end alt
 
     ...
 
-    Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
-    note right: Only needed if status != PAYABLE
-    Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
 
     Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
     activate PaysafeAPI
@@ -155,6 +160,7 @@
 @enduml
 
 
+
 @startuml "3-Withdraw-bank-account"
     title "Withdraw to a bank account"
 
@@ -210,6 +216,7 @@
 @enduml
 
 
+
 @startuml "3-Withdraw-card"
     title "Withdraw to a card"
 
@@ -233,7 +240,7 @@
         participant "Customer wallet" as CW
         participant "Merchant wallet" as MW
     end box
-    participant "Card Schemes\nVisa" as CardSchemes
+    participant "Card Schemes" as CardSchemes
 
     note left of Merchant: Customer wallet created
 
@@ -246,7 +253,7 @@
     activate PaysafeAPI
 
         PaysafeAPI <-[#FF0000] CW: Debit amount to withdraw\nfrom Customer wallet
-        PaysafeAPI [#FF0000]-> CardSchemes: Execute standalone credit\nwith the card schemes
+        PaysafeAPI [#FF0000]-> CardSchemes: Process standalone credit\nwith the card schemes
         PaysafeAPI <-[#FF0000] CW: (if fee is specified)\nDebit merchant's fee\nfrom the Customer wallet
         PaysafeAPI [#FF0000]-> MW: (if fee is specified)\nCredit merchant's fee\ninto the Merchant wallet
         PaysafeAPI <-[#FF0000] MW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
