@@ -595,7 +595,7 @@ Paysafe will also make sure any returned withdrawals are processed by crediting 
 
 &nbsp;
 
-
+<a name="api" title="API"></a>
 # API
 The API is constructed around REST and has following features:
 * Definite resource-oriented URLs
@@ -606,9 +606,6 @@ The API is constructed around REST and has following features:
 * **Message body**: This must contain valid Paysafe JSON objects as required for the type of request. Not all API calls require a message-body; for example, GET requests do not require a body.
 * **Resource ID**: Identifies the unique ID of a resource.
 ![Structure of a Typical API Request](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/user_upload/authentication_example_payments.png)
-
-<a name="apiendpoints" title="API Endpoints"></a>
-## API Endpoints
 
 <a name="webhooks" title="Webhooks"></a>
 # Webhooks
@@ -3121,9 +3118,9 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
             }
 
 
-# Group Wallets
+# Group Customers
 
-## Create Wallet [POST /digitalwallets/v1/wallets]
+## Create wallet [POST /wallets]
 Create a new wallet.
 
 + Request (application/json)
@@ -3161,84 +3158,16 @@ Create a new wallet.
 
 
 
-
-
-
-
-
-
-
-## Get Account List [GET /digitalwallets/v1/accounts{?customerId,limit,offset}]
+## Customers [/customers/{customerId}]
 
 + Parameters
     + customerId (string, required)
 
-        Filter by customer
-
-    + limit (number, optional)
-
-        This is the total number of records to return. Max = 50. Default = 10.
-
-    + offset (number, optional)
-
-        This is the starting position, where 0 is the first record. Default = 0.
+        Customer id
 
 
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (Accounts Response)
-
-
-
-+ Response 200 (application/xml)
-
-        OK
-
-    + Attributes (array[Account])
-
-
-
-+ Response 404
-
-        Wallet with the requested ID is not found.
-
-
-
-
-
-## Get Account [GET /digitalwallets/v1/accounts/{accountId}]
-
-Retrieve the account with the provided id.
-
-+ Parameters
-    + accountId (string, required)
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (Account)
-
-
-
-+ Response 404
-
-        Account with the requested ID was not found.
-
-
-
-
-
-
-# Group Customers
-
-## Get Customer [GET /digitalwallets/v1/customers/{customerId}]
+### Get customer by id [GET]
 Get a customer by ID.
-
-+ Parameters
-    + customerId (string, required)
 
 + Response 200 (application/json)
 
@@ -3252,21 +3181,53 @@ Get a customer by ID.
 
         Customer with the requested ID was not found.
 
-## Update Customer  [PATCH /digitalwallets/v1/customers/{customerId}]
 
-Update customer information. Note that not all attributes can be updated.
 
-+ Parameters
-    + customerId (string, required)
+
+### Deactivate customer [DELETE]
+Deactivates a customer.
+
++ Request
+    + Headers
+
+            X-Signature:<<Add Header Value>>
+
+
+
+
+
++ Response 200 (application/json)
+
+        OK
+
+    + Attributes (Customer)
+
+
+
++ Response 404
+
+        Customer with the requested ID was not found.
+
+
+
+
++ Response 409
+
+        The customer with the requested ID has already been deactivated.
+
+
+### Update customer information [PATCH]
+Update customer information.
 
 + Request (application/json)
 
     + Attributes (Customer)
 
 
-+ Response 200 (application/json)
 
-        OK
++ Response 202 (application/json)
+
+        Accepted
 
     + Attributes (Customer)
 
@@ -3285,361 +3246,6 @@ Update customer information. Note that not all attributes can be updated.
         Not Found
 
 
-## Deactivate Customer [DELETE /digitalwallets/v1/customers/{customerId}]
-Deactivates a customer wallet.
-
-+ Parameters
-    + customerId (string, required)
-
-+ Request
-    + Headers
-
-            X-Signature:<<Add Header Value>>
-
-
-+ Response 200
-
-        OK
-
-
-
-
-+ Response 404
-
-        Customer with the requested ID was not found.
-
-
-
-
-+ Response 409
-
-        The customer with the requested ID has already been deactivated.
-
-
-
-
-
-
-## Submit an identity document [POST /digitalwallets/v1/identity-documents]
-
-Create a new identity document
-
-+ Request (application/json)
-
-    + Attributes (IdentityDocument)
-
-
-
-+ Response 201 (application/json)
-
-        Created
-
-    + Attributes (IdentityDocument)
-
-
-
-+ Response 400 (application/json)
-
-        Validation failed. Check error response for details.
-
-    + Attributes (Error Details)
-
-
-
-
-
-
-## Get identity document list [GET /digitalwallets/v1/identity-documents{?customerId,limit,offset}]
-Retrieve a list of identity documents
-
-+ Parameters
-    + customerId (string, optional)
-
-        Filter by customer ID
-
-    + limit (number, optional)
-
-        This is the total number of records to return. Max = 50. Default = 10.
-
-    + offset (number, optional)
-
-        This is the starting position, where 0 is the first record. Default = 0.
-
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (Identity Documents Response)
-
-
-## Get identity document [GET /digitalwallets/v1/identity-documents/{identityDocumentId}]
-Get identity document by ID
-
-+ Parameters
-    + identityDocumentId (string, optional)
-
-        ID of the requested identity document
-
-
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (IdentityDocument)
-
-
-
-+ Response 404
-
-        Not Found
-
-
-
-
-
-
-
-
-
-# Group Transactions
-
-Initiate transfer of funds, transaction history and transaction details.
-
-
-## Transfer In [POST /digitalwallets/v1/transferins]
-
-Transfer funds from merchant's wallet account to customer's wallet.
-
-+ Request (application/json)
-    + Headers
-
-            X-Signature:<<Add Header Value>>
-
-
-    + Attributes (TransferIn)
-
-
-
-+ Response 201 (application/json)
-
-        Created
-
-    + Attributes (TransferIn)
-
-
-
-+ Response 400 (application/json)
-
-        Validation failed or other type of business error.
-
-    + Attributes (Error Details)
-
-
-
-
-## Transfer Out [POST /digitalwallets/v1/transferouts]
-
-Transfer funds from customer's wallet account to merchant's wallet or to another customer (peer) wallet.
-
-+ Request (application/json)
-    + Headers
-
-            X-Signature:<<Add Header Value>>
-
-
-    + Attributes (TransferOut)
-
-
-
-+ Response 201 (application/json)
-
-        Created
-
-    + Attributes (TransferOut)
-
-
-
-+ Response 400 (application/json)
-
-        Validation failed or other type of business error.
-
-    + Attributes (Error Details)
-
-
-## Get Transactions List [GET /digitalwallets/v1/transactions{?limit,offset,startDate,endDate,accountId}]
-
-Retrieve transactions for an account, ordered by creationTime descending
-
-+ Parameters
-    + accountId (string, required)
-
-        Filter by account ID
-
-    + limit (number, optional)
-
-        Limit number of results
-
-    + offset (number, optional)
-
-        Offset results by the specified number
-
-    + startDate (string, optional)
-
-        Filter by creation time
-
-        + Sample: 2021-10-05T14:43:33Z
-
-    + endDate (string, optional)
-
-        Filter by creationType after
-
-        + Sample: 2021-10-05T14:43:33Z
-
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (Transactions Response)
-
-
-
-+ Response 200 (application/xml)
-
-        OK
-
-    + Attributes (object)
-
-
-
-
-
-
-## Get Transaction [GET /digitalwallets/v1/transactions/{transactionId}]
-
-Retrieve details on a transaction with the specified id.
-
-+ Parameters
-    + transactionId (string, required)
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (Transaction)
-
-
-
-+ Response 404
-
-        Transaction with the requested ID was not found.
-
-
-
-
-
-
-
-## Create Authorization Hold [POST /digitalwallets/v1/authorization-holds]
-
-+ Request (application/json)
-
-    + Attributes (AuthorizationHold)
-
-
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (AuthorizationHold)
-
-
-
-+ Response 400 (application/json)
-
-        Unable to process request due to validation or other errors.
-
-    + Attributes (Error Details)
-
-
-
-
-
-
-
-## Get Authorization Holds [GET /digitalwallets/v1/authorization-holds{?limit,offset,accountId}]
-
-Retrieve list of active authorization holds only.
-
-+ Parameters
-    + accountId (string, reqiured)
-
-        Filter by Account ID
-
-        + Sample: 2021-10-05T14:43:33Z
-
-    + limit (number, optional)
-
-        Limit number of results
-
-    + offset (number, optional)
-
-        Offset results by the specified number
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (Authorization Holds Response)
-
-
-
-
-
-
-## Get Authorization Hold [GET /digitalwallets/v1/authorization-holds/{id}]
-
-Retrieve details on an authorization hold by ID.
-
-+ Parameters
-    + id (string, required)
-
-+ Response 200 (application/json)
-
-        OK
-
-    + Attributes (AuthorizationHold)
-
-
-
-+ Response 404
-
-        Not Found
-
-
-
-
-
-
-## Release An Authorization Hold [DELETE /digitalwallets/v1/authorization-holds/{id}]
-Expire an authorisation hold.
-
-+ Parameters
-    + id (string, required)
-
-+ Response 200
-
-        OK
-
-
-
-
-+ Response 404
-
-        Not Found
 
 
 
@@ -5020,7 +4626,6 @@ Wallet composite model
 ### Properties
 + `customer` (Customer, required)
 + `accounts` (array[Account], required)
-+ `identityDocuments` (array[IdentityDocument], required)
 + `termsAndConditionsAccepted` (boolean, required)
 
 
@@ -5035,25 +4640,27 @@ Wallet composite model
 + `email` (string, required) - Primary email address
 + `phone` (string, optional)
 + `mobile` (string, required)
-+ `address1` (string, optional)
++ `address1` (string, required)
 + `address2` (string, optional)
-+ `city` (string, optional)
-+ `zip` (string, optional)
++ `city` (string, required)
++ `zip` (string, required)
 + `state` (string, optional)
-+ `countryCode` (string, optional) - ISO country code
++ `countryCode`: `GB` (string, required) - ISO-3166 Alpha 2 country code
 + `birthDate` (string, required)
 + `registrationIp` (string, optional) - IPv4 address from which the customer has registered.
-+ `nationality` (string, required) - ISO country code for nationality of the customer
-+ `externalId` (string, required) - ID of the customer in an external system
-+ `kycStatus` (enum[string], optional) - KYC Status enumeration
-    + `NOT_COMPLETE`
-    + `IN_PROGRESS`
-    + `COMPLETE`
++ `registrationDate` (string, required) - Date of registration at the Merchant system
++ `nationality`: `GB` (string, required) - ISO-3166 Alpha 2 country code
++ `externalId`: `d6f475fe-57c9-4865-9316-0c3b8e8128d4` (string, required) - Any external id, e.g. UUID or a numeric id
++ `kyc` (KYC, optional)
 + `type` (enum[string], optional) - Type of Customer
-    + `LEGAL_ENTITY`
     + `PERSON`
+    + `LEGAL_ENTITY`
 + `legalEntityName` (string, optional)
 + `legalEntityIdentifier` (string, optional)
++ `status` (enum[string], optional)
+    + `ACTIVE`
+    + `RESTRICTED`
+    + `DEACTIVATED`
 
 
 ## Account (object)
@@ -5062,79 +4669,194 @@ Wallet composite model
 ### Properties
 + `id` (string, required)
 + `customerId` (string, required)
-+ `currency`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
-+ `totalBalance` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `availableBalance` (Minor Units Amount, required) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
++ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
++ `totalBalance` (number, optional) - Amount in minor units
++ `availableBalance` (number, required) - Amount in minor units
 + `iban` (string, optional) - IBAN associated with this account.
 + `creationTime`: `2019-08-24T14:15:22Z` (string, optional)
 + `hasIban` (boolean, optional)
 
 
-## IdentityDocument (object)
-Personal identity document
+## AccountList (object)
+List of accounts.
 
 ### Properties
-+ `id` (string, optional)
-+ `customerId` (string, required)
-+ `type` (enum[string], required)
-    + `PASSPORT`
-    + `DRIVERS_LICENSE`
-    + `ID_CARD`
-    + `GOVERNMENT_NATIONAL_ID`
-+ `documentNumber` (string, required)
-+ `expirationDate` (string, optional)
-+ `countryCode` (string, optional)
++ `accounts` (array[Account], optional)
++ `meta` (PagingResultMeta, optional)
 
 
 ## Transaction (object)
 
 
 ### Properties
++ `id`: `544232` (string, optional) - Transaction id
++ `slipId`: `121345` (string, optional) - Transaction Slip Id.
++ `customerId`: `1234` (string, optional) - Wallet customer id.
++ `customerAccountId`: `212345` (string, optional) - Account Id associated with this transaction.
 + `type` (enum[string], optional)
     + `DEPOSIT`
     + `WITHDRAWAL`
     + `CHARGEBACK_REVERSAL`
     + `RETURNED_WITHDRAWAL`
     + `CHARGEBACK`
-    + `PAY_OUT`
-    + `PAY_IN`
     + `MERCHANT_FEE`
-+ `accountId` (string, optional)
-+ `id` (string, optional)
-+ `accountType` (enum[string], optional)
-    + `FIAT`
-    + `CRYPTO`
-+ `description` (string, optional)
+    + `TRANSACTION_FEE`
+    + `CANCELATION`
+    + `TRANSFER_IN`
+    + `TRANSFER_OUT`
++ `amount`: `1000` (number, optional) - Transaction amount in minor units.
++ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
++ `fee`: `100` (number, optional) - Transaction fee in minor units.
 + `creationTime`: `2021-07-15T17:54:12Z` (string, optional)
-+ `customerId` (string, optional)
-+ `direction` (enum[string], optional)
-    + `IN`
-    + `OUT`
-    + `THROUGH`
-+ `exchangeRate` (ExchangeRate, optional)
-+ `feeAmount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `netAmount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `paymentDetails` (PaymentDetails, optional)
++ `direction` (enum[string], optional) - Transaction direction.
+    + `CREDIT`
+    + `DEBIT`
++ `paymentType` (enum[string], optional)
+
+    Type of instrument. Used as discriminator for different Payment Insturment types.
+
+      * CARD
+      * BANK_TRANSFER
+      * RAPID_TRANSFER
+
+    + `CARD`
+    + `BANK_TRANSFER`
+    + `RAPID_TRANSFER`
+    + `SOFORT`
+    + `TRANSFER`
++ `description`: `Transaction description.` (string, optional) - Transaction description.
 + `status` (enum[string], optional)
     + `PENDING`
     + `PROCESSING`
     + `COMPLETED`
     + `FAILED`
     + `CANCELLED`
-+ `statusReason` (enum[string], optional)
++ `statusReason` (enum[string], optional) - Additional STATUS information.
     + `ACTION_REQUIRED`
     + `PENDING_KYC`
     + `PENDING_REVIEW`
     + `PENDING_SCREENING`
     + `RECIPIENT_ACTION_REQUIRED`
     + `WAITING_FOR_RECIPIENT_ACCOUNT`
-+ `amount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `processorReferenceId` (string, optional)
-+ `merchantReferenceId` (string, optional)
++ `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
+
+
+## TransactionList (object)
+
+
+### Properties
++ `transactions` (array[Transaction], optional)
++ `meta` (PagingResultMeta, optional)
+
+
+## AuthorizationHold (object)
+
+
+### Properties
++ `id` (string, optional)
++ `accountId` (string, required)
++ `amount` (number, required)
++ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
++ `createdOn`: `2021-07-15T17:54:12Z` (string, optional)
++ `status` (enum[string], optional)
+    + `ACTIVE`
+    + `EXPIRED`
+    + `USED`
+
+
+## AuthorizationHoldList (object)
+
+
+### Properties
++ `authorizationHolds` (array[AuthorizationHold], optional)
++ `meta` (PagingResultMeta, optional)
+
+
+## Link (object)
+
+
+### Properties
++ `rel`: `urn:x-skrill:payment-redirect` (string, required)
++ `href` (string, required)
++ `method` (enum[string], optional)
+    + `GET`
+    + `POST`
+
+
+## DeviceInfo (object)
+Provides information about the device that the end-customer uses to access the service.
+
+### Properties
++ `sessionId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
++ `deviceId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
++ `ip`: `192.168.1.10` (string, optional)
++ `ipCountry`: `GB` (string, optional) - ISO-3166 Alpha 2 country code
++ `trueIp` (string, optional)
++ `trueIpCountry`: `GB` (string, optional) - ISO-3166 Alpha 2 country code
++ `type` (enum[string], optional)
+    + `BROWSER`
+    + `MOBILE_DEVICE`
+    + `SYSTEM`
+    + `UNKNOWN`
+
+
+## Error Details (object)
+Additional details about an error
+
+### Properties
++ `code` (string, optional) - The error code.
++ `message` (string, optional) - A description of the error.
++ `details` (array[string], optional) - Details of any parameter value errors.
++ `fieldErrors` (FieldError, optional) - Represents Field validation Error.
+
+
+## FieldError (object)
+Represents Field validation Error.
+
+### Properties
++ `field` (string, optional) - Identifies the JSON request field.
++ `error` (string, optional) - The problem associated with the field.
+
+
+## PagingResultMeta (object)
+
+
+### Properties
++ `numberOfRecords` (number, optional)
++ `limit` (number, optional)
++ `page` (number, optional)
+
+
+## Transfer (object)
+Model for facilitation of internal Wallet transfer of funds.
+
+### Properties
++ `slipId` (string, optional) - Transfer slip id.
++ `amount`: `1000` (number, required) - Transaction amount in minor units.
++ `fee`: `100` (number, optional) - Transaction fee in minor units.
++ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
++ `authorizationHoldId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
++ `sender` (AccountSlip, optional) - Account specific view of the slip.
++ `recipient` (AccountSlip, optional) - Account specific view of the slip.
++ `merchant` (AccountSlip, optional) - Account specific view of the slip.
++ `description`: `Transfer description.` (string, optional) - Transfer description.
++ `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
++ `status` (enum[string], optional)
+    + `PENDING`
+    + `PROCESSING`
+    + `COMPLETED`
+    + `FAILED`
+    + `CANCELLED`
++ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
 
 
 ## PaymentInstrument (object)
-Represents Payment Instrument base type.
+Represents Payment Instrument, used for Deposit or Withdrawal.
+There are two types of instruments:
+
+* BankAccountPaymentInstrument
+
+* CardPaymentInstrument
 
 ### Properties
 + `instrumentType` (string, optional)
@@ -5148,10 +4870,10 @@ Bank Account Payment Instrument
 + `accountHolderName` (string, optional) - This is the name of the customer or company that owns the bank account.
 + `iban` (string, optional) - The International Bank Account Number (IBAN) of the account.
 + `bic` (string, optional) - The Bank Acccount Bank Identifier Code (BIC) code. Also known as SWIFT code.
-+ `country`: `DEU` (string, optional) - The ISO 3166-1 alpha-3 code for the consumer's bank (e.g., Germany = DEU, JPN=Japan, CAN=Canada).
++ `countryCode`: `GB` (string, optional) - ISO-3166 Alpha 2 country code
 
 
-## CardPaymentInstrument (PaymentInstrument)
+## Card Payment Instrument (PaymentInstrument)
 Card Payment Instrument.
 
 ### Properties
@@ -5160,167 +4882,192 @@ Card Payment Instrument.
 + `cardHolderName` (string, optional) - Card holder name.
 + `expiryDate` (string, optional) - Expiry Date in "MM/YYYY" format.
 + `cardType` (string, optional) - Card type (Read Only).
-+ `issuingCountry` (string, optional) - Issuing Country. Country ISO 3166-1 Alpha-3 country code. (Read Only).
++ `issuingCountry`: `GB` (string, optional) - ISO-3166 Alpha 2 country code
 + `bankName` (string, optional) - Bank Name (Read Only).
 + `cardCurrency`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
 + `cvv` (string, optional) - Card CVV (Do not store)
 
 
-## PaymentDetails (object)
-
-
-### Properties
-+ `bankName` (string, optional)
-+ `instrumentBrand` (string, optional)
-+ `instrumentId` (string, optional)
-+ `obfuscatedInstrumentIdentifier` (string, optional)
-+ `optionId` (string, optional)
-+ `paymentType` (enum[string], optional)
-    + `CARD`
-    + `MOBILE_WALLET`
-    + `BANK`
-    + `ALTERNATIVE_PAYMENT_METHOD`
-
-
-## AuthorizationHold (object)
-
+## Deposit Request Object (object)
+Structure for initiating Depost process.
 
 ### Properties
-+ `id` (string, optional)
-+ `amount` (Minor Units Amount, required) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `createdOn`: `2021-07-15T17:54:12Z` (string, optional)
-+ `expiresOn`: `2021-07-15T17:54:12Z` (string, optional)
-+ `status` (enum[string], optional)
-    + `ACTIVE`
-    + `EXPIRED`
-+ `accountId` (string, optional)
-+ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
-
-
-## Minor Units Amount (object)
-Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-
-### Properties
-+ `amount`: `0` (number, required) - Amount value in Currency minor units.
++ `customerId` (string, required) - Customer ID
++ `amount` (number, required)
 + `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
++ `fee` (number, optional)
++ `paymentOption` (enum[string], required) - Enumeration of supported Payment Option Types
+    + `RAPID_TRANSFER`
+    + `SOFORT`
+    + `GIROPAY`
+    + `BANKWIRE`
+    + `CARD`
++ `paymentInstrument` (PaymentInstrument, required)
 
+    Represents Payment Instrument, used for Deposit or Withdrawal.
+    There are two types of instruments:
 
-## ExchangeRate (object)
+    * BankAccountPaymentInstrument
 
+    * CardPaymentInstrument
 
-### Properties
-+ `fromCurrency` (string, optional)
-+ `rate` (string, optional)
-+ `toCurrency` (string, optional)
-
-
-## DeviceInfo (object)
-Provides information about the device that the end-customer uses to access the service.
-
-### Properties
-+ `sessionId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
-+ `deviceId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
-+ `ip`: `192.168.1.10` (string, optional)
-+ `ipCountry` (string, optional)
-+ `trueIp` (string, optional)
-+ `trueIpCountry` (string, optional)
-+ `type` (enum[string], optional)
-    + `BROWSER`
-    + `MOBILE_DEVICE`
-    + `SYSTEM`
-    + `UNKNOWN`
-
-
-## FieldError (object)
-Represents Field validation Error.
-
-### Properties
-+ `field` (string, optional) - Identifies the JSON request field.
-+ `error` (string, optional) - The problem associated with the field.
-
-
-## Error Details (object)
-Additional details about an error
-
-### Properties
-+ `code` (string, optional) - The error code.
-+ `message` (string, optional) - A description of the error.
-+ `details` (array[string], optional) - Details of any parameter value errors.
-+ `fieldErrors` (FieldError, optional) - Represents Field validation Error.
-
-
-## TransferOut (object)
-
-
-### Properties
-+ `customerId` (string, optional)
-+ `amount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `type` (enum[string], optional)
-    + `MERCHANT_FEE`
-    + `P2P_TRANSFER`
-    + `OWN_ACCOUNTS_TRANSFER`
-    + `PAYMENT_TO_MERCHANT`
-+ `fee` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `description` (string, optional)
-+ `authorizationHoldId` (string, optional)
-+ `externalReferenceId` (string, optional)
-+ `peerCustomerId` (string, optional)
++ `merchantRefNum` (string, optional) - External Reference ID, that allows to correlate to external operation.
++ `internalReferenceId` (string, optional) - Internal Paysafe Reference Id required for tracking operation across systems. Must be unique identifier.
++ `successURL` (string, optional)
++ `failURL` (string, optional)
 + `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
-+ `transactionId` (string, optional)
 
 
-## TransferIn (object)
-
+## Deposit Object (object)
+Deposit Response object.
 
 ### Properties
-+ `customerId` (string, optional)
-+ `type` (enum[string], optional)
-    + `REFUND`
-    + `PAYMENT_FROM_MERCHANT`
-+ `amount` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `fee` (Minor Units Amount, optional) - Minor Units Amount is used for all balance changing operations (e.g Deposit, Withdrawal, ...).
-+ `description` (string, optional)
-+ `externalReferenceId` (string, optional)
++ `id` (string, optional) - The Digital Wallet slip id.
++ `customerId` (string, optional) - Customer id.
++ `accountId` (string, optional) - The account money gets deposited in. It deduced based on the currency.
++ `amount` (number, required) - Amount in minor currency units.
++ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
++ `fee`: `0` (number, optional) - Merchant fee to apply to deposit in minor currency units.
++ `paymentOption` (enum[string], optional) - Enumeration of supported Payment Option Types
+    + `RAPID_TRANSFER`
+    + `SOFORT`
+    + `GIROPAY`
+    + `BANKWIRE`
+    + `CARD`
++ `paymentInstrument` (PaymentInstrument, optional)
+
+    Represents Payment Instrument, used for Deposit or Withdrawal.
+    There are two types of instruments:
+
+    * BankAccountPaymentInstrument
+
+    * CardPaymentInstrument
+
++ `merchantRefNum` (string, optional) - Merchant Reference Id. Passed from Single API.
++ `internalReferenceId` (string, required)
++ `externalTransactionId` (string, optional) - External transaction id. Will be set only for Cards and will contain Netbanx transaction id.
++ `gatewayReconId` (string, optional) - Gateway reconciliation id. Will be set only for Cards and will contain Netbanx reconciliation id.
++ `redirection` (Link, optional)
++ `status` (enum[string], required)
+    + `PENDING`
+    + `PROCESSING`
+    + `COMPLETED`
+    + `FAILED`
+    + `CANCELLED`
++ `customerSlip` (AccountSlip, optional) - Account specific view of the slip.
++ `merchantSlip` (AccountSlip, optional) - Account specific view of the slip.
+
+
+## WithdrawalRequest (object)
+Request for Wallet withdrawal. The only supported options are CARD and BANKWIRE.
+
+### Properties
++ `customerId` (string, required) - Customer ID
++ `accountId` (string, required) - Account Id from where the money are withdrawn.
++ `amount` (number, required)
++ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
++ `fee` (number, optional)
++ `paymentOption` (enum[string], required) - Enumeration of supported Payment Option Types
+    + `RAPID_TRANSFER`
+    + `SOFORT`
+    + `GIROPAY`
+    + `BANKWIRE`
+    + `CARD`
++ `paymentInstrument` (PaymentInstrument, required)
+
+    Represents Payment Instrument, used for Deposit or Withdrawal.
+    There are two types of instruments:
+
+    * BankAccountPaymentInstrument
+
+    * CardPaymentInstrument
+
++ `internalReferenceId` (string, optional) - Internal Paysafe Reference Id required for tracking operation across systems. Must be unique identifier.
++ `merchantRefNum` (string, optional) - External Reference ID, that allows to correlate to external operation.
 + `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
-+ `transactionId` (string, optional)
 
 
-## PagingResultMeta (object)
+## Withdrawal (object)
+Withdrawal object.
+
+Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
+
+### Properties
++ `id` (string, optional) - The Digital Wallet slip id.
++ `accountId` (string, optional)
++ `customerId` (string, optional)
++ `merchantRefNum` (string, optional) - Reference Id
++ `internalReferenceId` (string, required)
++ `externalTransactionId` (string, optional)
++ `status` (enum[string], required)
+    + `PENDING`
+    + `PROCESSING`
+    + `COMPLETED`
+    + `FAILED`
+    + `CANCELLED`
++ `paymentOption` (enum[string], optional) - Enumeration of supported Payment Option Types
+    + `RAPID_TRANSFER`
+    + `SOFORT`
+    + `GIROPAY`
+    + `BANKWIRE`
+    + `CARD`
++ `paymentInstrument` (PaymentInstrument, optional)
+
+    Represents Payment Instrument, used for Deposit or Withdrawal.
+    There are two types of instruments:
+
+    * BankAccountPaymentInstrument
+
+    * CardPaymentInstrument
+
++ `customerSlip` (AccountSlip, optional) - Account specific view of the slip.
++ `merchantSlip` (AccountSlip, optional) - Account specific view of the slip.
+
+
+## KYC (object)
 
 
 ### Properties
-+ `numberOfRecords` (number, optional)
-+ `limit` (number, optional)
-+ `page` (number, optional)
++ `status` (enum[string], required) - KYC Status enumeration
+    + `COMPLETED`
+    + `IN_PROGRESS`
+    + `NOT_COMPLETED`
++ `idVerification` (KycVerificationItem, optional)
++ `addressVerification` (KycVerificationItem, optional)
++ `faceMatch` (KycVerificationItem, optional)
++ `EDD` (KycVerificationItem, optional)
++ `addressVerificationDocumentsReceived` (array, optional)
+    + (enum[string])
+        + Members
+            + `BANK_STATEMENT`
+            + `CREDIT_CARD_STATEMENT`
+            + `UTILITY_BILL`
+            + `CREDIT_CARD`
+            + `PHONE_BILL`
+            + `TAX_RETURN`
+            + `COUNCIL_BILL`
+            + `SCHOOL_ENROLLMENT_LETTER`
+            + `COURT_DOCUMENT`
+            + `PENSION_DOCUMENT`
+            + `LEASE_TENANT_CONTRACT`
+            + `OTHER_AV_DOCUMENT`
+            + `CUSTOM_AV_DOCUMENT`
 
 
-## Accounts Response (object)
-
-
-### Properties
-+ `accounts` (Account, optional)
-+ `meta` (PagingResultMeta, optional)
-
-
-## Authorization Holds Response (object)
-
-
-### Properties
-+ `meta` (PagingResultMeta, optional)
-+ `authorizationHolds` (array[AuthorizationHold], optional)
-
-
-## Identity Documents Response (object)
-
-
-### Properties
-+ `meta` (PagingResultMeta, optional)
-+ `identityDocuments` (IdentityDocument, optional) - Personal identity document
-
-
-## Transactions Response (object)
+## KycVerificationItem (object)
 
 
 ### Properties
-+ `meta` (PagingResultMeta, optional)
++ `status` (enum[string], optional)
+    + `COMPLETED`
+    + `NOT_COMPLETED`
++ `date`: `2021-07-19T13:23:41Z` (string, optional)
+
+
+## AccountSlip (object)
+Account specific view of the slip.
+
+### Properties
++ `accountId`: `5014567344` (string, optional)
++ `customerId`: `500014306996` (string, optional)
 + `transactions` (array[Transaction], optional)
