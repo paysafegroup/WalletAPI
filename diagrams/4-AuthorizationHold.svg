@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="690px" preserveAspectRatio="none" style="width:822px;height:690px;background:#FFFFFF;" version="1.1" viewBox="0 0 822 690" width="822px" zoomAndPan="magnify"><defs/><g><rect fill="none" height="681.4691" rx="3" ry="3" style="stroke:#868E96;stroke-width:0.75;" width="349.5" x="436.875" y="4.5"/><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="39.75" x="591.75" y="17.2983">Paysafe</text><line style="stroke:#FBC9D6;stroke-width:1.5;stroke-dasharray:5.0,5.0;" x1="72" x2="72" y1="60.1835" y2="649.4736"/><line style="stroke:#FBC9D6;stroke-width:1.5;stroke-dasharray:5.0,5.0;" x1="516.375" x2="516.375" y1="60.1835" y2="649.4736"/><line style="stroke:#FBC9D6;stroke-width:1.5;stroke-dasharray:5.0,5.0;" x1="691.875" x2="691.875" y1="60.1835" y2="649.4736"/><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="77.25" x="33.75" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="59.25" x="42.75" y="47.7565">Merchant</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="77.25" x="33.75" y="648.7236"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="59.25" x="42.75" y="670.5421">Merchant</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="93" x="469.875" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="75" x="478.875" y="47.7565">Paysafe API</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="93" x="469.875" y="648.7236"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="75" x="478.875" y="670.5421">Paysafe API</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="123" x="630.375" y="25.938"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="105" x="639.375" y="47.7565">Customer wallet</text><rect fill="#282828" height="33.4955" rx="3" ry="3" style="stroke:#282828;stroke-width:1.125;" width="123" x="630.375" y="648.7236"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="105" x="639.375" y="670.5421">Customer wallet</text><polygon fill="#282828" points="507.375,154.1609,514.875,157.1609,507.375,160.1609,510.375,157.1609" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="72.375" x2="511.875" y1="157.1609" y2="157.1609"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="81.375" y="118.2429">1</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="163.5" x="100.875" y="87.252">Create authorization hold</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="0" x="118.875" y="102.7474"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="323.25" x="118.875" y="102.7474">POST /digitalwalllets/v1/authorizationholds</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="63.75" x="136.875" y="118.2429">accountId</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="49.5" x="136.875" y="133.7384">amount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="87.75" x="136.875" y="149.2339">currencyCode</text><polygon fill="#282828" points="682.875,187.6564,690.375,190.6564,682.875,193.6564,685.875,190.6564" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="516.375" x2="687.375" y1="190.6564" y2="190.6564"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="525.375" y="182.7294">2</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="105" x="544.875" y="182.7294">Reserve amount</text><polygon fill="#282828" points="80.625,314.1248,73.125,317.1248,80.625,320.1248,77.625,317.1248" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="76.125" x2="515.625" y1="317.1248" y2="317.1248"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="88.875" y="262.7113">3</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="130.5" x="108.375" y="216.2249">AuthorizationHold</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="12" x="126.375" y="231.7203">id</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="63.75" x="126.375" y="247.2158">accountId</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="49.5" x="126.375" y="262.7113">amount</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="87.75" x="126.375" y="278.2068">currencyCode</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="66" x="126.375" y="293.7023">createdOn</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="45.75" x="126.375" y="309.1978">status:</text><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="53.25" x="176.625" y="309.1978">ACTIVE</text><rect fill="#FFFFFF" height="2.25" style="stroke:#FFFFFF;stroke-width:0.75;" width="817.125" x="0" y="360.8438"/><line style="stroke:#868E96;stroke-width:0.75;" x1="0" x2="817.125" y1="360.8438" y2="360.8438"/><line style="stroke:#868E96;stroke-width:0.75;" x1="0" x2="817.125" y1="363.0938" y2="363.0938"/><rect fill="#FFFFFF" height="24.438" style="stroke:#868E96;stroke-width:1.5;" width="36" x="390.5625" y="349.3748"/><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="15" x="398.8125" y="365.1731">. . .</text><polygon fill="#282828" points="507.375,440.0537,514.875,443.0537,507.375,446.0537,510.375,443.0537" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="72.375" x2="511.875" y1="443.0537" y2="443.0537"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="81.375" y="427.379">4</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="234" x="100.875" y="419.6312">Get list of active authorization holds</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="0" x="118.875" y="435.1267"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="314.25" x="118.875" y="435.1267">GET /digitalwalllets/v1/authorizationholds</text><polygon fill="#282828" points="80.625,473.5492,73.125,476.5492,80.625,479.5492,77.625,476.5492" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="76.125" x2="515.625" y1="476.5492" y2="476.5492"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="88.875" y="468.6222">5</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="159" x="108.375" y="468.6222">List of AuthorizationHold</text><rect fill="#FFFFFF" height="2.25" style="stroke:#FFFFFF;stroke-width:0.75;" width="817.125" x="0" y="520.2682"/><line style="stroke:#868E96;stroke-width:0.75;" x1="0" x2="817.125" y1="520.2682" y2="520.2682"/><line style="stroke:#868E96;stroke-width:0.75;" x1="0" x2="817.125" y1="522.5182" y2="522.5182"/><rect fill="#FFFFFF" height="24.438" style="stroke:#868E96;stroke-width:1.5;" width="36" x="390.5625" y="508.7992"/><text fill="#343A40" font-family="Verdana" font-size="9" font-weight="bold" lengthAdjust="spacing" textLength="15" x="398.8125" y="524.5975">. . .</text><polygon fill="#282828" points="507.375,599.4781,514.875,602.4781,507.375,605.4781,510.375,602.4781" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="72.375" x2="511.875" y1="602.4781" y2="602.4781"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="81.375" y="586.8034">6</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="171" x="100.875" y="579.0557">Release authorization hold</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="0" x="118.875" y="594.5511"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="381" x="118.875" y="594.5511">DELETE /digitalwalllets/v1/authorizationholds/{id}</text><polygon fill="#282828" points="80.625,632.9736,73.125,635.9736,80.625,638.9736,77.625,635.9736" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="76.125" x2="515.625" y1="635.9736" y2="635.9736"/><text fill="#343A40" font-family="Verdana" font-size="12.75" font-weight="bold" lengthAdjust="spacing" textLength="9" x="88.875" y="628.0466">7</text><text fill="#343A40" font-family="Verdana" font-size="12.75" lengthAdjust="spacing" textLength="18.75" x="108.375" y="628.0466">OK</text><!--MD5=[df40a1ed0e82853365566673de015ff6]
+@startuml "4-AuthorizationHold"
+    !theme cerulean-outline
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant Merchant
+    box "Paysafe"
+        participant "Paysafe API" as PaysafeAPI
+        participant "Customer wallet" as CW
+    end box
+
+    autonumber
+
+    Merchant -> PaysafeAPI: Create authorization hold\n    **POST /digitalwalllets/v1/authorizationholds**\n        accountId\n        amount\n        currencyCode
+
+    PaysafeAPI -> CW: Reserve amount
+
+    Merchant <- - PaysafeAPI: **AuthorizationHold**\n    id\n    accountId\n    amount\n    currencyCode\n    createdOn\n    status: **ACTIVE**
+
+    |||
+	== . . . ==
+    |||
+
+    Merchant -> PaysafeAPI: Get list of active authorization holds\n    **GET /digitalwalllets/v1/authorizationholds**
+
+    Merchant <- - PaysafeAPI: List of AuthorizationHold
+
+    |||
+	== . . . ==
+    |||
+
+    Merchant -> PaysafeAPI: Release authorization hold\n    **DELETE /digitalwalllets/v1/authorizationholds/{id}**
+
+    Merchant <- - PaysafeAPI: OK
+@enduml
+
+@startuml "4-AuthorizationHold"
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             false
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               5
+skinparam ArrowColor            #868E96
+skinparam stereotype {
+    CBackgroundColor #EDF0F2
+    CBorderColor #BABDBF
+    ABackgroundColor #8FB961
+    ABorderColor $SUCCESS_DARK
+    IBackgroundColor #D2494E
+    IBorderColor $DANGER_DARK
+    EBackgroundColor #E47833
+    EBorderColor $WARNING_DARK
+    NBackgroundColor #35638F
+    NBorderColor $INFO_DARK
+}
+skinparam title {
+	FontColor	                 #2FA4E7
+	BorderColor	                 #BABDBF
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              transparent
+}
+
+skinparam legend {
+	BackgroundColor transparent
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam swimlane {
+	BorderColor #033C73
+	BorderThickness 2
+	TitleBackgroundColor  #EDF0F2-#E9ECEF
+	TitleFontColor #2FA4E7
+}
+
+
+skinparam activity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BarColor #73A839
+	StartColor #033C73
+	EndColor #033C73
+	DiamondBackgroundColor transparent
+  	DiamondBorderColor #BABDBF
+	DiamondFontColor #BABDBF
+}
+
+
+skinparam participant {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2FA4E7
+	FontColor #343A40
+}
+
+
+skinparam sequence {
+	BorderColor #2FA4E7
+	TitleFontColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #2FA4E7
+	EndColor #2FA4E7
+	BoxBackgroundColor transparent
+	BoxBorderColor #868E96
+	BoxFontColor #343A40
+	DelayFontColor #343A40
+	LifeLineBorderColor #BABDBF
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor transparent
+	GroupBorderColor #868E96
+	GroupFontColor #343A40
+	GroupHeaderFontColor #033C73
+	DividerBackgroundColor transparent
+    DividerBorderColor #868E96
+    DividerBorderThickness 2
+    DividerFontColor #343A40
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #868E96
+	ReferenceFontColor #343A40
+	ReferenceHeaderFontColor #033C73
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam partition {
+	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam control {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam entity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam boundary {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam agent {
+	BackgroundColor transparent
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam artifact {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam component {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam interface {
+	BackgroundColor  transparent
+	BorderColor  #C71C22
+	FontColor #343A40
+}
+
+
+skinparam storage {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+}
+
+
+skinparam node {
+	BackgroundColor transparent
+	BorderColor #343A40
+	FontColor #343A40
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #343A40
+}
+
+
+skinparam database {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam class {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	FontColor #F8F9FA
+	HeaderBackgroundColor #2FA4E7-#2683B9
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam rectangle {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam package {
+	BackgroundColor transparent
+  	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor transparent
+  	BorderColor #033C73
+	FontColor #033C73
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #033C73
+	EndColor #033C73
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam card {
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam file {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam stack {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant Merchant
+    box "Paysafe"
+        participant "Paysafe API" as PaysafeAPI
+        participant "Customer wallet" as CW
+    end box
+
+    autonumber
+
+    Merchant -> PaysafeAPI: Create authorization hold\n    **POST /digitalwalllets/v1/authorizationholds**\n        accountId\n        amount\n        currencyCode
+
+    PaysafeAPI -> CW: Reserve amount
+
+    Merchant <- - PaysafeAPI: **AuthorizationHold**\n    id\n    accountId\n    amount\n    currencyCode\n    createdOn\n    status: **ACTIVE**
+
+    |||
+	== . . . ==
+    |||
+
+    Merchant -> PaysafeAPI: Get list of active authorization holds\n    **GET /digitalwalllets/v1/authorizationholds**
+
+    Merchant <- - PaysafeAPI: List of AuthorizationHold
+
+    |||
+	== . . . ==
+    |||
+
+    Merchant -> PaysafeAPI: Release authorization hold\n    **DELETE /digitalwalllets/v1/authorizationholds/{id}**
+
+    Merchant <- - PaysafeAPI: OK
+@enduml
+
+PlantUML version 1.2021.12(Tue Oct 05 19:01:58 EEST 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: BG
+--></g></svg>

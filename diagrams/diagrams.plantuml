@@ -333,6 +333,66 @@
 @enduml
 
 
+@startuml "4-AuthorizationHold"
+    !theme cerulean-outline
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+    participant Merchant
+    box "Paysafe"
+        participant "Paysafe API" as PaysafeAPI
+        participant "Customer wallet" as CW
+    end box
+
+    autonumber
+
+    Merchant -> PaysafeAPI: Create authorization hold\n\
+    **POST /digitalwalllets/v1/authorizationholds**\n\
+        accountId\n\
+        amount\n\
+        currencyCode
+
+    PaysafeAPI -> CW: Reserve amount
+
+    Merchant <-- PaysafeAPI: **AuthorizationHold**\n\
+    id\n\
+    accountId\n\
+    amount\n\
+    currencyCode\n\
+    createdOn\n\
+    status: **ACTIVE**
+
+    |||
+	== . . . ==
+    |||
+
+    Merchant -> PaysafeAPI: Get list of active authorization holds\n\
+    **GET /digitalwalllets/v1/authorizationholds**
+
+    Merchant <-- PaysafeAPI: List of AuthorizationHold
+
+    |||
+	== . . . ==
+    |||
+
+    Merchant -> PaysafeAPI: Release authorization hold\n\
+    **DELETE /digitalwalllets/v1/authorizationholds/{id}**
+
+    Merchant <-- PaysafeAPI: OK
+@enduml
+
+
 
 @startuml "6-Transfers-customer-to-merchant"
     !theme cerulean-outline
