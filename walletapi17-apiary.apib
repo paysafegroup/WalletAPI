@@ -214,6 +214,9 @@ Business requirements for creating a new wallet:
 
 * KYC verifications passed - a flag must be passed when creating a customer wallet that denotes that, and is the proof that Paysafe accepts that the customer was indeed verified. If the value of this flag is different than ``, the wallet creation will fail
 * Terms and conditions accepted - this flag is needed as proof that the Merchant has presented the Paysafe T&Cs to the customer, and the customer has accepted these T&Cs. If this flag has a value different than `true`, the wallet creation will fail.
+* Paysafe requires certain mandatory data points about the customer and identity metadata to be provided for a customer wallet account to be created. The details are documented in the API documentation.
+* Only end-consumers and not business (or business-like institutions) are being accepted for wallet account creation for the initial launch.
+* The currency of a wallet can only be created in EUR for the EEA and in GBP for the UK.
 
 Call [Create Wallet](#reference/wallets/create-wallet/create-wallet), with the following requirements for the data being passed in the body of the request:
 
@@ -221,15 +224,19 @@ Call [Create Wallet](#reference/wallets/create-wallet/create-wallet), with the f
 
 * `accounts` - at least one account object has to be populated; please refer to Merchant's agreement with Paysafe for a list of supported wallet currencies. If an unsupported currency is passed, or if two Account objects with the same currency are provided, creating the wallet will fail.
     * when creating a new wallet, `totalBalance` and `availableBalance` must be equal
-    * when `hasIban == true`, a new Virtual IBAN will be allocated for this customer for that account & currency
+    * when `hasIban == true`, a new Virtual IBAN (vIBAN) will be allocated for this customer for that account and currency. The vIBAN will be provided to Binance in the API response.
 
 * `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process
 
+&nbsp;
+
 ![Diagram: Onboarding a customer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/0-Wallet-Create.svg)
+
+&nbsp;
 
 When creating a wallet for an **newly signed-up customer**, the `totalBalance` and `availableBalance` fields for all `account` objects must be set to 0.
 
-If the wallet is created for an existing customer with an existing balance, the fields `totalBalance` and `availableBalance` must both be populated with the same amount that represents the desired initial balance for this customer. When creating the wallets, Paysafe will debit the amounts specified from the Merchant wallet, and credit these amounts into the customer's wallet.
+To migrate the balance, Binance calls an API endpoint to debit the amounts specified from the Merchant wallet, and credit these amounts into the customer's wallet effectively creating a starting balance.
 
 In case the email provided is not unique and a wallet is already created
 using this email address, the creation of a new wallet will fail.
@@ -237,6 +244,11 @@ using this email address, the creation of a new wallet will fail.
 After creating the wallet, the customer could be restricted on Paysafe side
 based on regulatory and risk checks.
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Update customer details
 
@@ -249,12 +261,23 @@ The following fields cannot be updated, and an attempt to do so will result in a
 * id
 * registrationIp
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Deactivate a customer
 
 When a customer closes their account with the Merchant, the digital wallet on the Paysafe side must be deactivated.
 
 The API [Deactivate Customer](#reference/customers/get-customer/deactivate-customer) must be used to achieve that.
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 
 ## Accounts
@@ -266,54 +289,311 @@ Account information can be retrieved with the following APIs:
 
 Direct update and delete acounts is not supported via API.
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Deposit with a card
 
+* Merchant customers will be able to deposit with Visa and Mastercard credit and debit cards in EUR and GBP. Merchant will manage the user experience however for card processing it is required that Paysafe integrated 3DS solution is used. Once card payment is processed successfully, the customers wallet balance will be increased with the deposit amount. Merchant will be able to apply a fee to the customer’s card deposits.
+
+* Merchant customers will choose the deposit amount and will provide their card details at Bianance’s website or mobile app.
+
+* Merchant will send a payment request to Paysafe including deposit amount, currency, card details, customer ID and customer fee.
+
+* Paysafe will process the card payment for deposit amount and any fees with the provider.
+
+* Paysafe will increase the customer’s wallet balance with the deposit amount and customer fee.
+
+* Paysafe will debit customer’s wallet with the fees and credit customer fee to Merchant merchant wallet.
+
+&nbsp;
+
 ![Diagram: Deposit with a card](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-card.svg)
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 
 ## Deposit with instant bank transfer - RapidTransfer
 
-> TODO: Marketing explanation
+As a service complementary to the Bank Transfer solution above, Paysafe can offer to the Merchant a Real-time bank transfer solution for the smaller basket size transfers. Rapid Transfer payments are normally instant however a small percentage of high risk transactions may have delayed processing (up to 3 business days). Pilot countries UK, Estonia, Latvia, Portugal.
+
+Transaction limits for Rapid Transfer
+| Daily   | Weekly  | Monthly  |
+|---------|---------|----------|
+|5,000 EUR|7,500 EUR|25,000 EUR|
+
+* Merchant will show the Rapid Transfer payment method to their customers alongside the other deposit options.
+
+* Merchant will collect customer’s bank account details (IBAN and SWIFT code for euro payments and sort code and account number for payments in GBP).
+
+* Merchant will send a payment request to Paysafe and will redirect the customer to the Rapid Transfer redirect url returned by Paysafe.
+
+* Rapid Transfer payment flow will assist the customer to authenticate with their bank, validate payment account and confirm a bank transfer to Paysafe.
+
+* After payment is successfully initiated, Paysafe will increase customer’s wallet balance with the payment amount.
+
+* Paysafe will debit any customer fee from customer’s wallet and credit them to Merchant  wallet.
+
+&nbsp;
 
 ![Diagram: Deposit with RapidTransfer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-rapid-transfer.svg)
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Deposit with a bank transfer
 
+Paysafe will support Merchant's customers with digital wallets to transfer money from their own bank accounts to their vIBANs in Paysafe partner bank. Once offline customer deposit reaches Paysafe partner bank, customer's wallet will be funded. Customers can only be charged a pre-defined fixed fee for bank transfer deposits.
+
+* Merchant will show vIBAN and Paysafe entity as account holder upon bank transfer payment option on Merchant website
+
+* Paysafe will perform vIBAN and names match when deposit received in Paysafe partner bank
+
+* The transaction amount will be credited to the consumers Merchant fiat wallet
+
+* Where applicable, the customer fee amount will be debited from the consumers Merchant fiat wallet.
+
+&nbsp;
+
 ![Diagram: Deposit with RapidTransfer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/2-Deposit-bank-transfer.svg)
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Authorization holds on a balance
 
+Certain wallet payment flows, like Buying Crypto require requesting a hold on part of a customer balance.
+
+Any held funds will not be available for any other transactions and will remain reserved until the Merchant executes the transaction or cancels the hold.
+
+&nbsp;
+
 ![Diagram: Authorization holds](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/4-AuthorizationHold.svg)
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Withdrawal to bank account
 
+Customers can withdraw from fiat balance to their bank account. The withdrawal amount cannot exceed the fiat balance of the user. Withdrawals in EUR and GBP are supported.
+
+* Customer initiates fiat withdrawal to bank account on Merchant's platform.
+
+* The Merchant requests the withdrawal from Paysafe and includes customer’s bank account or card details in the request.
+
+* Paysafe validates there is available balance in customer’s wallet.
+
+* Paysafe debits withdrawal amount and fee, if applicable, from customer’s wallet.
+
+* Paysafe routes the withdrawal to our partner banks and payment providers.
+
+* Paysafe credits customer fee to the Merchant wallet.
+
+* Paysafe returns a payment details in the response to the Merchant.
+
+Paysafe will also make sure any returned withdrawals are processed by crediting the returned amount back to the customer’s wallet. Binance will receive a notification for such returned withdrawals.
+
+&nbsp;
+
 ![Diagram: Withdraw to a bank account](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/3-Withdraw-bank-account.svg)
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 ## Withdrawal to a card
+
+Customers can withdraw from fiat balance to their cards as well (Visa Direct - credit and debit cards). The withdrawal amount cannot exceed the fiat balance of the customer. Withdrawals in EUR and GBP will be supported.
+
+* Customer initiates fiat withdrawal to bank account on Merchant's platform.
+
+* Merchant requests the withdrawal from Paysafe and includes customer’s bank account or card details in the request.
+
+* Paysafe validates there is available balance in customer’s wallet.
+
+* Paysafe debits withdrawal amount and fee, if applicable, from customer’s wallet.
+
+* Paysafe routes the withdrawal to our partner banks and payment providers.
+
+* Paysafe credits customer fee to Merchant wallet.
+
+* Paysafe returns a payment details response to the Merchant.
+
+Paysafe will also make sure any returned withdrawals are processed by crediting the returned amount back to the customer’s wallet. The Merchant will receive a notification for such returned withdrawals.
+
+&nbsp;
 
 ![Diagram: Withdraw to a card](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/3-Withdraw-card.svg)
 
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Transfer merchant to customer (crypto sell)
 
+1. Paysafe will allow Merchant's customers with a wallet to perform an exchange crypto currencies sell and have their wallet balance credited. Customers must be able to complete the Crypto sell entirely from the Merchant’s website and existing user experience flows.
+
+    * Any Customer who wants to sell crypto and receive funds into a fiat balance must have a consumer wallet created previously to the sell crypto request to Paysafe.
+
+2. The Merchant will request a sell crypto transaction when their customer completes a sell crypto transaction from their website
+
+    * The Merchant will request the crypto sell amount in the fiat wallet currency
+
+    * When required, the Merchant will request the crypto sell consumer fee in the fiat wallet currency
+
+        * If the consumer wallet is restricted or the transaction can not be completed for any reason Paysafe will return the error reason
+
+    * A Paysafe transaction ID will be provided on each transaction request and will be allocated to both the Crypto buy transaction and the Fee transaction.
+
+    * An external transaction ID can be provided by the Merchant on each transaction request and will be allocated to both the Crypto buy transaction and the Fee transaction
+
+        * Transactions can be searched in Paysafe’s merchant backoffice tool by either the Paysafe transaction ID or the external transaction ID
+
+3. The transaction amount will be debited from the Merchant wallet.
+
+    * Transaction will be deducted from the merchant wallet currency account that corresponds to the transaction (consumer’s wallet) currency.
+
+    * If the Merchant wallet currency account does not have sufficient balance the transaction will be declined and returned with the applicable error code for insufficient balance.
+
+        * A ‘Check Merchant Balance’ API is available if required.
+
+4. The amount of the crypto sell will be credited to the customers wallet
+
+    * Credit will be done in the customers wallet currency
+
+5. The amount of the crypto sell consumer fee will be credited to the Merchant account
+
+    * The merchant account will be credited in the currency that the consumer account was debited from
+
+    * If applicable, Paysafe fees will be deducted from the Merchant wallet
+
+&nbsp;
+
 ![Diagram: Transfer customer to merchant](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/6-Transfers-merchant-to-customer.svg)
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ## Transfer customer to merchant (crypto buy)
+
+1. Paysafe will allow Merchant's customers with a wallet created to perform an exchange crypto currency buy using their fiat balances. Customers must be able to complete the Crypto buy entirely from the Merchant’s website and existing user experience flows.
+
+    * Any Customer who wants to buy crypto using their fiat balance must have a consumer wallet created previously to the buy crypto request to Paysafe.
+
+2. The Merchant will have the option of reserving funds via the Authorization Hold API when their customer initiates a crypto buy using fiat balance or processing the transaction directly
+
+    * The Merchant will request the authorization hold for the crypto buy amount in the fiat wallet currency
+
+    * When required, the Merchant will request the authorization hold funds crypto buy consumer fee in the fiat wallet currency
+
+        * If the consumer wallet does not have available funds, is restricted or the transaction can not be completed for any reason Paysafe will return the error reason
+
+    * Any held funds will not be available for any other transactions and will remain reserved until the Merchant executes the transaction or cancels the reserve
+
+    * A Paysafe transaction ID will be provided on each transaction request and will be allocated to both the Crypto buy transaction and the Fee transaction.
+
+    * An external transaction ID can be provided by the Merchant on each transaction request and will be allocated to both the Crypto buy transaction and the Fee transaction
+
+        * Transactions can be searched in Paysafe’s merchant backoffice tool by either the Paysafe transaction ID or the external transaction ID
+
+3. When the Merchant's customer has their crypto buy order executed, The Merchant will inform Paysafe to debit the reserved transaction and fee (where applicable)
+
+    * The transaction amount will be debited from the consumers binance fiat wallet
+
+    * Where applicable, the customer fee amount will be debited from the consumers the Merchant fiat wallet
+
+4. The amount of the crypto buy transaction and consumer fee will be credited to the Merchant account
+
+    * The merchant account will be credited in the currency that the consumer account was debited from
+    * If applicable, Paysafe fees will be deducted from the Merchant wallet
+
+5. To fulfill PSD2 SCA requirements, the Merchant will be treated as a trusted merchant in a closed loop ecosystem for crypto buys/debits from consumer wallets.
+
+    * The Merchant must ensure that compliant SCA is completed on customer logins to the Binance ecosystem.
+
+&nbsp;
 
 ![Diagram: Transfer customer to merchant](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/6-Transfers-customer-to-merchant.svg)
 
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 ## Transfer customer to customer (trading pairs)
+
+1. Paysafe will allow customers with a wallet to perform a crypto trading pair buy/sell of crypto currencies with another customer and have their wallet balances adjusted the applicable amount. Customers must be able to complete the trading pairs exchange from the Merchant’s website and existing user experience flows.
+
+    * Both customers who wants to engage in a trading pairs transaction must have a consumer wallet created previously to the buy/sell crypto request to Paysafe
+
+    * The Merchant will provide the buying customers ID and the selling customers ID at time of request
+
+2. The Merchant will have the option of requesting a “Reserve Funds” transaction when their customer initiates a crypto buy using fiat balance or processing the transaction immediately.
+
+    * The Merchant will request the crypto buy amount in the buying customers fiat wallet currency
+
+    * When required, the Merchant will request the crypto buy consumer fee in the fiat wallet currency
+
+        * If the consumer wallet does not have available funds, is restricted or the transaction can not be completed for any reason Paysafe will return the error reason to the Merchant
+
+    * Any reserved funds will not be available for any other transactions and will remain reserved until the Merchant executes the transaction or cancels the reserve
+
+3. When the buy order is fulfilled, the amount of the crypto sell will be credited to the selling crypto customers wallet and the “Reserve funds” will be released/debited from the buying customers wallet
+
+    * Selling customer will have their wallet credited in the selling customers wallet currency
+
+    * If required, the amount of the crypto sell consumer fee will be credited to the Мerchant account
+
+        * The Мerchant account will be credited in the currency that the consumer account was debited from
+
+    * A Paysafe transaction ID will be provided on each transaction request and will be allocated to both the Crypto buy transaction and the Fee transaction.
+
+    * An external transaction ID can be provided by the Merchant on each transaction request and will be allocated to both the Crypto buy transaction and the Fee transaction
+
+        * Transactions can be searched in Paysafe’s merchant backoffice tool by either the Paysafe transaction ID or the external transaction ID
+
+4. If applicable, Paysafe fees will be deducted from the Merchant wallet
+
+5. To fulfill PSD2 SCA requirements, the Merchant will be treated as a trusted merchant in a closed loop ecosystem for crypto buys/debits from consumer wallets.
+
+    * The Merchant must ensure that compliant SCA is completed on customer logins to the Merchant's ecosystem.
+
+&nbsp;
 
 ![Diagram: Transfer customer to customer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/6-Transfers-customer-to-customer.svg)
 
 
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 
 # API
