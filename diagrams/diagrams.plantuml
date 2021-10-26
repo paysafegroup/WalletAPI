@@ -79,8 +79,6 @@
     note right: Only needed if status != PAYABLE
     Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
 
-    ...
-
     Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
     activate PaysafeAPI
 
