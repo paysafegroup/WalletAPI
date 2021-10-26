@@ -1,5 +1,5 @@
 @startuml "0-Wallet-Create"
-    title "Create a customer wallet"
+    title "Onboard a customer"
 
     !theme cerulean-outline
 
@@ -52,23 +52,48 @@
         LifeLineBorderColor #FBC9D6
     }
 
-    participant "Merchant" as Merchant
+    participant Merchant
     participant "Paysafe API" as PaysafeAPI
-    participant "Customer Wallet" as CW
+    participant "Merchant\ncustomer wallet" as CW
+    participant "Merchant\nmerchant wallet" as BW
+    participant "3DS auth with issuer\nor Payment Provider" as PSP
 
     note left of Merchant: Customer wallet created
-    Merchant -> PaysafeAPI: POST /digitalwallets/v1/wallet\ncustomer: {}\naccounts: []\nidentityDocuments: []\ntermsAndConditionsAccepted: true
+
+    Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount: 100000\ncurrencyCode: EUR\nwallet: {customerId, fee}
+
+    alt "3DS is required"
+        Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
+
+        Merchant --> PSP: Redirect Customer to provider (3D Secure or PSP/APM)
+        Merchant <-- PSP: Redirect Customer back to Merchant's system
+    else "3DS is NOT required"
+        Merchant <-- PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE
+    end alt
+
+    ...
+
+    Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
+    note right: Only needed if status != PAYABLE
+    Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
+
+    ...
+
+    Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
     activate PaysafeAPI
-        PaysafeAPI -> PaysafeAPI: Internal verifications
-        PaysafeAPI -> PaysafeAPI: Risk & Compliance\ncontrols
-        alt "Verifications, Risk & Compliance controls passed successfully"
-            PaysafeAPI -> CW **: Create customer wallet
-            Merchant <-- PaysafeAPI: 201 Created\ncustomer: {}\naccounts: []\nidentityDocuments: []
-        else "Verifications, Risk or Compliance controls failed"
-            Merchant <-- PaysafeAPI: Error\nerror details
-            note right: Customer wallet is not created
-        end if
+
+        PaysafeAPI [#FF0000]-> CW: Credit deposited amount\nto customer wallet
+        PaysafeAPI <-[#FF0000] CW: Debit merchant's fee\nfrom the customer wallet\n(if fee is specified)
+        PaysafeAPI [#FF0000]-> BW: Credit merchant's fee\ninto the Merchant wallet
+        PaysafeAPI <-[#FF0000] BW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
+
+        Merchant <-- PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
     deactivate PaysafeAPI
+
+	== T + 1 ==
+
+ 	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
+    note left: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
 
 
