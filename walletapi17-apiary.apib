@@ -224,7 +224,7 @@ Call **Onboard a customer**, with the following requirements for the data being 
 
 * `accounts` - at least one account object has to be populated; please refer to Merchant's agreement with Paysafe for a list of supported wallet currencies. If an unsupported currency is passed, or if two Account objects with the same currency are provided, creating the wallet will fail.
     * when creating a new wallet, `totalBalance` and `availableBalance` must be equal
-    * when `hasIban == true`, a new Virtual IBAN (vIBAN) will be allocated for this customer for that account and currency. The vIBAN will be provided to Binance in the API response.
+    * when `hasIban == true`, a new Virtual IBAN (vIBAN) will be allocated for this customer for that account and currency. The vIBAN will be provided to the Merchant in the API response.
 
 * `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process
 
@@ -236,7 +236,7 @@ Call **Onboard a customer**, with the following requirements for the data being 
 
 When creating a wallet for an **newly signed-up customer**, the `totalBalance` and `availableBalance` fields for all `account` objects must be set to 0.
 
-To migrate the balance, Binance calls an API endpoint to debit the amounts specified from the Merchant wallet, and credit these amounts into the customer's wallet effectively creating a starting balance.
+To migrate the balance, Merchant calls an API endpoint to debit the amounts specified from the Merchant wallet, and credit these amounts into the customer's wallet effectively creating a starting balance.
 
 In case the email provided is not unique and a wallet is already created
 using this email address, the creation of a new wallet will fail.
@@ -407,7 +407,7 @@ Customers can withdraw from fiat balance to their bank account. The withdrawal a
 
 * Paysafe returns a payment details in the response to the Merchant.
 
-Paysafe will also make sure any returned withdrawals are processed by crediting the returned amount back to the customer’s wallet. Binance will receive a notification for such returned withdrawals.
+Paysafe will also make sure any returned withdrawals are processed by crediting the returned amount back to the customer’s wallet. The Merchant will receive a notification for such returned withdrawals.
 
 &nbsp;
 
@@ -522,7 +522,7 @@ Paysafe will also make sure any returned withdrawals are processed by crediting 
 
 3. When the Merchant's customer has their crypto buy order executed, The Merchant will inform Paysafe to debit the reserved transaction and fee (where applicable)
 
-    * The transaction amount will be debited from the consumers binance fiat wallet
+    * The transaction amount will be debited from the consumers fiat wallet
 
     * Where applicable, the customer fee amount will be debited from the consumers the Merchant fiat wallet
 
@@ -533,7 +533,7 @@ Paysafe will also make sure any returned withdrawals are processed by crediting 
 
 5. To fulfill PSD2 SCA requirements, the Merchant will be treated as a trusted merchant in a closed loop ecosystem for crypto buys/debits from consumer wallets.
 
-    * The Merchant must ensure that compliant SCA is completed on customer logins to the Binance ecosystem.
+    * The Merchant must ensure that compliant SCA is completed on customer logins to the the Merchant ecosystem.
 
 &nbsp;
 
