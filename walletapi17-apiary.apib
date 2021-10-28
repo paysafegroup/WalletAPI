@@ -4364,6 +4364,81 @@ Customer to customer transfer requires both **sender** and **recipient** propert
             "status": "COMPLETED"
         }
 
+# Group Webhooks
+
+Webhooks allow for the Merchant to track certain events in the wallet. It's the responsibility of the Merchant to:
+
+* configure the webhook root URL with Paysafe
+* ensure the availability of the endpoints to receive the webhooks
+
+## Available webhooks [/webhook/path/at/merchant/system/customers/restrictions]
+
+### Customer restrictions update [POST]
+
++ Request Customer Restrictions Applied (application/jbson)
+
+    + Body
+
+        {
+            "id": "00000003630052156492",
+            "timestamp": "2021-07-15T17:54:12Z",
+            "customer": {
+                "id": "2342352",
+                "externalId": "d4b70695-3ffb-4f58-97ad-b61e8631a3e2",
+                "restrictions": [
+                    {
+                        "name": "ALL_TRANSACTIONS",
+                        "reason": "CONFIRMED_FRAUD",
+                        "requiredActions": null,
+                        "lastChangeDate": "2021-09-17T15:23:11Z"
+                    }
+                ]
+            }
+        }
+
++ Request Customer Restrictions Lifted (application/json)
+
+    + Body
+
+        {
+            "id": "00000003630052156492",
+            "timestamp": "2021-07-15T17:54:12Z",
+            "customer": {
+                "id": "2342352",
+                "externalId": "d4b70695-3ffb-4f58-97ad-b61e8631a3e2",
+                "restrictions": []
+            }
+        }
+
+
+
+### Transaction update [POST /webhook/path/at/merchant/system/customers/restrictions]
+
+
++ Request Transaction state change (application/json)
+
+    + Body
+
+        {
+            "id": "00000003630052156492",
+            "timestamp": "2021-07-15T17:54:12Z",
+            "transaction": {
+                "id": "5040057608",
+                "slipId": "5009964049",
+                "customerId": "500014306996",
+                "accountId": "5014567344",
+                "type": "DEPOSIT",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "creationTime": "2021-07-15T17:54:12Z",
+                "direction": "CREDIT",
+                "paymentType": "CARD",
+                "instrumentId": "43235252",
+                "description": "Transaction description.",
+                "status": "COMPLETED",
+                "merchantRefNum": "abcd1234"
+            }
+        }
 
 # Data Structures
 
