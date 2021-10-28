@@ -3528,6 +3528,17 @@ Update customer information.
         Not Found
 
 
+### Get customer instruments [GET /digitalwallets/v1/customers/{customerId}/instruments]
+
++ Request (application/json)
+    + Headers
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+    
+    + Parameters
+        + customerId (string, required)
+    
+Adde
+
 
 # Group Accounts
 
@@ -4375,6 +4386,8 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 ### Customer restrictions update [POST]
 
++ Attributes (CustomerRestrictionWebhook)
+
 + Request Customer Restrictions Applied (application/jbson)
 
     + Body
@@ -4414,6 +4427,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 ### Transaction update [POST /webhook/path/at/merchant/system/customers/restrictions]
 
++ Attributes (TransactionUpdateWebhook)
 
 + Request Transaction state change (application/json)
 
@@ -6359,3 +6373,78 @@ Account specific view of the slip.
 + `accountId`: `5014567344` (string, optional)
 + `customerId`: `500014306996` (string, optional)
 + `transactions` (array[Transaction], optional)
+
+
+## CustomerRestrictionWebhook (object)
+
+### Properties
+
++ `id` (string, required) - id of the change event
++ `timestamp`: `2021-07-15T17:54:12Z` - ISO timestamp
++ `customer` (CustomerPartRestrictions)
+
+
+## CustomerPartRestrictions (object)
+
+### Properties
+
++ `id` (string, required) - customer id
++ `restrictions` (array[Restriction], optional)
+
+
+
+## TransactionUpdateWebhook (object)
+
+### Properties
+
++ `id` (string, required) - id of the change event
++ `timestamp`: `2021-07-15T17:54:12Z` - ISO timestamp
++ `transaction` (TransactionPartWebhook, required)
+
+
+## TransactionPartWebhook (object)
+
+### Properties
++ `id`: `544232` (string, optional) - Transaction id
++ `slipId`: `121345` (string, optional) - Transaction Slip Id.
++ `customerId`: `1234` (string, optional) - Wallet customer id.
++ `accountId`: `212345` (string, optional) - Account Id associated with this transaction.
++ `type` (enum[string], optional)
+    + `DEPOSIT`
+    + `WITHDRAWAL`
+    + `CHARGEBACK_REVERSAL`
+    + `RETURNED_WITHDRAWAL`
+    + `CHARGEBACK`
+    + `MERCHANT_FEE`
+    + `TRANSACTION_FEE`
+    + `CANCELATION`
+    + `TRANSFER_IN`
+    + `TRANSFER_OUT`
++ `amount`: `1000` (number, optional) - Transaction amount in minor units.
++ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
++ `creationTime`: `2021-07-15T17:54:12Z` (string, optional)
++ `direction` (enum[string], optional) - Transaction direction.
+    + `CREDIT`
+    + `DEBIT`
++ `paymentType` (enum[string], optional)
+
+    Type of instrument. Used as discriminator for different Payment Insturment types.
+
+      * CARD
+      * BANK_TRANSFER
+      * RAPID_TRANSFER
+
+    + `CARD`
+    + `BANK_TRANSFER`
+    + `RAPID_TRANSFER`
+    + `SOFORT`
+    + `TRANSFER`
++ `instrumentId` (string, required)
++ `description`: `Transaction description.` (string, optional) - Transaction description.
++ `status` (enum[string], optional)
+    + `PENDING`
+    + `PROCESSING`
+    + `COMPLETED`
+    + `FAILED`
+    + `CANCELLED`
++ `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
