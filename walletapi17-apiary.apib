@@ -83,7 +83,7 @@ The Payments API currently supports the following payment methods:
 
 > **Note:** Rapid Transfer is only supported for Payments.
 
-> **Note:** Bank transfers is only supported for Standalone Credits.
+> **Note:** Bank transfers is only supported for Standalone Credits. For EUR, it should be through SEPA and for GBP it should be through Faster Payments.
 
 
 ## Transaction Types Supported
@@ -828,6 +828,26 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
    }
 ```
 
+<a name="fasterpaymentsobject" title="fasterpayments Object"></a>
+## fasterPayments
+
+| Element    | Type                            | Required    | Description                                                                                 |
+|------------|---------------------------------|-------------|---------------------------------------------------------------------------------------------|
+| accountHolderName | string<br/>`length<140`           | Mandatory   | This is the name of the customer or company that owns the bank account.    |
+| sortCode        | string<br/>`length=6`         | Mandatory | This is the sort code of the Bank. |
+| accountNumber | string<br/>`length=8-10`        | Mandatory    | This is the costumer's bank account number.                                                        |
+| lastDigits   | string<br/>`length=2`         | Read Only    | Last 2 digits of the bank account number.                                  |
+
+```apib
+    {
+    "fasterPayments": {
+        "accountHolderName": "John Doe",
+        "sortCode": "321654",
+        "accountNumber": "98877219"
+      }
+    }
+```
+
 <a name="fieldErrorobject" title= "Field Error Object"></a>
 ## fieldError
 
@@ -964,7 +984,7 @@ This is a read-only raw response returned by an acquirer.
 | amount                                                                          | number <br/>`max=99999999999` | Mandatory                                                 | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process US $109.9, this value should be 10990.<br/>**Note:** This field is mandatory if *transactionType* is included. <br/>The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | currencyCode                                                                    | string <br/>`length=3`        | Mandatory                                                 | This is the currency of the merchant account, for example, USD or CAD. See [Currency Codes](#currencycodes). <br/>The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | paymentHandleToken                                                              | string <br/>`length=50`       | Read Only                                                 | This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| paymentObject, card [card](#cardobject) or rapidTransfer [rapidTransfer](#rapidtransferobject) or sepa [sepa](#sepaobject)|Objects | Mandatory |These are details of the payment instrument used in the request. |
+| [card](#cardobject) or [rapidTransfer](#rapidtransferobject) or [sepa](#sepaobject) or [fasterPayments](#fasterpaymentsobject)|Objects | Mandatory |These are details of the payment instrument used in the request. |
 |wallet     |[wallet](#walletobject) |Optional| Wallet object.|
 |billingDetails         |[billingDetails](#billingdetailsobject) |Conditional |These are billing details for the request.<br/>**Note:** For single-use Payment Handles, this address information is ignored if the *paymentHandleTokenFrom* parameter is included and there is already address information associated with that customer.|
 |profile                |[profile](#profileobject)  |Conditional| This is the customer's profile. Mandatory for VIP_PREFERRED and Sightline (Play+). Optional for all other payment methods. |
@@ -2086,7 +2106,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                     "accountHolderName": "John Doe",
                     "bic": "ABNANL2APIP",
                     "lastDigits": "00"
-                }
+                },
                 "wallet":{
                    "customerId" : "GGG",
                    "slipId" : "100753",
@@ -2098,6 +2118,86 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "timeToLiveSeconds": 899,
                 "transactionType": "STANDALONE_CREDIT"
             }
+
++ Request Create Payment Handle for Faster Payments for Standalone Credit (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
+    + Body
+
+            {
+                "merchantRefNum": "merchantRefNum-124",
+                "transactionType": "STANDALONE_CREDIT",
+                "fasterPayments": {
+                    "accountHolderName": "John Doe",
+                    "sortCode": "321654",
+                    "accountNumber": "98877219"
+                    },
+                "paymentType": "BANK_TRANSFER",
+                "amount": 3000,
+                "currencyCode": "GBP",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "wallet":{
+                   "customerId" : "GGG",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                }
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+                "amount": 3000,
+                "merchantRefNum": "merchantRefNum-124",
+                "action": "NONE",
+                "currencyCode": "GBP",
+                "usage": "SINGLE_USE",
+                "status": "PAYABLE",
+                "paymentType": "BANK_TRANSFER",
+                "executionMode": "SYNCHRONOUS",
+                "customerIp": "172.0.0.1",
+                "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "fasterPayments": {
+                    "accountHolderName": "John Doe",
+                    "sortCode": "321654",
+                    "lastDigits": "19"
+                    },
+                "wallet":{
+                   "customerId" : "GGG",
+                   "slipId" : "100753",
+                   "fee" : 400,
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "timeToLiveSeconds": 899,
+                "transactionType": "STANDALONE_CREDIT"
+            }
+
 
 
 ### Get Payment Handle [GET /paymenthub/v1/paymenthandles/{paymenthandle_id}]
@@ -2796,6 +2896,110 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
             {
               "amount": 40,
               "merchantRefNum": "merchantRefNum-151",
+              "currencyCode": "EUR",
+              "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+              "customerIp": "204.91.0.12",
+              "description": "Pay surplus"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": "e075f2ae-dfc4-4f6d-8d89-61158367b6a6",
+              "amount": 40,
+              "merchantRefNum": "merchantRefNum-151",
+              "paymentHandleToken": "SC9mbfZSITB5OwDJ",
+              "customerIp": "204.91.0.12",
+              "currencyCode": "EUR",
+              "paymentType": "BANK_TRANSFER",
+              "status": "COMPLETED",
+              "description": "Pay surplus",
+              "sepa": {
+                       "nickName": "Sally's Barclays Account",
+                       "accountHolderName": "John Doe",
+                       "bic": "ABNANL2APIP",
+                       "lastDigits": "00"
+              },
+              "wallet":{
+                 "customerId" : "abc",
+                 "slipId" : "100753",
+                 "fee": "10",
+                 "customerAccount" : {
+                    "id":"xyz",
+                    "transactions": [{
+                      "id": "12321",
+                      "type": "WITHDRAWAL",
+                      "amount": 40,
+                      "currencyCode": "EUR",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 10,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     },
+                     {
+                      "id": "12322",
+                      "type": "MERCHANT_FEE",
+                      "amount": 10,
+                      "currencyCode": "EUR",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
+
+                   },
+                  "merchantAccount" : {
+                     "id": "def",
+                    "transactions": [{
+                      "id": "12323",
+                      "type": "MERCHANT_FEE",
+                      "amount": 10,
+                      "currencyCode": "EUR",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "CREDIT",
+                      "fee": 5,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "string"
+                     },
+                     {
+                      "id": "12324",
+                      "type": "FEE",
+                      "amount": 5,
+                      "currencyCode": "EUR",
+                      "creationTime": "2021-07-15T17:54:12Z",
+                      "direction": "DEBIT",
+                      "fee": 0,
+                      "paymentType": "BANK_TRANSFER",
+                      "status": "COMPLETED",
+                      "merchantRefNum": "testTran"
+                     }
+                   ]
+                  }
+              }
+
+            }
+
+
++ Request Process a Standalone Credit Using a Faster Payments Payment Handle Token (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
+    + Body
+
+            {
+              "amount": 40,
+              "merchantRefNum": "merchantRefNum-151",
               "currencyCode": "GBP",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
               "customerIp": "204.91.0.12",
@@ -2816,11 +3020,10 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "paymentType": "BANK_TRANSFER",
               "status": "COMPLETED",
               "description": "Pay surplus",
-              "sepa": {
-                       "nickName": "Sally's Barclays Account",
-                       "accountHolderName": "John Doe",
-                       "bic": "ABNANL2APIP",
-                       "lastDigits": "00"
+              "fasterPayments": {
+                "accountHolderName": "John Doe",
+                "sortCode": "321654",
+                "lastDigits": "19"
               },
               "wallet":{
                  "customerId" : "abc",
@@ -4472,6 +4675,20 @@ For all Transfer of Funds you need to allocate the required funds from **Sender*
             + lastDigits:`11` (string) - These are the last two digits of the iban.
             _Read Only, length=2_
 
+    + fasterPayments (object) - These are the details of the [fasterPayments](#fasterpaymentsobject) used for the request.
+
+        + Properties
+
+            + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+            _length<=140_
+            + sortCode: `321654` (string, required) - This is the sortcode for the consumer's bank account.
+            _Optional, length=6_
+            + accountNumber: `98877219` (string, required) - This is the Bank Account Number for the costumer's bank account.
+            _length=8-10_
+            + lastDigits:`11` (string) - These are the last two digits of the account number.
+            _Read Only, length=2_
+            
+
 + `status`: `PENDING` (enum) - This is the status of the transaction request.
     _Read Only_
     + Members
@@ -4922,6 +5139,21 @@ For all Transfer of Funds you need to allocate the required funds from **Sender*
             _length=8-34_
             + lastDigits:`11` (string) - These are the last two digits of the iban.
             _Read Only, length=2_
+
+    + fasterPayments (object) - These are the details of the [fasterPayments](#fasterpaymentsobject) used for the request.
+
+        + Properties
+
+            + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+            _length<=140_
+            + sortCode: `321654` (string, required) - This is the sortcode for the consumer's bank account.
+            _Optional, length=6_
+            + accountNumber: `98877219` (string, required) - This is the Bank Account Number for the costumer's bank account.
+            _length=8-10_
+            + lastDigits:`11` (string) - These are the last two digits of the account number.
+            _Read Only, length=2_
+
+
 
 
 ## `Payment Instrument Customer`
