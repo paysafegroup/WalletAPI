@@ -3530,14 +3530,16 @@ Update customer information.
 
 ### Get customer instruments [GET /digitalwallets/v1/customers/{customerId}/instruments]
 
-+ Request (application/json)
++ Request
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
     
     + Parameters
         + customerId (string, required)
     
-Adde
++ Response (application/json)
+
+    + Attributes (WalletPaymentInstrument)
 
 
 # Group Accounts
@@ -6448,3 +6450,35 @@ Account specific view of the slip.
     + `FAILED`
     + `CANCELLED`
 + `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
+
+
+## WalletPaymentInstrument
+
+### Properties
+
++ `instrumentType`: (enum[string], required)
+    + CARD
+    + BANK_ACCOUNT
++ Include WalletPaymentInstrumentBankAccount
++ Include WalletPaymentInstrumentCard
+
+
+## WalletPaymentInstrumentBankAccount
+
+### Properties
+
++ `bankName`
++ `accountHolderName`
++ `iban`
++ `sortCode`
++ `accountNumber`
++ `countryCode`
+
+                    
+## WalletPaymentInstrumentCard
+
+### Properties
+
++ `pan` (string)
++ `cardHolderName` (string)
++ `expiryDate`: `2023-08-31` (string)
