@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 |Version | Date | Details                                                                                                                   |
 |------------------|------------|-------------------------------------------------------------------------------------------------------------------------------|
+| V1               | 10 Nov 2021   |- Added the parameter <i>verifiedInstrument</i> to Payment handle                                                                             |
 | V1               | 08 Nov 2021   |- Added Payment Workflows                                                                             |
 |                  |               |- Labeled Mandatory Fields as <i>required</i>                                                                              |
 | V1               | 10 Aug 2020   |- Document Release                                                                                                              |
@@ -1300,9 +1301,10 @@ This is a read-only raw response returned by an acquirer.
 
 | Element    | Type         | Required  | Description                   |
 |------------|--------------|-----------|-------------------------------|
-| customerId | string <br/> |           | The wallet customer id.       |
-| slipId     | string <br/> | Read Only | The transaction id at wallet. |
+|customerId | string <br/> |           | The wallet customer id.       |
+|slipId     | string <br/> | Read Only | The transaction id at wallet. |
 |fee                |BigInteger<br/>    |Fee to be applied on this wallet account transaction.|
+| verifiedInstrument     | boolean <br/> | Optional | It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails. This is applicable only for STANDALONE_CREDIT. |
 |customerAccount         |[customerAccount](#customerAccountObject)|Ready Only|Customer account.|
 |merchantAccount         |[merchantAccount](#merchantAccountObject)|Ready Only|Merchant account.|
 
@@ -1312,6 +1314,7 @@ This is a read-only raw response returned by an acquirer.
        "customerId" : "abc",
        "slipId" : "100753",
        "fee": 400,
+       "verifiedInstrument" : true,
        "customerAccount" : {
          "id":"abc",
          "transactions" : [ {
@@ -1982,6 +1985,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
                     }
@@ -2028,6 +2032,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "fee" : 400,
                    "slipId" : "100753",
+                   "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -2079,6 +2084,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "verifiedInstrument" : false,
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -2119,6 +2125,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "slipId" : "100753",
                    "fee" : 400,
+                   "verifiedInstrument" : false,
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -2159,6 +2166,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -2198,6 +2206,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "slipId" : "100753",
                    "fee" : 400,
+                   "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -2831,6 +2840,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
                  "customerId" : "abc",
                  "slipId" : "100753",
                  "fee": "10",
+                 "verifiedInstrument" : true,
                  "customerAccount" : {
                     "id":"xyz",
                     "transactions": [{
@@ -2934,6 +2944,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
                  "customerId" : "abc",
                  "slipId" : "100753",
                  "fee": "10",
+                 "verifiedInstrument" : true,
                  "customerAccount" : {
                     "id":"xyz",
                     "transactions": [{
@@ -3037,6 +3048,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
                  "customerId" : "abc",
                  "slipId" : "100753",
                  "fee": "10",
+                 "verifiedInstrument" : true,
                  "customerAccount" : {
                     "id":"xyz",
                     "transactions": [{
@@ -3133,6 +3145,7 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
                  "customerId" : "abc",
                  "slipId" : "100753",
                  "fee": "10",
+                 "verifiedInstrument" : true,
                  "customerAccount" : {
                     "id":"xyz",
                     "transactions": [{
@@ -5361,6 +5374,9 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
             _length<=50_
 + slipId: `123456` (string) - Wallet transaction id.
             _Read Only _length<=50_
++ verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. 
+The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails.
+This is applicable only for STANDALONE_CREDIT.            
 + customerAccount: (phcustomerAccountRequest) - Customer Wallet Account.
 
 ## `phcustomerAccountRequest`
@@ -5533,7 +5549,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
         + PENDING - The transaction awaiting payment service provider's response.
 + `currencyCode`:`CAD` (string, required) - This is the [currency of the merchant account](#currencycodes), for example, USD or CAD. **Note:** The *currencyCode* specified in the Payment request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken.
     _max=3_
-+ Include wallet
++ Include walletPaymentRes
 + One of
 
     + card (object) - These are the details of the [card](#cardobject) used for the request. Only one payment instrument object (for example, *card* or *paysafecash* or *sightline*) can be included in the request.
@@ -5714,8 +5730,27 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
             _Read Only, length<=50_
         + fee: `400` (number) - The fee need to be applied on the transaction.
             _Read Only, length<=50_
+        + verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. 
+The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails. 
+This is applicable only for STANDALONE_CREDIT.             
         + Include customerAccount
         + Include merchantAccount
+
+## `walletPaymentRes`
+
++ wallet (object) - wallet.
+
+    + Properties
+
+        + customerId: `abcd` (string) - The customer id.
+            _Read Only, length<=50_
+        + slipId: `123456` (string) - The transaction id at wallet side.
+            _Read Only, length<=50_
+        + fee: `400` (number) - The fee need to be applied on the transaction.
+            _Read Only, length<=50_
+        + Include customerAccount
+        + Include merchantAccount
+
 
 
 
