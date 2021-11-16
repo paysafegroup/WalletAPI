@@ -3533,10 +3533,10 @@ Update customer information.
 + Request
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
-    
+
     + Parameters
         + customerId (string, required)
-    
+
 + Response (application/json)
 
     + Attributes (WalletPaymentInstrument)
@@ -4391,6 +4391,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 + Attributes (CustomerRestrictionWebhook)
 
 + Request Customer Restrictions Applied (application/jbson)
+
 
     + Body
 
@@ -6394,7 +6395,7 @@ Account specific view of the slip.
 + `restrictions` (array[Restriction], optional)
 
 
-
+=======
 ## TransactionUpdateWebhook (object)
 
 ### Properties
@@ -6451,7 +6452,6 @@ Account specific view of the slip.
     + `CANCELLED`
 + `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
 
-
 ## WalletPaymentInstrument
 
 ### Properties
@@ -6474,7 +6474,7 @@ Account specific view of the slip.
 + `accountNumber`
 + `countryCode`
 
-                    
+
 ## WalletPaymentInstrumentCard
 
 ### Properties
