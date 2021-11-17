@@ -5,12 +5,17 @@ HOST: https://api2.test.paysafe.com/
 
 ## Release Notes
 
-|Version | Date | Details                                                                                                                   |
-|------------------|------------|-------------------------------------------------------------------------------------------------------------------------------|
-| V1               | 10 Nov 2021   |- Added the parameter <i>verifiedInstrument</i> to Payment handle                                                                             |
-| V1               | 08 Nov 2021   |- Added Payment Workflows                                                                             |
-|                  |               |- Labeled Mandatory Fields as <i>required</i>                                                                              |
-| V1               | 10 Aug 2020   |- Document Release                                                                                                              |
+| Version | Date        | Details                                                                              |
+|---------|-------------|--------------------------------------------------------------------------------------|
+| V1      | 17 Nov 2021 | - Added get customer's payment instruments endpoint                                  |
+|         |             | - Added KYC parameters, following Risk & Compliance workshops                        |
+|         |             | - Added clarifications on virtual IBAN assignment; webhook for virtual IBAN assigned |
+|         |             | - Added deviceInfo; customerIp updated to mandatory for all payment APIs             |
+|         |             | - Added information about onboarding idempotency; removed "phone" field; one of email or mobile is required |
+| V1      | 10 Nov 2021 | - Added the parameter <i>verifiedInstrument</i> to Payment handle                    |
+| V1      | 08 Nov 2021 | - Added Payment Workflows                                                            |
+|         |             | - Labeled Mandatory Fields as <i>required</i>                                        |
+| V1      | 10 Aug 2020 | - Document Release                                                                   |
 
 # Overview
 
@@ -80,6 +85,12 @@ All Merchant fees that the Merchant needs to charge its customers, are **accumul
 
 To allow for the ultimate flexibility, all merchant fees **must be provided by the Merchant on a per-transaction basis**. This approach allows the Merchant to execute different pricing schemes based on regions, currency, customer loyalty levels, dynamic fee structures and other information that is only available to the Merchant.
 
+
+## Device information
+
+Customer device information plays a critital role in all risk and compliance assessments in the digital wallet offering. Paysafe uses ThreatMetrix as the preferred device intelligence solution.
+
+The Merchant is required to pass in the data as received by ThreatMetrix, to avoid double billing in the case where Paysafe fetches the device information separately from Merchant.
 
 ## Payment Methods
 
@@ -237,6 +248,12 @@ Call **Onboard a customer**, with the following requirements for the data being 
 
 * `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process
 
+> NOTE: Assigning virtual IBAN may be different due to differences in the banks used. Paysafe will try to return the information as soon as possible.
+><br>
+> When creating a new customer, the response might include a virtual IBAN assigned to the account. This means that Paysafe managed to assign the virtual IBAN to the customer, and no subsequent webhooks will be sent.
+><br>
+> If the response DOES NOT contain a value for the account's `iban`, this means that the virtual IBAN will be assigned asynchronously. In this case the Merchant must wait for a webhook that will notify the availability of the virtual IBAN for this customer. When the webhook received, the Merchant must fetch the IBAN via the get Accounts API (due to information security requirements, Paysafe should not send the IBAN via a webhook).
+
 &nbsp;
 
 ![Diagram: Onboarding a customer](https://github.com/paysafegroup/WalletAPI/raw/Wallet-API-updates/diagrams/0-Wallet-Create.svg)
@@ -334,9 +351,9 @@ Direct update and delete acounts is not supported via API.
 As a service complementary to the Bank Transfer solution above, Paysafe can offer to the Merchant a Real-time bank transfer solution for the smaller basket size transfers. Rapid Transfer payments are normally instant however a small percentage of high risk transactions may have delayed processing (up to 3 business days). Pilot countries UK, Estonia, Latvia, Portugal.
 
 Transaction limits for Rapid Transfer
-| Daily   | Weekly  | Monthly  |
-|---------|---------|----------|
-|5,000 EUR|7,500 EUR|25,000 EUR|
+| Daily     | Weekly    | Monthly    |
+|-----------|-----------|------------|
+| 5,000 EUR | 7,500 EUR | 25,000 EUR |
 
 * Merchant will show the Rapid Transfer payment method to their customers alongside the other deposit options.
 
@@ -698,7 +715,7 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 | nickName | string<br/>`length<=50` | Optional  | This is the nickname the merchant has for the billing address.                                                                                                                                                |
 | street   | string<br/>`length<=50` | Mandatory | This is the first line of the customer's street address.                                                                                                                                                      |
 | street2  | string<br/>`length<=50` | Optional  | This is the second line of the customer's street address, if required (for example, apartment number).                                                                                                        |
-| city     | string<br/>`length<=40` | add | This is the city where the address is located.                                                                                                                                                                |
+| city     | string<br/>`length<=40` | add       | This is the city where the address is located.                                                                                                                                                                |
 | state    | string<br/>`length<=40` | Optional  | This is the state/province/region in which the customer lives. For Canada, see [Province Codes](#provincecodes). For the United States, see [State Codes](#statecodes). Other countries have no restrictions. |
 | zip      | string<br/>`length<=10` | Mandatory | This is the zip, postal, or postcode of the customer's address.                                                                                                                                               |
 | country  | string<br/>`length=2`   | Mandatory | This is the country where the address is located. See [Country Codes](#countrycodes).                                                                                                                         |
@@ -720,10 +737,10 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 <a name="customerAccount" title="Customer Account Object"></a>
 ## customerAccount
 
-| Element      | Type                      | Required   | Description                                                                                                |
-|--------------|---------------------------|------------|------------------------------------------------------------------------------------------------------------|
-| id           | string <br/>              | Read Only  | The wallet customer account to  deposit the funds in.                                                      |
-| transactions | array of [transaction](#transactionObject) | Ready Only | The transactions postings on the wallet account.                                                            |
+| Element      | Type                                       | Required   | Description                                           |
+|--------------|--------------------------------------------|------------|-------------------------------------------------------|
+| id           | string <br/>                               | Read Only  | The wallet customer account to  deposit the funds in. |
+| transactions | array of [transaction](#transactionObject) | Ready Only | The transactions postings on the wallet account.      |
 
 ```apib
     {
@@ -812,18 +829,15 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 
 <a name="deviceinfo" title="Device Info Object"></a>
 ## deviceInfo
-| Element | Type                           | Required  | Description                 |
-|---------|--------------------------------|-----------|-----------------------------|
-| threatMetrixSessionId    | String<br/>`max=100` | Optional | This is the Threat Metrix session id.  |
-| threatMetrixData   | Object   | Optional | This is the placeholder object to pass the Threat Metrix data. |
+| Element               | Type                 | Required | Description                           |
+|-----------------------|----------------------|----------|---------------------------------------|
+| threatMetrixSessionId | String<br/>`max=100` | Optional | This is the Threat Metrix session id. |
+| threatMetrixData   | String   | Optional | The URL-encoded response as received from Threat Metrix
 
 ```apib
             {
-               "threatMetrixSessionID": "uetqeuqtuteu-321",
-               "trheatMetrixData" : {
-                  "userToken": "fddsfjsjfgs",
-                  "field1": "value1"
-                }
+               "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+               "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
             }
 ```
 
@@ -859,12 +873,12 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 <a name="fasterpaymentsobject" title="fasterpayments Object"></a>
 ## fasterPayments
 
-| Element    | Type                            | Required    | Description                                                                                 |
-|------------|---------------------------------|-------------|---------------------------------------------------------------------------------------------|
-| accountHolderName | string<br/>`length<140`           | Mandatory   | This is the name of the customer or company that owns the bank account.    |
-| sortCode        | string<br/>`length=6`         | Mandatory | This is the sort code of the Bank. |
-| accountNumber | string<br/>`length=8-10`        | Mandatory    | This is the costumer's bank account number.                                                        |
-| lastDigits   | string<br/>`length=2`         | Read Only    | Last 2 digits of the bank account number.                                  |
+| Element           | Type                     | Required  | Description                                                             |
+|-------------------|--------------------------|-----------|-------------------------------------------------------------------------|
+| accountHolderName | string<br/>`length<140`  | Mandatory | This is the name of the customer or company that owns the bank account. |
+| sortCode          | string<br/>`length=6`    | Mandatory | This is the sort code of the Bank.                                      |
+| accountNumber     | string<br/>`length=8-10` | Mandatory | This is the costumer's bank account number.                             |
+| lastDigits        | string<br/>`length=2`    | Read Only | Last 2 digits of the bank account number.                               |
 
 ```apib
     {
@@ -935,10 +949,10 @@ This is a read-only raw response returned by an acquirer.
 <a name="merchantAccount" title="Merchant Account Object"></a>
 ## merchantAccount
 
-| Element      | Type                      | Required   | Description                                                                                                |
-|--------------|---------------------------|------------|------------------------------------------------------------------------------------------------------------|
-| id           | string <br/>              | Read Only  | The wallet merchant account to  deposit the funds in.                                                      |
-| transactions | array of [transaction](#transactionObject) | Ready Only | The transactions postings on the wallet account.                                                            |
+| Element      | Type                                       | Required   | Description                                           |
+|--------------|--------------------------------------------|------------|-------------------------------------------------------|
+| id           | string <br/>                               | Read Only  | The wallet merchant account to  deposit the funds in. |
+| transactions | array of [transaction](#transactionObject) | Ready Only | The transactions postings on the wallet account.      |
 
 ```apib
     {
@@ -995,47 +1009,47 @@ This is a read-only raw response returned by an acquirer.
 <a name="paymenthandleobject" title="Payment Handle Object"></a>
 ## Payment Handle
 
-| Element                                                                         | Type                          | Required                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|---------------------------------------------------------------------------------|-------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id                                                                              | string<br/>`length<=36`       | Read Only                                                 | This is the ID returned in the response. This ID can be used to retrieve the Payment Handle.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| accountId                                                                       | string<br/>`length<=10`       | Conditional                                               | This is the merchant account number used for the request. Include this parameter if you have more than one merchant account for the currency/payment type combination you are specifying.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| paymentHandleTokenFrom                                                          | string<br/>`length<=50`       | Optional                                                  | This is the merchant account number used for the request. Include this parameter if you have more than one merchant account for the currency/payment type combination you are specifying.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| paymentHandleToken                                                              | string<br/>`length<=50`       | Read Only                                                 | The Payment Handle Token generated by our system which should be used for subsequent Payment/Credit transaction.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| merchantRefNum                                                                  | string<br/>`length<=255`      | Mandatory                                                 | This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| transactionType                                                                 | Enumeration                   | Either customerOperation or transactionType is Mandatory. | This specifies the transaction type for which the Payment Handle is created. Possible values are: <ul><li>PAYMENT - Payment Handle is created to continue the Payment.</li><li> STANDALONE_CREDIT - Payment Handle is created to continue the standalone credit.</li><li>ORIGINAL_CREDIT - Payment Handle is created to continue the original credit.</li><li>VERIFICATION - Payment Handle is created to continue the verification request.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| status                                                                          | Enumeration                   | Read Only                                                 | This is the status of the request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>INITIATED &ndash; The request was initiated with the downstream provider.</li><li>PAYABLE &ndash; The merchant can use the Payment Handle for a Payment request.</li><li>PROCESSING &ndash; The Payment Handle was authorized by customer, awaiting PSP response.</li><li>FAILED &ndash; The transaction failed due to an error or got declined.</li><li>EXPIRED &ndash; The Payment Handle expired because the merchant did not proceed with the Payment transaction.</li><li>COMPLETED &ndash; The Payment request was initiated successfully using the Payment Handle.</li><li>ERROR &ndash; The Payment Handle has errored. The reason for this state might be because of some system or environmental issues. </li></ul> By default, PaymentHandles will EXPIRE after 15 mins unless in a PROCESSING status.  Once the transaction flow has been initiated by the customer, the time permitted for the customer to complete authorization is dependent upon the payment type. PaymentHandles that lapse the permitted processing will be marked EXPIRED.If the customer is required to complete authorization as part of a redirect flow, the PaymentHandle is updated to have a PROCESSING status and the expiration time is extended to allow this additional time for the customer to complete these activities.For payment types where there is automatic settlement (settleWithAuth=true), if the PAYABLE Payment Handle has EXPIRED,  the corresponding Payment/Settlement resources will be auto created.  IF the PSP supports refunds, they will be auto refunded to the customer. |
-| statusReason                                                                    | Enumeration                   | Read Only                                                 | <ul><li>AUTH_VOIDED - Authorization was cancelled (voided).</li><li> USER_CANCELLED - User cancelled the transaction </li><li>AUTH_EXPIRED - Authorization has expired and no settlements were completed.</ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| usage                                                                           | Enumeration                   | Read Only                                                 | This specifies how the Payment Handle will be used for Payments. Possible values are:<ul><li>SINGLE_USE &ndash; The Payment Handle can be used for only one transaction and expires if not used.</li><li>MULTI_USE &ndash; The Payment Handle can be used multiple times.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| paymentType                                                                     | Enumeration                   | Mandatory                                                 | This is the payment type associated with this Payment Handle. Possible values are:<ul><li>CARD</li><li>RAPID_TRANSFER</li><li>BANK_TRANSFER</li>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| action                                                                          | Enumeration                   | Read Only                                                 | This specifies the next step of the user journey once they proceed to the Payment. Possible values are:<ul><li>NONE &ndash; No action is required, for example, for a standard credit card payment.</li><li>REDIRECT &ndash; The user must be redirected to complete a Payment, for example, when an alternate payment method like Paysafecard is used.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| executionMode                                                                   | Enumeration                   | Read Only                                                 | This specifies the action of the merchant server to complete the Payment. Possible values are:<ul><li>SYNCHRONOUS &ndash; The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.</li><li>ASYNCHRONOUS &ndash; The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| amount                                                                          | number <br/>`max=99999999999` | Mandatory                                                 | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process US $109.9, this value should be 10990.<br/>**Note:** This field is mandatory if *transactionType* is included. <br/>The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| currencyCode                                                                    | string <br/>`length=3`        | Mandatory                                                 | This is the currency of the merchant account, for example, USD or CAD. See [Currency Codes](#currencycodes). <br/>The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| paymentHandleToken                                                              | string <br/>`length=50`       | Read Only                                                 | This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| [card](#cardobject) or [rapidTransfer](#rapidtransferobject) or [sepa](#sepaobject) or [fasterPayments](#fasterpaymentsobject)|Objects | Mandatory |These are details of the payment instrument used in the request. |
-|wallet     |[wallet](#walletobject) |Optional| Wallet object.|
-|billingDetails         |[billingDetails](#billingdetailsobject) |Conditional |These are billing details for the request.<br/>**Note:** For single-use Payment Handles, this address information is ignored if the *paymentHandleTokenFrom* parameter is included and there is already address information associated with that customer.|
-|profile                |[profile](#profileobject)  |Conditional| This is the customer's profile. Mandatory for VIP_PREFERRED and Sightline (Play+). Optional for all other payment methods. |
-|shippingDetails        |Complex                    |Conditional| These are the shipping details of the request.|
-|merchantDescriptor     |[merchantDescriptor](#merchantdescriptorobject) |Optional|This is the merchant descriptor that will be displayed on the customer's card or bank statement.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.|
-|returnLinks            |[returnLinks](#returnlinksobject) | Mandatory for redirect flows.|The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory. |
-|returnLinks.rel        |Enumeration | |This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. self will get details of the current call. Options:default - (required) The default return url, will be used if specific status return url is not defined.on_completed - Will be returned to this URL if the payment is completed.on_failed - Will be returned to this URL if the payment is failed.Future Options:on_cancelled,self, void_auths. Not all processing gateways support on_failed. Contact your account manager for more information. |
-|returnLinks.href       |String      | |The actual URL. |
-|returnLinks.method     |String      | |The HTTP method. |
-|customerIp             |string<br/>`length<=39`    |Optional|This is the customer's IP address. |
-|timeToLiveSeconds      |number<br/>`length<=899`   |Read Only|This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration.|
-|links                  |[links](#linksobject) Array of link objects     |Read Only| This provides the redirect details to which a merchant needs to redirect the customer to complete the authentication. Typically the case with 3DS Cards, PSCard, PSCash|
-|links.rel              |[links](#linksobject)  Enumeration   |Read Only| redirect_payment - Merchant needs to redirect consumer to this url to complete authentication.|
-|links.href             |String  |Read Only| The URL to redirect.|
-|links.method           |String  |Read Only| The HTTP method to be used, if needed.|
-|customerId             |String  Max = 36|Read Only| The HTTP method to be used, if needed.|
-|txnTime                | UTC formatted date | Read Only | This is the date and time the request was processed. For example:<br/>2019-01-26T10:32:28Z |
-|gatewayResponse        |[gatewayResponse](#gatewayresponseobject)|Read Only| This is the read-only raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
-|updatedTime |datetime  |Read Only  |ISO 8601 format (UTC) This is the date and time the resource was last updated, for example, `2014-01-26T10:32:28Z`  |
-|statusTime  |datetime  |Read Only  |ISO 8601 format (UTC) This is the date and time the resource was last updated, for example, `2014-01-26T10:32:28Z`  |
-|meta|[meta](#metaobject)|Read Only| This is the information of the response.|
-|error| error Object |  | Represents the customer id, which is saved at Paysafe side. |
-|timeToLiveSeconds | Long | Read Only | This is the period of time the paymentHandleToken is valid before expiration, in seconds, returned in the response. |
+| Element                                                                                                                        | Type                                            | Required                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|--------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| id                                                                                                                             | string<br/>`length<=36`                         | Read Only                                                 | This is the ID returned in the response. This ID can be used to retrieve the Payment Handle.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| accountId                                                                                                                      | string<br/>`length<=10`                         | Conditional                                               | This is the merchant account number used for the request. Include this parameter if you have more than one merchant account for the currency/payment type combination you are specifying.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| paymentHandleTokenFrom                                                                                                         | string<br/>`length<=50`                         | Optional                                                  | This is the merchant account number used for the request. Include this parameter if you have more than one merchant account for the currency/payment type combination you are specifying.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| paymentHandleToken                                                                                                             | string<br/>`length<=50`                         | Read Only                                                 | The Payment Handle Token generated by our system which should be used for subsequent Payment/Credit transaction.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| merchantRefNum                                                                                                                 | string<br/>`length<=255`                        | Mandatory                                                 | This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| transactionType                                                                                                                | Enumeration                                     | Either customerOperation or transactionType is Mandatory. | This specifies the transaction type for which the Payment Handle is created. Possible values are: <ul><li>PAYMENT - Payment Handle is created to continue the Payment.</li><li> STANDALONE_CREDIT - Payment Handle is created to continue the standalone credit.</li><li>ORIGINAL_CREDIT - Payment Handle is created to continue the original credit.</li><li>VERIFICATION - Payment Handle is created to continue the verification request.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| status                                                                                                                         | Enumeration                                     | Read Only                                                 | This is the status of the request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>INITIATED &ndash; The request was initiated with the downstream provider.</li><li>PAYABLE &ndash; The merchant can use the Payment Handle for a Payment request.</li><li>PROCESSING &ndash; The Payment Handle was authorized by customer, awaiting PSP response.</li><li>FAILED &ndash; The transaction failed due to an error or got declined.</li><li>EXPIRED &ndash; The Payment Handle expired because the merchant did not proceed with the Payment transaction.</li><li>COMPLETED &ndash; The Payment request was initiated successfully using the Payment Handle.</li><li>ERROR &ndash; The Payment Handle has errored. The reason for this state might be because of some system or environmental issues. </li></ul> By default, PaymentHandles will EXPIRE after 15 mins unless in a PROCESSING status.  Once the transaction flow has been initiated by the customer, the time permitted for the customer to complete authorization is dependent upon the payment type. PaymentHandles that lapse the permitted processing will be marked EXPIRED.If the customer is required to complete authorization as part of a redirect flow, the PaymentHandle is updated to have a PROCESSING status and the expiration time is extended to allow this additional time for the customer to complete these activities.For payment types where there is automatic settlement (settleWithAuth=true), if the PAYABLE Payment Handle has EXPIRED,  the corresponding Payment/Settlement resources will be auto created.  IF the PSP supports refunds, they will be auto refunded to the customer. |
+| statusReason                                                                                                                   | Enumeration                                     | Read Only                                                 | <ul><li>AUTH_VOIDED - Authorization was cancelled (voided).</li><li> USER_CANCELLED - User cancelled the transaction </li><li>AUTH_EXPIRED - Authorization has expired and no settlements were completed.</ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| usage                                                                                                                          | Enumeration                                     | Read Only                                                 | This specifies how the Payment Handle will be used for Payments. Possible values are:<ul><li>SINGLE_USE &ndash; The Payment Handle can be used for only one transaction and expires if not used.</li><li>MULTI_USE &ndash; The Payment Handle can be used multiple times.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| paymentType                                                                                                                    | Enumeration                                     | Mandatory                                                 | This is the payment type associated with this Payment Handle. Possible values are:<ul><li>CARD</li><li>RAPID_TRANSFER</li><li>BANK_TRANSFER</li>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| action                                                                                                                         | Enumeration                                     | Read Only                                                 | This specifies the next step of the user journey once they proceed to the Payment. Possible values are:<ul><li>NONE &ndash; No action is required, for example, for a standard credit card payment.</li><li>REDIRECT &ndash; The user must be redirected to complete a Payment, for example, when an alternate payment method like Paysafecard is used.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| executionMode                                                                                                                  | Enumeration                                     | Read Only                                                 | This specifies the action of the merchant server to complete the Payment. Possible values are:<ul><li>SYNCHRONOUS &ndash; The status of the Payment request will be returned synchronously to the merchant, for example, a credit card request.</li><li>ASYNCHRONOUS &ndash; The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| amount                                                                                                                         | number <br/>`max=99999999999`                   | Mandatory                                                 | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process US $109.9, this value should be 10990.<br/>**Note:** This field is mandatory if *transactionType* is included. <br/>The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| currencyCode                                                                                                                   | string <br/>`length=3`                          | Mandatory                                                 | This is the currency of the merchant account, for example, USD or CAD. See [Currency Codes](#currencycodes). <br/>The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| paymentHandleToken                                                                                                             | string <br/>`length=50`                         | Read Only                                                 | This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| [card](#cardobject) or [rapidTransfer](#rapidtransferobject) or [sepa](#sepaobject) or [fasterPayments](#fasterpaymentsobject) | Objects                                         | Mandatory                                                 | These are details of the payment instrument used in the request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| wallet                                                                                                                         | [wallet](#walletobject)                         | Optional                                                  | Wallet object.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| billingDetails                                                                                                                 | [billingDetails](#billingdetailsobject)         | Conditional                                               | These are billing details for the request.<br/>**Note:** For single-use Payment Handles, this address information is ignored if the *paymentHandleTokenFrom* parameter is included and there is already address information associated with that customer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| profile                                                                                                                        | [profile](#profileobject)                       | Conditional                                               | This is the customer's profile. Mandatory for VIP_PREFERRED and Sightline (Play+). Optional for all other payment methods.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| shippingDetails                                                                                                                | Complex                                         | Conditional                                               | These are the shipping details of the request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| merchantDescriptor                                                                                                             | [merchantDescriptor](#merchantdescriptorobject) | Optional                                                  | This is the merchant descriptor that will be displayed on the customer's card or bank statement.<br/>**Note:** Not all processing gateways support this parameter. Contact your account manager for more information.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| returnLinks                                                                                                                    | [returnLinks](#returnlinksobject)               | Mandatory for redirect flows.                             | The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| returnLinks.rel                                                                                                                | Enumeration                                     |                                                           | This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. self will get details of the current call. Options:default - (required) The default return url, will be used if specific status return url is not defined.on_completed - Will be returned to this URL if the payment is completed.on_failed - Will be returned to this URL if the payment is failed.Future Options:on_cancelled,self, void_auths. Not all processing gateways support on_failed. Contact your account manager for more information.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| returnLinks.href                                                                                                               | String                                          |                                                           | The actual URL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| returnLinks.method                                                                                                             | String                                          |                                                           | The HTTP method.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| customerIp                                                                                                                     | string<br/>`length<=39`                         | Mandatory                                                 | This is the customer's IP address.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| timeToLiveSeconds                                                                                                              | number<br/>`length<=899`                        | Read Only                                                 | This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| links                                                                                                                          | [links](#linksobject) Array of link objects     | Read Only                                                 | This provides the redirect details to which a merchant needs to redirect the customer to complete the authentication. Typically the case with 3DS Cards, PSCard, PSCash                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| links.rel                                                                                                                      | [links](#linksobject)  Enumeration              | Read Only                                                 | redirect_payment - Merchant needs to redirect consumer to this url to complete authentication.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| links.href                                                                                                                     | String                                          | Read Only                                                 | The URL to redirect.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| links.method                                                                                                                   | String                                          | Read Only                                                 | The HTTP method to be used, if needed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| customerId                                                                                                                     | String  Max = 36                                | Read Only                                                 | The HTTP method to be used, if needed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| txnTime                                                                                                                        | UTC formatted date                              | Read Only                                                 | This is the date and time the request was processed. For example:<br/>2019-01-26T10:32:28Z                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| gatewayResponse                                                                                                                | [gatewayResponse](#gatewayresponseobject)       | Read Only                                                 | This is the read-only raw response returned by an acquirer. It is returned only if your account is configured accordingly.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| updatedTime                                                                                                                    | datetime                                        | Read Only                                                 | ISO 8601 format (UTC) This is the date and time the resource was last updated, for example, `2014-01-26T10:32:28Z`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| statusTime                                                                                                                     | datetime                                        | Read Only                                                 | ISO 8601 format (UTC) This is the date and time the resource was last updated, for example, `2014-01-26T10:32:28Z`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| meta                                                                                                                           | [meta](#metaobject)                             | Read Only                                                 | This is the information of the response.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| error                                                                                                                          | error Object                                    |                                                           | Represents the customer id, which is saved at Paysafe side.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| timeToLiveSeconds                                                                                                              | Long                                            | Read Only                                                 | This is the period of time the paymentHandleToken is valid before expiration, in seconds, returned in the response.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 
 ```apib
@@ -1054,7 +1068,7 @@ This is a read-only raw response returned by an acquirer.
     "paymentType": "CARD",
     "amount": 190,
     "currencyCode": "GBP",
-    "customerIp": "172.0.0.1",
+    "customerIp": "73.82.192.17",
     "billingDetails": {
         "nickName": "Home",
         "street": "100 Queen",
@@ -1088,7 +1102,7 @@ This is a read-only raw response returned by an acquirer.
 | settleWithAuth     | boolean                                   | Optional  | This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><ul><li>false &ndash; The request is not settled</li><li>true &ndash; The request is settled</li></ul><br/>**Note:** Defaults to *true*.                                                                                                                                                                                                                                                                                                   |
 | paymentHandleToken | string<br/>`length<=36`                   | Mandatory | This is the Payment Handle token that represents the payment instrument to be used in the Payment request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | availableToSettle  | number                                    | Read Only | This is the amount of the Authorization remaining to settle, in minor units.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| customerIp         | string<br/>`length<=39`                   | Optional  | This is the customer's IP address.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| customerIp         | string<br/>`length<=39`                   | Mandatory | This is the customer's IP address.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | description        | string<br/>`length<=255`                  | Optional  | This is a description of the transaction, provided by the merchant.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | txnTime            | UTC formatted date                        | Read Only | This is the date and time the request was processed. For example:<br/>2019-01-26T10:32:28Z                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | status             | enum                                      | Read Only | This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>HELD &ndash; The transaction has been placed on hold due to risk considerations.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li><li>PENDING &ndash; The request is pending.</li></ul> |
@@ -1115,7 +1129,7 @@ This is a read-only raw response returned by an acquirer.
     "dupCheck": true,
     "settleWithAuth": false,
     "paymentHandleToken": "SCZJg09GWSv36NLB",
-    "customerIp": "10.10.12.64",
+    "customerIp": "73.82.192.17",
     "description": "Gaming Request"
 }
 ```
@@ -1146,9 +1160,9 @@ This is a read-only raw response returned by an acquirer.
 <a name="rapidtransferobject" title="rapidTransfer Object"></a>
 ## rapidTransfer
 
-| Element    | Type                            | Required    | Description                                                                                 |
-|------------|---------------------------------|-------------|---------------------------------------------------------------------------------------------|
-|sepa         |[sepa](#sepaObject)|Mandatory|Sepa bank account.|
+| Element | Type                | Required  | Description        |
+|---------|---------------------|-----------|--------------------|
+| sepa    | [sepa](#sepaObject) | Mandatory | Sepa bank account. |
 
 ```apib
     {
@@ -1191,13 +1205,13 @@ This is a read-only raw response returned by an acquirer.
 <a name="sepaobject" title="sepa Object"></a>
 ## sepa
 
-| Element    | Type                            | Required    | Description                                                                                 |
-|------------|---------------------------------|-------------|---------------------------------------------------------------------------------------------|
-| nickName    | string <br/>`length<=50`       | Optional   | This is alias name for the bank account.                                               |
-| accountHolderName | string<br/>`length<32`           | Mandatory   | This is the name of the customer or company that owns the bank account.    |
-| bic        | string<br/>`length=8-11`         | Mandatory | This is the Bank Identifier Code for the consumer's bank account.. |
-| iban | string<br/>`length=8-34`        | Mandatory    | This is the International Bank Account Number for the costumer's bank account.                                                        |
-| lastDigits   | string<br/>`length=2`         | Read Only    | Last 2 digits of the iban.                                  |
+| Element           | Type                     | Required  | Description                                                                    |
+|-------------------|--------------------------|-----------|--------------------------------------------------------------------------------|
+| nickName          | string <br/>`length<=50` | Optional  | This is alias name for the bank account.                                       |
+| accountHolderName | string<br/>`length<32`   | Mandatory | This is the name of the customer or company that owns the bank account.        |
+| bic               | string<br/>`length=8-11` | Mandatory | This is the Bank Identifier Code for the consumer's bank account..             |
+| iban              | string<br/>`length=8-34` | Mandatory | This is the International Bank Account Number for the costumer's bank account. |
+| lastDigits        | string<br/>`length=2`    | Read Only | Last 2 digits of the iban.                                                     |
 
 ```apib
     {
@@ -1237,17 +1251,17 @@ This is a read-only raw response returned by an acquirer.
 <a name="standalonecreditsobject" title="standalonecredits Object"></a>
 ## Standalone Credit
 
-| Element                                                                                                          | Type                                                                                                                                                                                                                                                                             | Required  | Description                                                                                                                                                                                                                                                                                                                          |
-|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id                                                                                                               | string <br/>`length<=36`                                                                                                                                                                                                                                                         | Read Only | This is the ID returned in the response. This ID can be used for future associated requests.                                                                                                                                                                                                                                         |
-| amount                                                                                                           | number<br/>`max=99999999999`                                                                                                                                                                                                                                                     | Mandatory | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. <br/>**Note:** The *amount* specified in the Credit request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.                                           |
-| merchantRefNum                                                                                                   | string <br/>`length<=255`                                                                                                                                                                                                                                                        | Mandatory | This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.                                                                                                                                                                                              |
-| paymentHandleToken                                                                                               | string                                                                                                                                                                                                                                                                           | Mandatory | This is the payment token generated by Paysafe that will be used by merchants for Standalone Credit requests.                                                                                                                                                                                                                        |
-| currencyCode                                                                                                     | string<br/>`length=3`                                                                                                                                                                                                                                                            | Mandatory | This is the currency of the merchant account, for example, USD or CAD, returned in the request response. See [Currency Codes](#currencycodes). <br/>**Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken. |
-| card \|sepa | [card](#cardobject) \| [sepa](#sepaobject)] | Read Only | These are the details of the payment method used.                                                                                                                                                                                                                                                                                    |
-| billingDetails                                                                                                   | [billingDetails](#billingdetailsobject)                                                                                                                                                                                                                                          | Optional  | These are the billing details for the request.                                                                                                                                                                                                                                                                                       |
-| customerIp                                                                                                       | string<br/>`length<=39`                                                                                                                                                                                                                                                          | Optional  | This is the customer's IP address.                                                                                                                                                                                                                                                                                                   |
-| description                                                                                                      | string<br/>`length<=255`                                                                                                                                                                                                                                                         | Optional  | This is a description of the transaction, provided by the merchant.                                                                                                                                                                                                                                                                  |
+| Element            | Type                                        | Required  | Description                                                                                                                                                                                                                                                                                                                          |
+|--------------------|---------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| id                 | string <br/>`length<=36`                    | Read Only | This is the ID returned in the response. This ID can be used for future associated requests.                                                                                                                                                                                                                                         |
+| amount             | number<br/>`max=99999999999`                | Mandatory | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. <br/>**Note:** The *amount* specified in the Credit request must match the *amount* specified in the Payment Handle request from which the *paymentHandleToken* is taken.                                           |
+| merchantRefNum     | string <br/>`length<=255`                   | Mandatory | This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.                                                                                                                                                                                              |
+| paymentHandleToken | string                                      | Mandatory | This is the payment token generated by Paysafe that will be used by merchants for Standalone Credit requests.                                                                                                                                                                                                                        |
+| currencyCode       | string<br/>`length=3`                       | Mandatory | This is the currency of the merchant account, for example, USD or CAD, returned in the request response. See [Currency Codes](#currencycodes). <br/>**Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken. |
+| card \|sepa        | [card](#cardobject) \| [sepa](#sepaobject)] | Read Only | These are the details of the payment method used.                                                                                                                                                                                                                                                                                    |
+| billingDetails     | [billingDetails](#billingdetailsobject)     | Optional  | These are the billing details for the request.                                                                                                                                                                                                                                                                                       |
+| customerIp         | string<br/>`length<=39`                     | Mandatory | This is the customer's IP address.                                                                                                                                                                                                                                                                                                   |
+| description        | string<br/>`length<=255`                    | Optional  | This is a description of the transaction, provided by the merchant.                                                                                                                                                                                                                                                                  |
 
 ```apib
 {
@@ -1255,7 +1269,7 @@ This is a read-only raw response returned by an acquirer.
   "amount":10098,
   "paymentHandleToken": "SC9mbfZSITB5OwDJ",
   "currencyCode": "GBP",
-  "customerIp":"204.91.0.12",
+  "customerIp": "73.82.192.17",
   "description":"Winning payment from Loto"
 }
 ```
@@ -1282,19 +1296,19 @@ This is a read-only raw response returned by an acquirer.
 <a name="transaction" title="Transaction Object"></a>
 ## transaction
 
-| Element   | Type             | Required  | Description                                                                                                        |
-|-----------|------------------|-----------|--------------------------------------------------------------------------------------------------------------------|
-| id      | string <br/>     | Read Only | This is the transaction id posted to the wallet account.|
-| type      | string <br/>     | Read Only | This is the type of the transactions posted in the wallet account. Possible values are:<ul><li>DEPOSIT</li><li>WITHDRAWAL</li><li>CHARGEBACK_REVERSAL</li><li>RETURNED_WITHDRAWAL</li><li>CHARGEBACK</li><li>MERCHANT_FEE</li><li>TRANSACTION_FEE</li><li>CANCELATION</li><li>TRANSFER_IN</li><li>TRANSFER_OUT</li></ul> |
-| amount    | number <br/> | Read Only | This is the amount for the posting.                                                                                |
-| currencyCode | string <br/>`length=3` | Read Only | This is the currency of the wallet account.|
-| creationTime | UTC formatted date | Read Only | This is the date and time the transaction was created. For example:<br/>2019-01-26T10:32:28Z                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| direction | string <br/>     | Read Only | This is the direction of the transactions applied on wallet account. Valid values are CREDIT. DEBIT                |
-| fee    | number <br/> | Read Only | This is the fee applied on the transaction.|
-| paymentType      | enum <br/>     | Read Only | This is the payment type used for thetransaction. Possible values are:<ul><li>CARD</li><li>RAPID_TRANSFER</li><li>BANK_TRANSFER</li></ul>|
-| status | enum <br/>     | Read Only | This is the status of the transactions. Possible values are:<ul><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>FAILED</li><li>CANCELLED</li></ul>|
-| statusReason | enum <br/>     | Read Only | This is the reason code of the current status. Possible values are:<ul><li>ACTION_REQUIRED</li><li>PENDING_KYC</li><li>PENDING_REVIEW</li><li>PENDING_SCREENING</li><li>RECIPIENT_ACTION_REQUIRED</li><li>WAITING_FOR_RECIPIENT_ACCOUNT</li></ul>|
-| merchantRefNum    | String <br/> | Read Only | This is the merchant reference number specified by the merchant.|
+| Element        | Type                   | Required  | Description                                                                                                                                                                                                                                                                                                              |
+|----------------|------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| id             | string <br/>           | Read Only | This is the transaction id posted to the wallet account.                                                                                                                                                                                                                                                                 |
+| type           | string <br/>           | Read Only | This is the type of the transactions posted in the wallet account. Possible values are:<ul><li>DEPOSIT</li><li>WITHDRAWAL</li><li>CHARGEBACK_REVERSAL</li><li>RETURNED_WITHDRAWAL</li><li>CHARGEBACK</li><li>MERCHANT_FEE</li><li>TRANSACTION_FEE</li><li>CANCELATION</li><li>TRANSFER_IN</li><li>TRANSFER_OUT</li></ul> |
+| amount         | number <br/>           | Read Only | This is the amount for the posting.                                                                                                                                                                                                                                                                                      |
+| currencyCode   | string <br/>`length=3` | Read Only | This is the currency of the wallet account.                                                                                                                                                                                                                                                                              |
+| creationTime   | UTC formatted date     | Read Only | This is the date and time the transaction was created. For example:<br/>2019-01-26T10:32:28Z                                                                                                                                                                                                                             |
+| direction      | string <br/>           | Read Only | This is the direction of the transactions applied on wallet account. Valid values are CREDIT. DEBIT                                                                                                                                                                                                                      |
+| fee            | number <br/>           | Read Only | This is the fee applied on the transaction.                                                                                                                                                                                                                                                                              |
+| paymentType    | enum <br/>             | Read Only | This is the payment type used for thetransaction. Possible values are:<ul><li>CARD</li><li>RAPID_TRANSFER</li><li>BANK_TRANSFER</li></ul>                                                                                                                                                                                |
+| status         | enum <br/>             | Read Only | This is the status of the transactions. Possible values are:<ul><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>FAILED</li><li>CANCELLED</li></ul>                                                                                                                                                              |
+| statusReason   | enum <br/>             | Read Only | This is the reason code of the current status. Possible values are:<ul><li>ACTION_REQUIRED</li><li>PENDING_KYC</li><li>PENDING_REVIEW</li><li>PENDING_SCREENING</li><li>RECIPIENT_ACTION_REQUIRED</li><li>WAITING_FOR_RECIPIENT_ACCOUNT</li></ul>                                                                        |
+| merchantRefNum | String <br/>           | Read Only | This is the merchant reference number specified by the merchant.                                                                                                                                                                                                                                                         |
 
 ```apib
     {
@@ -1320,8 +1334,8 @@ This is a read-only raw response returned by an acquirer.
 
 | Element    | Type         | Required  | Description                   |
 |------------|--------------|-----------|-------------------------------|
-|customerId | string <br/> |           | The wallet customer id.       |
-|slipId     | string <br/> | Read Only | The transaction id at wallet. |
+| customerId | string <br/> |           | The wallet customer id.       |
+| slipId     | string <br/> | Read Only | The transaction id at wallet. |
 |fee                |BigInteger<br/>    |Fee to be applied on this wallet account transaction.|
 | verifiedInstrument     | boolean <br/> | Optional | It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails. This is applicable only for STANDALONE_CREDIT. |
 |customerAccount         |[customerAccount](#customerAccountObject)|Ready Only|Customer account.|
@@ -1671,7 +1685,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "paymentType": "CARD",
                 "amount": 1000,
                 "currencyCode": "GBP",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "billingDetails": {
                     "nickName": "Home",
                     "street": "100 Queen",
@@ -1707,7 +1721,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "status": "PAYABLE",
               "paymentType": "CARD",
               "executionMode": "SYNCHRONOUS",
-              "customerIp": "172.0.0.1",
+              "customerIp": "73.82.192.17",
               "paymentHandleToken": "SCO3wKcIyLoQbQvw",
               "billingDetails": {
                 "nickName": "Home",
@@ -1774,7 +1788,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "paymentType": "CARD",
                 "amount": 3000,
                 "currencyCode": "GBP",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "billingDetails": {
                     "nickName": "Home",
                     "street": "100 Queen",
@@ -1817,7 +1831,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "status": "INITIATED",
                 "paymentType": "CARD",
                 "executionMode": "SYNCHRONOUS",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
                 "billingDetails": {
                     "nickName": "Home",
@@ -1888,7 +1902,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "paymentType": "RAPID_TRANSFER",
                 "amount": 3000,
                 "currencyCode": "GBP",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "billingDetails": {
                     "nickName": "Home",
                     "street": "100 Queen",
@@ -1931,7 +1945,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "status": "INITIATED",
                 "paymentType": "RAPID_TRANSFER",
                 "executionMode": "SYNCHRONOUS",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
                 "billingDetails": {
                     "nickName": "Home",
@@ -2012,7 +2026,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "paymentType": "CARD",
               "amount": 3000,
               "currencyCode": "GBP",
-              "customerIp": "172.0.0.1",
+              "customerIp": "73.82.192.17",
               "billingDetails": {
                 "nickName": "Home",
                 "street": "100 Queen",
@@ -2037,7 +2051,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "status": "PAYABLE",
               "paymentType": "CARD",
               "executionMode": "SYNCHRONOUS",
-              "customerIp": "172.0.0.1",
+              "customerIp": "73.82.192.17",
               "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
               "billingDetails": {
                 "nickName": "Home",
@@ -2091,7 +2105,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "paymentType": "BANK_TRANSFER",
                 "amount": 3000,
                 "currencyCode": "EUR",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "billingDetails": {
                     "nickName": "Home",
                     "street": "100 Queen",
@@ -2124,7 +2138,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "status": "PAYABLE",
                 "paymentType": "BANK_TRANSFER",
                 "executionMode": "SYNCHRONOUS",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
                 "billingDetails": {
                     "nickName": "Home",
@@ -2173,7 +2187,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "paymentType": "BANK_TRANSFER",
                 "amount": 3000,
                 "currencyCode": "GBP",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "billingDetails": {
                     "nickName": "Home",
                     "street": "100 Queen",
@@ -2206,7 +2220,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "status": "PAYABLE",
                 "paymentType": "BANK_TRANSFER",
                 "executionMode": "SYNCHRONOUS",
-                "customerIp": "172.0.0.1",
+                "customerIp": "73.82.192.17",
                 "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
                 "billingDetails": {
                     "nickName": "Home",
@@ -2268,7 +2282,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "transactionType": "PAYMENT",
               "paymentType": "CARD",
               "executionMode": "SYNCHRONOUS",
-              "customerIp": "172.0.0.1",
+              "customerIp": "73.82.192.17",
               "paymentHandleToken": "SC0YsGIIgFksiOsQ",
               "billingDetails": {
                 "street": "100 Queen",
@@ -2358,7 +2372,7 @@ Click **Get Payment Handle Using Merchant Reference Number** above to look up a 
                     "transactionType": "PAYMENT",
                     "paymentType": "CARD",
                     "executionMode": "SYNCHRONOUS",
-                    "customerIp": "172.0.0.1",
+                    "customerIp": "73.82.192.17",
                     "paymentHandleToken": "SC0YsGIIgFksiOsQ",
                     "billingDetails": {
                         "street": "100 Queen",
@@ -2431,7 +2445,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
               "currencyCode": "GBP",
               "settleWithAuth": true,
               "paymentHandleToken": "SCZJg09GWSv36NLB",
-              "customerIp": "10.10.12.64",
+              "customerIp": "73.82.192.17",
               "description": "Magazine subscription"
             }
 
@@ -2446,7 +2460,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
               "settleWithAuth": true,
               "paymentHandleToken": "SCZJg09GWSv36NLB",
               "txnTime": "2018-12-14T15:12:18Z",
-              "customerIp": "10.10.12.64",
+              "customerIp": "73.82.192.17",
               "dupCheck": true,
               "description": "Magazine subscription",
               "currencyCode": "GBP",
@@ -2545,7 +2559,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
               "currencyCode": "GBP",
               "settleWithAuth": true,
               "paymentHandleToken": "SCZJg09GWSv36NLB",
-              "customerIp": "10.10.12.64",
+              "customerIp": "73.82.192.17",
               "description": "Magazine subscription"
             }
 
@@ -2561,7 +2575,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
               "settleWithAuth": true,
               "paymentHandleToken": "SCZJg09GWSv36NLB",
               "txnTime": "2018-12-14T15:12:18Z",
-              "customerIp": "10.10.12.64",
+              "customerIp": "73.82.192.17",
               "dupCheck": true,
               "description": "Magazine subscription",
               "currencyCode": "GBP",
@@ -2673,7 +2687,7 @@ Click **Get Payments** above to look up a Payment using the ID returned in the r
               "settleWithAuth": false,
               "paymentHandleToken": "SCZJg09GWSv36NLB",
               "txnTime": "2018-12-14T15:12:18Z",
-              "customerIp": "10.10.12.64",
+              "customerIp": "73.82.192.17",
               "dupCheck": true,
               "description": "Magazine subscription",
               "currencyCode": "GBP",
@@ -2794,7 +2808,7 @@ Click **Get Payment Using Merchant Reference Number** above to look up a Payment
                   "paymentHandleToken": "SChfCGCURe5NiLIv",
                   "authCode": "107212",
                   "txnTime": "2018-12-14T15:12:18Z",
-                  "customerIp": "10.10.12.64",
+                  "customerIp": "73.82.192.17",
                   "description": "Magazine subscription",
                   "currencyCode": "GBP",
                   "paymentType": "CARD",
@@ -2837,7 +2851,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "merchantRefNum": "merchantRefNum-151",
               "currencyCode": "GBP",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-              "customerIp": "204.91.0.12",
+              "customerIp": "73.82.192.17",
               "description": "Pay surplus"
             }
 
@@ -2850,7 +2864,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "amount": 40,
               "merchantRefNum": "merchantRefNum-151",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-              "customerIp": "204.91.0.12",
+              "customerIp": "73.82.192.17",
               "currencyCode": "GBP",
               "paymentType": "CARD",
               "status": "COMPLETED",
@@ -2935,7 +2949,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "merchantRefNum": "merchantRefNum-151",
               "currencyCode": "EUR",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-              "customerIp": "204.91.0.12",
+              "customerIp": "73.82.192.17",
               "description": "Pay surplus"
             }
 
@@ -2948,7 +2962,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "amount": 40,
               "merchantRefNum": "merchantRefNum-151",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-              "customerIp": "204.91.0.12",
+              "customerIp": "73.82.192.17",
               "currencyCode": "EUR",
               "paymentType": "BANK_TRANSFER",
               "status": "COMPLETED",
@@ -3040,7 +3054,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "merchantRefNum": "merchantRefNum-151",
               "currencyCode": "GBP",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-              "customerIp": "204.91.0.12",
+              "customerIp": "73.82.192.17",
               "description": "Pay surplus"
             }
 
@@ -3053,7 +3067,7 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
               "amount": 40,
               "merchantRefNum": "merchantRefNum-151",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-              "customerIp": "204.91.0.12",
+              "customerIp": "73.82.192.17",
               "currencyCode": "GBP",
               "paymentType": "BANK_TRANSFER",
               "status": "COMPLETED",
@@ -3155,7 +3169,7 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
               "amount": 40,
               "merchantRefNum": "merchantRefNum-151",
               "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-              "customerIp": "204.91.0.12",
+              "customerIp": "73.82.192.17",
               "currencyCode": "GBP",
               "paymentType": "CARD",
               "status": "COMPLETED",
@@ -3268,7 +3282,7 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
                     "amount": 40,
                     "merchantRefNum": "merchantRefNum-151",
                     "paymentHandleToken": "SC9mbfZSITB5OwDJ",
-                    "customerIp": "204.91.0.12",
+                    "customerIp": "73.82.192.17",
                     "currencyCode": "GBP",
                     "paymentType": "CARD",
                     "status": "PENDING",
@@ -3282,6 +3296,12 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
 
 ## Onboard a customer [/digitalwallets/v1/wallets]
 
+This endpoint is idempotent on the `externalId` field. If multiple requests are submitted with the same `externalId` and the same information, Paysafe will ignore the subsequent calls and will return a successful response.
+
+If initial balance must be granted to the customer, the operation will be treated as a transfer transaction, and a webhook should be awaited to confirm that the initial balance is transferred to the customer.
+
+> NOTE: **One of `email` or `mobile` is required when creating a customer wallet, and these must be unique across customers!**
+
 ### Create customer's wallet [POST]
 
 + Request onboard a customer (application/json)
@@ -3290,7 +3310,7 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
             X-Signature: <<Add Header Value>>
 
 
-    + Attributes (Wallet)
+    + Attributes (WalletCreateRequest)
 
 
     + Body
@@ -3307,6 +3327,7 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
             "zip": "E17 033",
             "countryCode": "GB",
             "birthDate": "1999-08-24",
+            "customerIp": "73.82.192.17",
             "registrationIp": "123.123.123.123",
             "registrationDate": "2019-08-24T14:15:22Z",
             "nationality": "GB",
@@ -3319,7 +3340,16 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
               },
               "addressVerificationDocumentsReceived": [
                 "BANK_STATEMENT"
-              ]
+              ],
+              "pep": {
+                  "status": "NO_MATCH",
+                  "lastScreenDate": "2019-08-24T15:15:22Z"
+              },
+              "sanctions": {
+                  "status": "RESOLVED",
+                  "lastScreenDate": "2019-08-24T15:16:22Z",
+                  "reason": "Description of the resolution reason, free text"
+              },
             },
             "type": "PERSON"
           },
@@ -3331,7 +3361,12 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
               "hasIban": true
             }
           ],
-          "termsAndConditionsAccepted": true
+          "termsAndConditionsAccepted": true,
+          "customerIp": "73.82.192.17",
+          "deviceInfo": {
+            "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+            "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+          }
         }
 
 
@@ -3451,7 +3486,7 @@ Get a customer by ID.
               },
               "addressVerificationDocumentsReceived": [
                 "BANK_STATEMENT"
-              ]
+              ],
             },
             "type": "PERSON",
             "restrictions": [
@@ -3502,6 +3537,7 @@ Deactivates a customer.
 Update customer information.
 
 + Request (application/json)
+
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
 
@@ -3512,7 +3548,13 @@ Update customer information.
             "address1": "23 New Str",
             "city": "London",
             "zip": "E17 033",
-            "countryCode": "GB"
+            "countryCode": "GB",
+            "kyc": {
+                "pep": {
+                    "status": "MATCH",
+                    "lastScreenDate": "2019-10-24T14:15:22Z"
+                }
+            }
         }
 
 + Response 202 (application/json)
@@ -3579,7 +3621,7 @@ Update customer information.
 
 + Response (application/json)
 
-    + Attributes (WalletPaymentInstrument)
+    + Attributes (array[WalletPaymentInstrument])
 
 
 # Group Accounts
@@ -3835,8 +3877,10 @@ Create a new authorization hold.
             "amount": 1000,
             "currencyCode": "EUR",
             "deviceInfo": {
-                "TO_BE_DETERMINED_IN_WORKSHOPS": ""
-            }
+                "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+            },
+            "customerIp": "73.82.192.17"
         }
 
 + Response 200 (application/json)
@@ -4020,6 +4064,20 @@ Customer to customer transfer requires both **sender** and **recipient** propert
 2. Set **recipient** field in the request
 3. Passing **authorizationHoldId** property is not required.
 
+&nbsp;
+
+**Async behaviour**
+
+The transfers can be queued on Paysafe's side if the rate of transfer requests increases significantly.
+
+If this is the case:
+
+* the response will contain a transaction status `PENDING`
+* the response will only contain the `merchantRefNum` field from the list of identifiers
+* the Merchant must wait for the webhook for this transaction to confirm the final status of the operation - successful or not.
+
+Until the webhook is received, the submitted transaction will not be available for fetching via the GET Transactions endpoint.
+
 
 ### Perform transfer [POST]
 
@@ -4043,8 +4101,11 @@ Customer to customer transfer requires both **sender** and **recipient** propert
             "description": "Transfer description.",
             "merchantRefNum": "abcd1234",
             "deviceInfo": {
-                "TO_BE_DEFINED_IN_WORKSHOPS": ""
-            }
+                "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+            },
+            "customerIp": "73.82.192.17"
+
         }
 
 + Response 201 (application/json)
@@ -4172,7 +4233,8 @@ Customer to customer transfer requires both **sender** and **recipient** propert
             "description": "Transfer description.",
             "merchantRefNum": "abcd1234",
             "deviceInfo": {
-                "TO_BE_DEFINED_IN_WORKSHOPS": ""
+                "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
             }
         }
 
@@ -4301,7 +4363,8 @@ Customer to customer transfer requires both **sender** and **recipient** propert
             "description": "Transfer description.",
             "merchantRefNum": "abcd1234",
             "deviceInfo": {
-                "TO_BE_DEFINED_IN_WORKSHOPS": ""
+                "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
             }
         }
 
@@ -4468,7 +4531,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 
 
-### Transaction update [POST /webhook/path/at/merchant/system/customers/restrictions]
+### Transaction update [POST /webhook/path/at/merchant/system/transactions/events]
 
 + Attributes (TransactionUpdateWebhook)
 
@@ -4496,6 +4559,31 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
                 "merchantRefNum": "abcd1234"
             }
         }
+
+
+### Account update [POST /webhook/path/at/merchant/system/accounts/events]
+
+The webhook is sent when there's an update on the customer account. The `operationType` signifies the change that occurred.
+
+> NOTE: For events with  `operationType ==  IBAN_ASSIGNED`, Paysafe is not able to send the `iban` field in a webhook due to information security restrictions. To obtain the IBAN, the Merchant must call the Account Information endpoint.
+
+
++ Attributes (AccountUpdateWebhook)
+
++ Request Account change (application/json)
+
+    + Body
+
+        {
+            "id": "00000003630052156492",
+            "timestamp": "2021-07-15T17:54:12Z",
+            "operationType": "IBAN_ASSIGNED"
+            "account": {
+                "id": "5040057608",
+                "customerId": "500014306996"
+            }
+        }
+
 
 # Data Structures
 
@@ -5053,8 +5141,8 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
         + RECEIVED - Our system has received the request and is waiting for the downstream processor’s response.
 + `description`:`Purchase Credit` (string) - This is a description of the transaction, provided by the merchant.
     _Optional, length<=255_
-+ `customerIp`:`204.91.0.12` (string) - This is the customer's IP address.
-    _Optional, length<=39_
++ `customerIp`:`73.82.192.17` (string) - This is the customer's IP address.
+    _length<=39_
 
 ## Partial Auth
 + partialAuth (object)
@@ -5154,8 +5242,8 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
     + `rel`: `redirect_payment` (enum)
     + `href`:`http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709`
     + `method`:`GET`
-+ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
-    _Optional, length<=39_
++ `customerIp`:`73.82.192.17` (string) - This is the customer's IP address.
+    _length<=39_
 + `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration.
     _Read Only, length<=899_
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
@@ -5222,8 +5310,8 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
     + `rel`: `redirect_payment` (enum)
     + `href`:`http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709`
     + `method`:`GET`
-+ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
-    _Optional, length<=39_
++ `customerIp`:`73.82.192.17` (string) - This is the customer's IP address.
+    _length<=39_
 
 ## PaymentHandleRequest SUT
 
@@ -5380,7 +5468,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
         + `rel`:`redirect_payment` (enum)
         + `href`:`http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709`
         + `method`:`GET`
-    + `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
+    + `customerIp`:`73.82.192.17` (string) - This is the customer's IP address.
         _length<=39_
     + `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration.
         _Read Only, length<=899_
@@ -5388,27 +5476,27 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 ## `deviceInfoRequest`
 
-+ threatMetrixSessionId: `abcfhdjsfjs` (string) - The Threat Metrix Session Id.
++ threatMetrixSessionId: `a71a475b-1956-4814-9c92-7faa8226b218` (string) - The Threat Metrix Session Id.
             _length<=100_
-+ threatMetrixData: (object) - The placeholder to pass all the Threat Metrix data.
++ threatMetrixData: (string) - The URL-encoded response as received from Threat Metrix
 
 ## `deviceInfoResponse`
 
-+ threatMetrixSessionId: `abcfhdjsfjs` (string) - The Threat Metrix Session Id.
++ threatMetrixSessionId: `a71a475b-1956-4814-9c92-7faa8226b218` (string) - The Threat Metrix Session Id.
             _length<=100_
 
 
 ## `walletRequest`
 
-+ customerId: `abc` (string) - The wallet id.
++ customerId: `423797719` (string) - The wallet id.
             _length<=50_
 + fee: `400` (number) - The fee to be applied on this transactions.
             _length<=50_
 + slipId: `123456` (string) - Wallet transaction id.
             _Read Only _length<=50_
-+ verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. 
++ verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied.
 The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails.
-This is applicable only for STANDALONE_CREDIT.            
+This is applicable only for STANDALONE_CREDIT.
 + deviceInfo: (deviceInfoRequest) - Device Info.
 + customerAccount: (phcustomerAccountRequest) - Customer Wallet Account.
 
@@ -5560,8 +5648,8 @@ This is applicable only for STANDALONE_CREDIT.
     _length<=36_
 + `availableToSettle`:`0` (number) - This is the amount of the Authorization remaining to settle, in minor units.
     _Read Only_
-+ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
-    _Optional, length<=39_
++ `customerIp`:`73.82.192.17` (string) - This is the customer's IP address.
+    _length<=39_
 + `description`:`Consumer Purchase` (string) - This is a description of the transaction, provided by the merchant.
     _Optional, length<=255_
 + `txnTime`:`2018-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
@@ -5763,9 +5851,9 @@ This is applicable only for STANDALONE_CREDIT.
             _Read Only, length<=50_
         + fee: `400` (number) - The fee need to be applied on the transaction.
             _Read Only, length<=50_
-        + verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. 
-The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails. 
-This is applicable only for STANDALONE_CREDIT.             
+        + verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied.
+The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails.
+This is applicable only for STANDALONE_CREDIT.
         + deviceInfo: (deviceInfoResponse) - Device Info.
            _Read Only,
         + Include customerAccount
@@ -5872,8 +5960,8 @@ This is applicable only for STANDALONE_CREDIT.
     _length<=36_
 + `merchantRefNum`:`P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
     _length<=255_
-+ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
-    _Optional, length<=39_
++ `customerIp`:`73.82.192.17` (string) - This is the customer's IP address.
+    _length<=39_
 + `dupCheck`:`true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
     _Optional_
     + Default: true
@@ -5934,14 +6022,15 @@ This is applicable only for STANDALONE_CREDIT.
 
 
 
-## Wallet (object)
+## WalletCreateRequest (object)
 Wallet composite model
 
 ### Properties
 + `customer` (Customer, required)
 + `accounts` (array[Account], required)
 + `termsAndConditionsAccepted` (boolean, required)
-
++ `deviceInfo` (deviceInfoRequest, required)
++ `customerIp` (string, required)
 
 ## Customer (object)
 
@@ -5951,9 +6040,8 @@ Wallet composite model
 + `firstName` (string, required)
 + `lastName` (string, required)
 + `title` (string, optional) - Personal title, Mr., Dr., etc.
-+ `email` (string, required) - Primary email address
-+ `phone` (string, optional)
-+ `mobile` (string, required)
++ `email` (string, optional) - Primary email address; At least one of **`email` or `mobile` is required** when creating a new wallet!
++ `mobile` (string, optional) - Mobile phone number; At least one of **`email` or `mobile` is required** when creating a new wallet!
 + `address1` (string, required)
 + `address2` (string, optional)
 + `city` (string, required)
@@ -5961,6 +6049,7 @@ Wallet composite model
 + `state` (string, optional)
 + `countryCode`: `GB` (string, required) - ISO-3166 Alpha 2 country code
 + `birthDate` (string, required)
++ `customerIp` (string, required)
 + `registrationIp` (string, optional) - IPv4 address from which the customer has registered.
 + `registrationDate` (string, required) - Date of registration at the Merchant system
 + `nationality`: `GB` (string, required) - ISO-3166 Alpha 2 country code
@@ -6157,7 +6246,8 @@ List of accounts.
     + `EXPIRED`
     + `USED`
     + `RELEASED`
-+ `deviceInfo` (DeviceInfo, required)
++ `deviceInfoRequest` (deviceInfoRequest, required)
++ `customerIp` (string, required)
 
 ## AuthorizationHoldList (object)
 
@@ -6177,12 +6267,6 @@ List of accounts.
     + `GET`
     + `POST`
 
-
-## DeviceInfo (object)
-Provides information about the device that the end-customer uses to access the service.
-
-### Properties
-+ `TO_BE_DETERMINED_IN_WORKSHOPS`: `` (string, optional)
 
 ## Error Details (object)
 Additional details about an error
@@ -6231,7 +6315,8 @@ Model for facilitation of internal Wallet transfer of funds.
     + `COMPLETED`
     + `FAILED`
     + `CANCELLED`
-+ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
++ `deviceInfo` (deviceInfoRequest, required) - Provides information about the device that the end-customer uses to access the service.
++ `customerIp` (string, required)
 
 
 ## PaymentInstrument (object)
@@ -6299,7 +6384,7 @@ Structure for initiating Depost process.
 + `internalReferenceId` (string, optional) - Internal Paysafe Reference Id required for tracking operation across systems. Must be unique identifier.
 + `successURL` (string, optional)
 + `failURL` (string, optional)
-+ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
++ `deviceInfo` (deviceInfoRequest, optional) - Provides information about the device that the end-customer uses to access the service.
 
 
 ## Deposit Object (object)
@@ -6368,7 +6453,7 @@ Request for Wallet withdrawal. The only supported options are CARD and BANKWIRE.
 
 + `internalReferenceId` (string, optional) - Internal Paysafe Reference Id required for tracking operation across systems. Must be unique identifier.
 + `merchantRefNum` (string, optional) - External Reference ID, that allows to correlate to external operation.
-+ `deviceInfo` (DeviceInfo, optional) - Provides information about the device that the end-customer uses to access the service.
++ `deviceInfo` (deviceInfoRequest, optional) - Provides information about the device that the end-customer uses to access the service.
 
 
 ## Withdrawal (object)
@@ -6420,6 +6505,8 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
 + `addressVerification` (KycVerificationItem, optional)
 + `faceMatch` (KycVerificationItem, optional)
 + `EDD` (KycVerificationItem, optional)
++ `pep` (KycScreenItem, optional)
++ `sanctions` (KycScreenItem, optional)
 + `addressVerificationDocumentsReceived` (array, optional)
     + (enum[string])
         + Members
@@ -6440,13 +6527,25 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
 
 ## KycVerificationItem (object)
 
-
 ### Properties
 + `status` (enum[string], optional)
     + `COMPLETED`
     + `NOT_COMPLETED`
 + `date`: `2021-07-19T13:23:41Z` (string, optional)
++ `documentUrls` (array[string], optional)
 
+## KycScreenItem (object)
+
+### Properties
+
++ `status` (enum[string], required)
+    + `NOT_SCREENED`
+    + `MATCH`
+    + `NO_MATCH`
+    + `RESOLVED`
+    + `DISMISSED`
++ `lastScreenDate`: `2021-07-19T13:23:41Z` (string, optional)
++ `reason` (string, optional)
 
 ## AccountSlip (object)
 Account specific view of the slip.
@@ -6474,7 +6573,6 @@ Account specific view of the slip.
 + `restrictions` (array[Restriction], optional)
 
 
-=======
 ## TransactionUpdateWebhook (object)
 
 ### Properties
@@ -6531,6 +6629,7 @@ Account specific view of the slip.
     + `CANCELLED`
 + `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
 
+
 ## WalletPaymentInstrument
 
 ### Properties
@@ -6547,7 +6646,7 @@ Account specific view of the slip.
 ### Properties
 
 + `bankName`
-+ `accountHolderName`
++ `accountHolderNa
 + `iban`
 + `sortCode`
 + `accountNumber`
@@ -6561,3 +6660,21 @@ Account specific view of the slip.
 + `pan` (string)
 + `cardHolderName` (string)
 + `expiryDate`: `2023-08-31` (string)
+
+
+## AccountUpdateWebhook
+
+### Properties
+
++ `id` (string, required) - id of the change event
++ `timestamp`: `2021-07-15T17:54:12Z` - ISO timestamp
++ `operationType` (enum[string], required)
+    + `IBAN_ASSIGNED`
++ `account` (TransactionPartWebhook, required)
+
+
+## AccountUpdateWebhookAccountPart
+
+### Properties
++ `id` (string, required)
++ `customerId` (string, required)
