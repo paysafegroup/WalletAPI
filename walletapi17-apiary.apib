@@ -810,6 +810,25 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
             }
 ```
 
+<a name="deviceinfo" title="Device Info Object"></a>
+## deviceInfo
+| Element | Type                           | Required  | Description                 |
+|---------|--------------------------------|-----------|-----------------------------|
+| threatMetrixSessionId    | String<br/>`max=100` | Optional | This is the Threat Metrix session id.  |
+| threatMetrixData   | Object   | Optional | This is the placeholder object to pass the Threat Metrix data. |
+
+```apib
+            {
+               "threatMetrixSessionID": "uetqeuqtuteu-321",
+               "trheatMetrixData" : {
+                  "userToken": "fddsfjsjfgs",
+                  "field1": "value1"
+                }
+            }
+```
+
+
+
 <a name="errorobject" title="error Object"></a>
 ## error
 | Element     | Type   | Required  | Description                                                                  |
@@ -5367,6 +5386,18 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
         _Read Only, length<=899_
 
 
+## `deviceInfoRequest`
+
++ threatMetrixSessionId: `abcfhdjsfjs` (string) - The Threat Metrix Session Id.
+            _length<=100_
++ threatMetrixData: (object) - The placeholder to pass all the Threat Metrix data.
+
+## `deviceInfoResponse`
+
++ threatMetrixSessionId: `abcfhdjsfjs` (string) - The Threat Metrix Session Id.
+            _length<=100_
+
+
 ## `walletRequest`
 
 + customerId: `abc` (string) - The wallet id.
@@ -5378,6 +5409,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 + verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. 
 The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails.
 This is applicable only for STANDALONE_CREDIT.            
++ deviceInfo: (deviceInfoRequest) - Device Info.
 + customerAccount: (phcustomerAccountRequest) - Customer Wallet Account.
 
 ## `phcustomerAccountRequest`
@@ -5734,6 +5766,8 @@ This is applicable only for STANDALONE_CREDIT.
         + verifiedInstrument: `false` (boolean) - It specifies if the instrument (card, sepa, fasterPayments etc) has been previously verfied. 
 The default value for this is false. If this is specified as false, Paysafe will verify the instrument and rejects the transaction, if the verification fails. 
 This is applicable only for STANDALONE_CREDIT.             
+        + deviceInfo: (deviceInfoResponse) - Device Info.
+           _Read Only,
         + Include customerAccount
         + Include merchantAccount
 
@@ -5749,6 +5783,8 @@ This is applicable only for STANDALONE_CREDIT.
             _Read Only, length<=50_
         + fee: `400` (number) - The fee need to be applied on the transaction.
             _Read Only, length<=50_
+        + deviceInfo: (deviceInfoResponse) - Device Info.
+           _Read Only,
         + Include customerAccount
         + Include merchantAccount
 
