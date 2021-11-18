@@ -1295,7 +1295,117 @@ This is a read-only raw response returned by an acquirer.
      },
 }
 ```
+<a name="transaction" title="Transaction Object"></a>
+## transaction
 
+| Element   | Type             | Required  | Description                                                                                                        |
+|-----------|------------------|-----------|--------------------------------------------------------------------------------------------------------------------|
+| id      | string <br/>     | Read Only | This is the transaction id posted to the wallet account.|
+| type      | string <br/>     | Read Only | This is the type of the transactions posted in the wallet account. Possible values are:<ul><li>DEPOSIT</li><li>WITHDRAWAL</li><li>CHARGEBACK_REVERSAL</li><li>RETURNED_WITHDRAWAL</li><li>CHARGEBACK</li><li>MERCHANT_FEE</li><li>TRANSACTION_FEE</li><li>CANCELATION</li><li>TRANSFER_IN</li><li>TRANSFER_OUT</li></ul> |
+| amount    | number <br/> | Read Only | This is the amount for the posting.                                                                                |
+| currencyCode | string <br/>`length=3` | Read Only | This is the currency of the wallet account.|
+| creationTime | UTC formatted date | Read Only | This is the date and time the transaction was created. For example:<br/>2019-01-26T10:32:28Z                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| direction | string <br/>     | Read Only | This is the direction of the transactions applied on wallet account. Valid values are CREDIT. DEBIT                |
+| fee    | number <br/> | Read Only | This is the fee applied on the transaction.|
+| paymentType      | enum <br/>     | Read Only | This is the payment type used for thetransaction. Possible values are:<ul><li>CARD</li><li>RAPID_TRANSFER</li><li>BANK_TRANSFER</li></ul>|
+| status | enum <br/>     | Read Only | This is the status of the transactions. Possible values are:<ul><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>FAILED</li><li>CANCELLED</li></ul>|
+| statusReason | enum <br/>     | Read Only | This is the reason code of the current status. Possible values are:<ul><li>ACTION_REQUIRED</li><li>PENDING_KYC</li><li>PENDING_REVIEW</li><li>PENDING_SCREENING</li><li>RECIPIENT_ACTION_REQUIRED</li><li>WAITING_FOR_RECIPIENT_ACCOUNT</li></ul>|
+| merchantRefNum    | String <br/> | Read Only | This is the merchant reference number specified by the merchant.|
+
+```apib
+    {
+    "transaction": {
+        "id": "12321",
+        "type": "DEPOSIT",
+        "amount": 1000,
+        "currencyCode": "GBP",
+        "creationTime": "2021-07-15T17:54:12Z",
+        "direction": "CREDIT",
+        "fee": 400,
+        "paymentType": "CARD",
+        "status": "COMPLETED",
+        "merchantRefNum": "testTrans"
+      }
+    }
+```
+
+
+
+<a name="wallet" title="Wallet Object"></a>
+## wallet
+
+| Element    | Type         | Required  | Description                   |
+|------------|--------------|-----------|-------------------------------|
+| customerId | string <br/> |           | The wallet customer id.       |
+| slipId     | string <br/> | Read Only | The transaction id at wallet. |
+|fee                |BigInteger<br/>    |Fee to be applied on this wallet account transaction.|
+|customerAccount         |[customerAccount](#customerAccountObject)|Ready Only|Customer account.|
+|merchantAccount         |[merchantAccount](#merchantAccountObject)|Ready Only|Merchant account.|
+
+```apib
+    {
+    "wallet":{
+       "customerId" : "abc",
+       "slipId" : "100753",
+       "fee": 400,
+       "customerAccount" : {
+         "id":"abc",
+         "transactions" : [ {
+              "id": "12321",
+              "type": "DEPOSIT",
+              "amount": 1000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "CREDIT",
+              "fee": 400,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            },
+           {
+              "id": "12322",
+              "type": "MERCHANT_FEE",
+              "amount": 400,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "DEBIT",
+              "fee": 0,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            }
+         ]
+        },
+        "merchantAccount" : {
+           "id": "def",
+           "transactions" : [ {
+              "id": "12323",
+              "type": "MERCHANT_FEE",
+              "amount": 400,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "CREDIT",
+              "fee": 100,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            },
+           {
+              "id": "12324",
+              "type": "FEE",
+              "amount": 100,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "DEBIT",
+              "fee": 0,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            }
+          ]
+       }
+  }
+```
 
 # Error Summary
 
