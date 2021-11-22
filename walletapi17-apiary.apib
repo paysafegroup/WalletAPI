@@ -7,6 +7,9 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 22 Nov 2021 | - Added bank account detail - BIC                                                                           |
+|         |             | - Updated examples                                                                                          |
+|         |             | - Removed initial balance when creating a wallet - a separate transfer transaction must be used             |
 | V1      | 17 Nov 2021 | - Removed pagination from get customer accounts; the API returns a list of accounts                         |
 |         |             | - URL for GET instruments changed; customerId converted to required query parameter                         |
 |         |             | - Added wallet transaction statusReason                                                                     |
@@ -3355,8 +3358,6 @@ If initial balance must be granted to the customer, the operation will be treate
           "accounts": [
             {
               "currencyCode": "GBP",
-              "totalBalance": 0,
-              "availableBalance": 0,
               "hasIban": true
             }
           ],
@@ -6013,7 +6014,7 @@ Wallet composite model
 
 ### Properties
 + `customer` (Customer, required)
-+ `accounts` (array[Account], required)
++ `accounts` (array[AccountRequest], required)
 + `termsAndConditionsAccepted` (boolean, required)
 + `deviceInfo` (deviceInfoRequest, required)
 + `customerIp` (string, required)
@@ -6149,6 +6150,12 @@ Wallet composite model
 + `availableBalance` (number, required) - Amount in minor units
 + `iban` (string, optional) - IBAN associated with this account.
 + `creationTime`: `2019-08-24T14:15:22Z` (string, optional)
++ `hasIban` (boolean, optional)
+
+## AccountRequest (object)
+
+### Properties
++ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
 + `hasIban` (boolean, optional)
 
 
@@ -6642,6 +6649,7 @@ Account specific view of the slip.
 + `bankName`
 + `accountHolderName`
 + `iban`
++ `bic`
 + `sortCode`
 + `accountNumber`
 + `countryCode`
@@ -6671,4 +6679,4 @@ Account specific view of the slip.
 
 ### Properties
 + `id` (string, required)
-+ `customerId` (string, required)trn
++ `customerId` (string, required)
