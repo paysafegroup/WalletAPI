@@ -834,7 +834,7 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
             }
 ```
 
-<a name="deviceinfo" title="Device Info Object"></a>
+<a name="deviceinfoobject" title="Device Info Object"></a>
 ## deviceInfo
 | Element               | Type                 | Required | Description                           |
 |-----------------------|----------------------|----------|---------------------------------------|
@@ -1351,9 +1351,9 @@ This is a read-only raw response returned by an acquirer.
 | customerId | string <br/> |           | The wallet customer id.       |
 | slipId     | string <br/> | Read Only | The transaction id at wallet. |
 |fee                |BigInteger<br/>    |            |Fee to be applied on this wallet account transaction.|
-|deviceInfo                |[deviceInfo](#deviceInfoObject)    |            |Device Information.|
-|customerAccount         |[customerAccount](#customerAccountObject)|Ready Only|Customer account.|
-|merchantAccount         |[merchantAccount](#merchantAccountObject)|Ready Only|Merchant account.|
+|deviceInfo                |[deviceInfo](#deviceinfoobject)    |            |Device Information.|
+|customerAccount         |[customerAccount](#customerAccount)|Ready Only|Customer account.|
+|merchantAccount         |[merchantAccount](#merchantAccount)|Ready Only|Merchant account.|
 
 ```apib
     {
