@@ -839,12 +839,14 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 |-----------------------|----------------------|----------|---------------------------------------|
 | threatMetrixSessionId | String<br/>`max=100` | Optional | This is the Threat Metrix session id. |
 | threatMetrixData   | String   | Optional | The URL-encoded response as received from Threat Metrix
+| appType|  String | Required| The type of end-user application that facilitated the request; `WEB_APP`, `MOBILE_APP`, `API`|
 
 ```apib
-            {
-               "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
-               "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
-            }
+    {
+        "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+        "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+        "appType": "WEB_APP"
+    }
 ```
 
 
@@ -3513,6 +3515,25 @@ Update customer information.
 
     + Attributes (array[WalletPaymentInstrument])
 
+        [
+            {
+                "instrumentType": "SEPA_BANK_ACCOUNT",
+                "bankName": "First Bank",
+                "accountHolderName": "John Smith",
+                "iban": "DE3456789043567890876",
+                "bic": "3456789",
+                "countryCode": "DE"
+            },
+            {
+                "instrumentType": "UK_BANK_ACCOUNT",
+                "bankName": "First Bank",
+                "accountHolderName": "John Smith",
+                "iban": "DE3456789043567890876",
+                "bic": "3456789",
+                "countryCode": "DE"
+            },
+        ]
+
 
 # Group Accounts
 
@@ -4409,9 +4430,11 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 ### Transaction update [POST /webhook/path/at/merchant/system/transactions/events]
 
+This webhook will be sent when the status of all transaction types is updated - deposit, withdrawal or transfers
+
 + Attributes (TransactionUpdateWebhook)
 
-+ Request Transaction state change (application/json)
++ Request Deposit completed (application/json)
 
     + Body
 
@@ -4433,7 +4456,34 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
                 "description": "Transaction description.",
                 "status": "COMPLETED",
                 "statusReason": null,
-                "merchantRefNum": "abcd1234"
+                "merchantRefNum": "af9a4b8d-47da-401e-99b4-20b070f4190b"
+            }
+        }
+
+
++ Request Withdrawal completed (application/json)
+
+    + Body
+
+        {
+            "id": "00000003630052156492",
+            "timestamp": "2021-07-15T17:54:12Z",
+            "transaction": {
+                "id": "5040057608",
+                "slipId": "5009964049",
+                "customerId": "500014306996",
+                "accountId": "5014567344",
+                "type": "WITHDRAWAL",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "creationTime": "2021-07-15T17:54:12Z",
+                "direction": "DEBIT",
+                "paymentType": "CARD",
+                "instrumentId": "43235252",
+                "description": "Transaction description.",
+                "status": "COMPLETED",
+                "statusReason": null,
+                "merchantRefNum": "5dd3a306-aa5f-4cb3-ab44-47a82261a7a6"
             }
         }
 
@@ -6525,9 +6575,11 @@ Account specific view of the slip.
 
 ### Properties
 
++ `id` (string)
 + `instrumentType`: (enum[string], required)
     + CARD
-    + BANK_ACCOUNT
+    + SEPA_BANK_ACCOUNT
+    + UK_BANK_ACCOUNT
 + Include WalletPaymentInstrumentBankAccount
 + Include WalletPaymentInstrumentCard
 
@@ -6542,7 +6594,6 @@ Account specific view of the slip.
 + `bic`
 + `sortCode`
 + `accountNumber`
-+ `countryCode`
 
 
 ## WalletPaymentInstrumentCard
@@ -6570,3 +6621,4 @@ Account specific view of the slip.
 ### Properties
 + `id` (string, required)
 + `customerId` (string, required)
+updat
