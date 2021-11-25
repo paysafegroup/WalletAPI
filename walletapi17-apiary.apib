@@ -7,7 +7,8 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
-| V1      | 25 Nov 2021 | -                                                                            |
+| V1      | 25 Nov 2021 | - Examples & documentation updated; added appType in deviceInfo                                                                           |
+|         |             | - Updated Payment Handle samples with <i>deviceInfo</i>
 | V1      | 22 Nov 2021 | - Added bank account detail - BIC                                                                           |
 |         |             | - Updated examples                                                                                          |
 |         |             | - Removed initial balance when creating a wallet - a separate transfer transaction must be used             |
@@ -834,7 +835,7 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
             }
 ```
 
-<a name="deviceinfo" title="Device Info Object"></a>
+<a name="deviceinfoobject" title="Device Info Object"></a>
 ## deviceInfo
 | Element               | Type                 | Required | Description                           |
 |-----------------------|----------------------|----------|---------------------------------------|
@@ -1035,7 +1036,7 @@ This is a read-only raw response returned by an acquirer.
 | amount                                                                                                                         | number <br/>`max=99999999999`                   | Mandatory                                                 | This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process US $109.9, this value should be 10990.<br/>**Note:** This field is mandatory if *transactionType* is included. <br/>The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | currencyCode                                                                                                                   | string <br/>`length=3`                          | Mandatory                                                 | This is the currency of the merchant account, for example, USD or CAD. See [Currency Codes](#currencycodes). <br/>The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | paymentHandleToken                                                                                                             | string <br/>`length=50`                         | Read Only                                                 | This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| [card](#cardobject) or [rapidTransfer](#rapidtransferobject) or [sepa](#sepaobject) or [fasterPayments](#fasterpaymentsobject) | Objects                                         | Mandatory                                                 | These are details of the payment instrument used in the request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| [card](#cardobject) or [rapidTransfer](#rapidtransferobject) or [sepa](#sepaobject) or [fasterPayments](#fasterpaymentsobject) | Object                                         | Mandatory                                                 | These are details of the payment instrument used in the request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | wallet                                                                                                                         | [wallet](#walletobject)                         | Optional                                                  | Wallet object.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | billingDetails                                                                                                                 | [billingDetails](#billingdetailsobject)         | Conditional                                               | These are billing details for the request.<br/>**Note:** For single-use Payment Handles, this address information is ignored if the *paymentHandleTokenFrom* parameter is included and there is already address information associated with that customer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | profile                                                                                                                        | [profile](#profileobject)                       | Conditional                                               | This is the customer's profile. Mandatory for VIP_PREFERRED and Sightline (Play+). Optional for all other payment methods.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
@@ -1074,6 +1075,14 @@ This is a read-only raw response returned by an acquirer.
         "cvv": "111",
         "holderName": "Chad"
     },
+    "wallet" : {
+       "customerId" : "12345",
+       "fee": 400,
+       "deviceInfo" : {
+          "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+          "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+       }
+    },   
     "paymentType": "CARD",
     "amount": 190,
     "currencyCode": "GBP",
@@ -1267,7 +1276,7 @@ This is a read-only raw response returned by an acquirer.
 | merchantRefNum     | string <br/>`length<=255`                   | Mandatory | This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.                                                                                                                                                                                              |
 | paymentHandleToken | string                                      | Mandatory | This is the payment token generated by Paysafe that will be used by merchants for Standalone Credit requests.                                                                                                                                                                                                                        |
 | currencyCode       | string<br/>`length=3`                       | Mandatory | This is the currency of the merchant account, for example, USD or CAD, returned in the request response. See [Currency Codes](#currencycodes). <br/>**Note:** The *currencyCode* specified in the Credit request must match the *currencyCode* specified in the Payment Handle request from which the *paymentHandleToken* is taken. |
-| card \|sepa        | [card](#cardobject) \| [sepa](#sepaobject)] | Read Only | These are the details of the payment method used.                                                                                                                                                                                                                                                                                    |
+| [card](#cardobject) or [sepa](#sepaobject) or [fasterPayments](#fasterpaymentsobject)        | Object | Read Only | These are the details of the payment method used.                                                                                                                                                                                                                                                                                    |
 | billingDetails     | [billingDetails](#billingdetailsobject)     | Optional  | These are the billing details for the request.                                                                                                                                                                                                                                                                                       |
 | customerIp         | string<br/>`length<=39`                     | Mandatory | This is the customer's IP address.                                                                                                                                                                                                                                                                                                   |
 | description        | string<br/>`length<=255`                    | Optional  | This is a description of the transaction, provided by the merchant.                                                                                                                                                                                                                                                                  |
@@ -1301,7 +1310,122 @@ This is a read-only raw response returned by an acquirer.
      },
 }
 ```
+<a name="transaction" title="Transaction Object"></a>
+## transaction
 
+| Element   | Type             | Required  | Description                                                                                                        |
+|-----------|------------------|-----------|--------------------------------------------------------------------------------------------------------------------|
+| id      | string <br/>     | Read Only | This is the transaction id posted to the wallet account.|
+| type      | string <br/>     | Read Only | This is the type of the transactions posted in the wallet account. Possible values are:<ul><li>DEPOSIT</li><li>WITHDRAWAL</li><li>CHARGEBACK_REVERSAL</li><li>RETURNED_WITHDRAWAL</li><li>CHARGEBACK</li><li>MERCHANT_FEE</li><li>TRANSACTION_FEE</li><li>CANCELATION</li><li>TRANSFER_IN</li><li>TRANSFER_OUT</li></ul> |
+| amount    | number <br/> | Read Only | This is the amount for the posting.                                                                                |
+| currencyCode | string <br/>`length=3` | Read Only | This is the currency of the wallet account.|
+| creationTime | UTC formatted date | Read Only | This is the date and time the transaction was created. For example:<br/>2019-01-26T10:32:28Z                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| direction | string <br/>     | Read Only | This is the direction of the transactions applied on wallet account. Valid values are CREDIT. DEBIT                |
+| fee    | number <br/> | Read Only | This is the fee applied on the transaction.|
+| paymentType      | enum <br/>     | Read Only | This is the payment type used for thetransaction. Possible values are:<ul><li>CARD</li><li>RAPID_TRANSFER</li><li>BANK_TRANSFER</li></ul>|
+| status | enum <br/>     | Read Only | This is the status of the transactions. Possible values are:<ul><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>FAILED</li><li>CANCELLED</li></ul>|
+| statusReason | enum <br/>     | Read Only | This is the reason code of the current status. Possible values are:<ul><li>ACTION_REQUIRED</li><li>PENDING_KYC</li><li>PENDING_REVIEW</li><li>PENDING_SCREENING</li><li>RECIPIENT_ACTION_REQUIRED</li><li>WAITING_FOR_RECIPIENT_ACCOUNT</li></ul>|
+| merchantRefNum    | String <br/> | Read Only | This is the merchant reference number specified by the merchant.|
+
+```apib
+    {
+    "transaction": {
+        "id": "12321",
+        "type": "DEPOSIT",
+        "amount": 1000,
+        "currencyCode": "GBP",
+        "creationTime": "2021-07-15T17:54:12Z",
+        "direction": "CREDIT",
+        "fee": 400,
+        "paymentType": "CARD",
+        "status": "COMPLETED",
+        "merchantRefNum": "testTrans"
+      }
+    }
+```
+
+
+
+<a name="wallet" title="Wallet Object"></a>
+## wallet
+
+| Element    | Type         | Required  | Description                   |
+|------------|--------------|-----------|-------------------------------|
+| customerId | string <br/> |           | The wallet customer id.       |
+| slipId     | string <br/> | Read Only | The transaction id at wallet. |
+|fee                |BigInteger<br/>    |            |Fee to be applied on this wallet account transaction.|
+|deviceInfo                |[deviceInfo](#deviceinfoobject)    |            |Device Information.|
+|customerAccount         |[customerAccount](#customerAccount)|Ready Only|Customer account.|
+|merchantAccount         |[merchantAccount](#merchantAccount)|Ready Only|Merchant account.|
+
+```apib
+    {
+    "wallet":{
+       "customerId" : "12345",
+       "slipId" : "100753",
+       "fee": 400,
+       "deviceInfo" : {
+          "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+          "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+       },
+       "customerAccount" : {
+         "id":"abc",
+         "transactions" : [ {
+              "id": "12321",
+              "type": "DEPOSIT",
+              "amount": 1000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "CREDIT",
+              "fee": 400,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            },
+           {
+              "id": "12322",
+              "type": "MERCHANT_FEE",
+              "amount": 400,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "DEBIT",
+              "fee": 0,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            }
+         ]
+        },
+        "merchantAccount" : {
+           "id": "def",
+           "transactions" : [ {
+              "id": "12323",
+              "type": "MERCHANT_FEE",
+              "amount": 400,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "CREDIT",
+              "fee": 100,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            },
+           {
+              "id": "12324",
+              "type": "FEE",
+              "amount": 100,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "DEBIT",
+              "fee": 0,
+              "paymentType": "CARD",
+              "status": "COMPLETED",
+              "merchantRefNum": "testTrans"
+            }
+          ]
+       }
+  }
+```
 
 # Error Summary
 
@@ -1573,6 +1697,10 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF"
+                   },
                    "customerAccount" : {
                        "id":"abc"
                    },
@@ -1645,6 +1773,9 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "fee" : 400,
                    "slipId" : "100753",
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -1700,6 +1831,10 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF"
+                   },
                    "customerAccount" : {
                        "id":"abc"
                    },
@@ -1760,6 +1895,9 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "slipId" : "100753",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -1819,6 +1957,10 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF"
+                   },
                    "customerAccount" : {
                        "id":"abc"
                    },
@@ -1877,6 +2019,9 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "slipId" : "100753",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
                    "customerAccount" : {
                        "id":"abc"
                    }
@@ -1928,6 +2073,10 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF"
+                   },
                    "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
@@ -1980,6 +2129,9 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "fee" : 400,
                    "slipId" : "100753",
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
                    "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
@@ -2032,6 +2184,10 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF"
+                   },
                    "verifiedInstrument" : false,
                    "customerAccount" : {
                        "id":"abc"
@@ -2078,6 +2234,9 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "slipId" : "100753",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
                    "verifiedInstrument" : false,
                    "customerAccount" : {
                        "id":"abc"
@@ -2119,6 +2278,10 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF"
+                   },
                    "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
@@ -2164,6 +2327,9 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "customerId" : "GGG",
                    "slipId" : "100753",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
                    "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
@@ -2219,6 +2385,9 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "wallet":{
                    "customerId" : "GGG",
                    "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
                    "slipId" : "100753",
                    "customerAccount" : {
                        "id":"abc"
@@ -2310,6 +2479,9 @@ Click **Get Payment Handle Using Merchant Reference Number** above to look up a 
                        "customerId" : "GGG",
                        "fee" : 400,
                        "slipId" : "100753",
+                       "deviceInfo" : {
+                          "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                       },
                         "customerAccount" : {
                           "id":"abc"
                         }
