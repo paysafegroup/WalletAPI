@@ -7,7 +7,8 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
-| V1      | 24 Nov 2021 | - Updated Payment Handle samples with <i>deviceInfo</i>
+| V1      | 25 Nov 2021 | - Examples & documentation updated; added appType in deviceInfo                                                                           |
+|         |             | - Updated Payment Handle samples with <i>deviceInfo</i>
 | V1      | 22 Nov 2021 | - Added bank account detail - BIC                                                                           |
 |         |             | - Updated examples                                                                                          |
 |         |             | - Removed initial balance when creating a wallet - a separate transfer transaction must be used             |
@@ -840,12 +841,14 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 |-----------------------|----------------------|----------|---------------------------------------|
 | threatMetrixSessionId | String<br/>`max=100` | Optional | This is the Threat Metrix session id. |
 | threatMetrixData   | String   | Optional | The URL-encoded response as received from Threat Metrix
+| appType|  String | Required| The type of end-user application that facilitated the request; `WEB_APP`, `MOBILE_APP`, `API`|
 
 ```apib
-            {
-               "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
-               "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
-            }
+    {
+        "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+        "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+        "appType": "WEB_APP"
+    }
 ```
 
 
@@ -1700,6 +1703,11 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    },
                    "customerAccount" : {
                        "id":"abc"
+                   },
+                   "deviceInfo": {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                      "appType": "WEB_APP"
                    }
                 },
                 "paymentType": "CARD",
@@ -1829,6 +1837,11 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    },
                    "customerAccount" : {
                        "id":"abc"
+                   },
+                   "deviceInfo": {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                      "appType": "WEB_APP"
                    }
                 },
                 "returnLinks": [{
@@ -1950,6 +1963,11 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    },
                    "customerAccount" : {
                        "id":"abc"
+                   },
+                   "deviceInfo": {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                      "appType": "WEB_APP"
                    }
                 },
                 "returnLinks": [{
@@ -2062,7 +2080,12 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
-                    }
+                    },
+                   "deviceInfo": {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                      "appType": "WEB_APP"
+                   }
               },
               "paymentType": "CARD",
               "amount": 3000,
@@ -2145,7 +2168,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                     "accountHolderName": "John Doe",
                     "bic": "ABNANL2APIP",
                     "iban": "DE89370400440532013000"
-                    },
+                },
                 "paymentType": "BANK_TRANSFER",
                 "amount": 3000,
                 "currencyCode": "EUR",
@@ -2168,6 +2191,11 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "verifiedInstrument" : false,
                    "customerAccount" : {
                        "id":"abc"
+                   },
+                   "deviceInfo": {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                      "appType": "WEB_APP"
                    }
                 }
             }
@@ -2257,6 +2285,11 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                    "verifiedInstrument" : true,
                    "customerAccount" : {
                        "id":"abc"
+                   },
+                   "deviceInfo": {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                      "appType": "WEB_APP"
                    }
                 }
             }
@@ -3371,7 +3404,7 @@ If initial balance must be granted to the customer, the operation will be treate
 + Request onboard a customer (application/json)
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
-            X-Signature: <<Add Header Value>>
+            Signature: <<Add Header Value>>
 
 
     + Attributes (WalletCreateRequest)
@@ -3380,57 +3413,86 @@ If initial balance must be granted to the customer, the operation will be treate
     + Body
 
         {
-          "customer": {
-            "firstName": "John",
-            "lastName": "Doe",
-            "title": "Mr",
-            "email": "john.doe@example.com",
-            "mobile": "+4434525551511",
-            "address1": "23 Four Str",
-            "city": "London",
-            "zip": "E17 033",
-            "countryCode": "GB",
-            "birthDate": "1999-08-24",
-            "customerIp": "73.82.192.17",
-            "registrationIp": "123.123.123.123",
-            "registrationDate": "2019-08-24T14:15:22Z",
-            "nationality": "GB",
-            "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
-            "kyc": {
-              "status": "COMPLETED",
-              "idVerification": {
+            "customer": {
+                "firstName": "John",
+                "lastName": "Doe",
+                "title": "Mr",
+                "email": "john.doe@example.com",
+                "phone": "+443452555151",
+                "address1": "23 Four Str",
+                "city": "London",
+                "zip": "E17 033",
+                "countryCode": "GB",
+                "birthDate": "1999-08-24",
+                "registrationIp": "115.148.82.143",
+                "nationality": "GB",
+                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "kyc": {
                 "status": "COMPLETED",
-                "date": "2021-07-19T13:23:41Z"
-              },
-              "addressVerificationDocumentsReceived": [
-                "BANK_STATEMENT"
-              ],
-              "pep": {
-                  "status": "NO_MATCH",
-                  "lastScreenDate": "2019-08-24T15:15:22Z"
-              },
-              "sanctions": {
-                  "status": "RESOLVED",
-                  "lastScreenDate": "2019-08-24T15:16:22Z",
-                  "reason": "Description of the resolution reason, free text"
-              },
+                "idVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:23:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc1",
+                        "https://documents-repository.com/images/doc2"
+                    ]
+                },
+                "addressVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:25:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc3",
+                        "https://documents-repository.com/images/doc4"
+                    ]
+                },
+                "faceMatch": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:27:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc5",
+                        "https://documents-repository.com/images/doc6"
+                    ]
+                },
+                "EDD": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:35:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc7"
+                    ]
+                },
+                "addressVerificationDocumentsReceived": [
+                    "BANK_STATEMENT",
+                    "CREDIT_CARD",
+                    "TAX_RETURN",
+                    "PENSION_DOCUMENT",
+                    "PHONE_BILL"
+                ],
+                "pep": {
+                    "status": "MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Matched"
+                },
+                "sanctions": {
+                    "status": "NO_MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                }
+                },
+                "type": "PERSON"
             },
-            "type": "PERSON"
-          },
-          "accounts": [
-            {
-              "currencyCode": "GBP",
-              "hasIban": true
-            }
-          ],
-          "termsAndConditionsAccepted": true,
-          "customerIp": "73.82.192.17",
-          "deviceInfo": {
-            "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
-            "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
-          }
+            "accounts": [
+                {
+                    "currencyCode": "GBP",
+                    "hasIban": true
+                }
+            ],
+            "termsAndConditionsAccepted": true,
+            "deviceInfo": {
+                "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                "appType": "WEB_APP"
+            },
+            "customerIp": "73.82.192.17"
         }
-
 
 + Response 201 (application/json)
 
@@ -3439,48 +3501,74 @@ If initial balance must be granted to the customer, the operation will be treate
     + Body
 
         {
-          "customer": {
-            "id": "7453266",
-            "firstName": "John",
-            "lastName": "Doe",
-            "title": "Mr",
-            "email": "john.doe@example.com",
-            "mobile": "+4434525551511",
-            "address1": "23 Four Str",
-            "city": "London",
-            "zip": "E17 033",
-            "countryCode": "GB",
-            "birthDate": "1999-08-24",
-            "registrationIp": "123.123.123.123",
-            "registrationDate": "2019-08-24T14:15:22Z",
-            "nationality": "GB",
-            "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
-            "kyc": {
-              "status": "COMPLETED",
-              "idVerification": {
+            "customer": {
+                "id": "5435323362",
+                "firstName": "John",
+                "lastName": "Doe",
+                "title": "Mr",
+                "email": "john.doe@example.com",
+                "mobile": "+4434525551511",
+                "address1": "23 Four Str",
+                "city": "London",
+                "zip": "E17 033",
+                "countryCode": "GB",
+                "birthDate": "1999-08-24",
+                "registrationIp": "115.148.82.143",
+                "registrationDate": "2019-08-24T14:15:22Z",
+                "nationality": "GB",
+                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "kyc": {
                 "status": "COMPLETED",
-                "date": "2021-07-19T13:23:41Z"
-              },
-              "addressVerificationDocumentsReceived": [
-                "BANK_STATEMENT"
-              ]
+                "idVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:23:41Z"
+                },
+                "addressVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:25:41Z"
+                },
+                "faceMatch": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:27:41Z"
+                },
+                "EDD": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:35:41Z"
+                },
+                "addressVerificationDocumentsReceived": [
+                    "BANK_STATEMENT",
+                    "CREDIT_CARD",
+                    "TAX_RETURN",
+                    "PENSION_DOCUMENT",
+                    "PHONE_BILL"
+                ],
+                "pep": {
+                    "status": "MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "In PEP lists"
+                },
+                "sanctions": {
+                    "status": "NO_MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z"
+                }
+                },
+                "type": "PERSON"
             },
-            "type": "PERSON"
-          },
-          "accounts": [
-            {
-              "id": "4326523",
-              "customerId": "7453266",
-              "currencyCode": "GBP",
-              "totalBalance": 0,
-              "availableBalance": 0,
-              "hasIban": true,
-              "iban": "NL74ABNA1231242344",
-              "creationTime": "2021-07-19T14:23:41Z"
-            }
-          ],
-          "termsAndConditionsAccepted": true
+            "accounts": [
+                {
+                "id": "42342355",
+                "customerId": "5435323362",
+                "currencyCode": "GBP",
+                "totalBalance": 0,
+                "availableBalance": 0,
+                "iban": "NL74ABNA1231242344",
+                "hasIban": true,
+                "bic": "ABNANL2A"
+                }
+            ],
+            "termsAndConditionsAccepted": true
         }
+
 
 + Response 400 (application/json)
 
@@ -3525,7 +3613,7 @@ Get a customer by ID.
     + Body
 
         {
-            "id": "7453266",
+            "id": "5435323362",
             "firstName": "John",
             "lastName": "Doe",
             "title": "Mr",
@@ -3536,30 +3624,49 @@ Get a customer by ID.
             "zip": "E17 033",
             "countryCode": "GB",
             "birthDate": "1999-08-24",
-            "registrationIp": "123.123.123.123",
+            "registrationIp": "115.148.82.143",
             "registrationDate": "2019-08-24T14:15:22Z",
             "nationality": "GB",
             "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
             "kyc": {
-              "status": "COMPLETED",
-              "idVerification": {
                 "status": "COMPLETED",
-                "date": "2021-07-19T13:23:41Z"
-              },
-              "addressVerificationDocumentsReceived": [
-                "BANK_STATEMENT"
-              ],
-            },
-            "type": "PERSON",
-            "restrictions": [
-                {
-                    "name": "ALL_TRANSACTIONS",
-                    "reason": "CONFIRMED_FRAUD",
-                    "requiredActions": null,
-                    "lastChangeDate": "2021-09-17T15:23:11Z"
+                "idVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:23:41Z"
+                },
+                "addressVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:25:41Z"
+                },
+                "faceMatch": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:27:41Z"
+                },
+                "EDD": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:35:41Z"
+                },
+                "addressVerificationDocumentsReceived": [
+                    "BANK_STATEMENT",
+                    "CREDIT_CARD",
+                    "TAX_RETURN",
+                    "PENSION_DOCUMENT",
+                    "PHONE_BILL"
+                ],
+                "pep": {
+                    "status": "MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Matched"
+                },
+                "sanctions": {
+                    "status": "NO_MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Incorrect data"
                 }
-            ]
+            },
+            "type": "PERSON"
         }
+
 
 + Response 404
 
@@ -3581,13 +3688,85 @@ Deactivates a customer.
 
     + Attributes (Customer)
 
+    + Body
+
+        {
+            "id": "5435323362",
+            "firstName": "John",
+            "lastName": "Doe",
+            "title": "Mr",
+            "email": "john.doe@example.com",
+            "mobile": "+4434525551511",
+            "address1": "23 Four Str",
+            "city": "London",
+            "zip": "E17 033",
+            "countryCode": "GB",
+            "birthDate": "1999-08-24",
+            "registrationIp": "123.123.123.123",
+            "registrationDate": "2019-08-24T14:15:22Z",
+            "nationality": "GB",
+            "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+            "kyc": {
+                "status": "COMPLETED",
+                "idVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:23:41Z"
+                },
+                "addressVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:25:41Z"
+                },
+                "faceMatch": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:27:41Z"
+                },
+                "EDD": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:35:41Z"
+                },
+                "addressVerificationDocumentsReceived": [
+                    "BANK_STATEMENT",
+                    "CREDIT_CARD",
+                    "TAX_RETURN",
+                    "PENSION_DOCUMENT",
+                    "PHONE_BILL"
+                ],
+                "pep": {
+                    "status": "MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Matched"
+                },
+                "sanctions": {
+                    "status": "NO_MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Incorrect data"
+                }
+            },
+            "type": "PERSON",
+            "restrictions": [
+                {
+                    "name": "LOGIN",
+                    "reason": "CLOSE_ACCOUNT",
+                    "requiredActions": [
+                        "MANUAL_REVIEW"
+                    ],
+                    "lastChangeDate": "2021-11-24T15:18:14.741Z"
+                },
+                {
+                    "name": "ALL_TRANSACTIONS",
+                    "reason": "CLOSE_ACCOUNT",
+                    "requiredActions": [
+                        "MANUAL_REVIEW"
+                    ],
+                    "lastChangeDate": "2021-11-24T15:18:14.741Z"
+                }
+            ]
+        }
 
 
 + Response 404
 
         Customer with the requested ID was not found.
-
-
 
 
 + Response 409
@@ -3606,17 +3785,71 @@ Update customer information.
     + Body
 
         {
-            "id": "5435323362",
-            "address1": "23 New Str",
+            "firstName": "John",
+            "lastName": "Doe",
+            "title": "Mr",
+            "email": "john.doe@example.com",
+            "phone": "+443452555151",
+            "address1": "24 Four Str",
             "city": "London",
             "zip": "E17 033",
             "countryCode": "GB",
+            "birthDate": "1999-08-24",
+            "registrationIp": "115.148.82.143",
+            "nationality": "GB",
+            "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
             "kyc": {
+                "status": "COMPLETED",
+                "idVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:23:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc1",
+                        "https://documents-repository.com/images/doc2"
+                    ]
+                },
+                "addressVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:25:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc3",
+                        "https://documents-repository.com/images/doc4"
+                    ]
+                },
+                "faceMatch": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:27:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc5",
+                        "https://documents-repository.com/images/doc6"
+                    ]
+                },
+                "EDD": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:35:41Z",
+                    "documentUrls": [
+                        "https://documents-repository.com/images/doc7"
+                    ]
+                },
+                "addressVerificationDocumentsReceived": [
+                    "BANK_STATEMENT",
+                    "CREDIT_CARD",
+                    "TAX_RETURN",
+                    "PENSION_DOCUMENT",
+                    "PHONE_BILL"
+                ],
                 "pep": {
                     "status": "MATCH",
-                    "lastScreenDate": "2019-10-24T14:15:22Z"
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Matched"
+                },
+                "sanctions": {
+                    "status": "NO_MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Incorrect data"
                 }
-            }
+            },
+            "type": "PERSON"
         }
 
 + Response 202 (application/json)
@@ -3628,13 +3861,13 @@ Update customer information.
     + Body
 
         {
-            "id": "7453266",
+            "id": "5435323362",
             "firstName": "John",
             "lastName": "Doe",
             "title": "Mr",
             "email": "john.doe@example.com",
             "mobile": "+4434525551511",
-            "address1": "23 New Str",
+            "address1": "24 Four Str",
             "city": "London",
             "zip": "E17 033",
             "countryCode": "GB",
@@ -3644,19 +3877,43 @@ Update customer information.
             "nationality": "GB",
             "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
             "kyc": {
-              "status": "COMPLETED",
-              "idVerification": {
                 "status": "COMPLETED",
-                "date": "2021-07-19T13:23:41Z"
-              },
-              "addressVerificationDocumentsReceived": [
-                "BANK_STATEMENT"
-              ]
+                "idVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:23:41Z"
+                },
+                "addressVerification": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:25:41Z"
+                },
+                "faceMatch": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:27:41Z"
+                },
+                "EDD": {
+                    "status": "COMPLETED",
+                    "date": "2021-07-19T13:35:41Z"
+                },
+                "addressVerificationDocumentsReceived": [
+                    "BANK_STATEMENT",
+                    "CREDIT_CARD",
+                    "TAX_RETURN",
+                    "PENSION_DOCUMENT",
+                    "PHONE_BILL"
+                ],
+                "pep": {
+                    "status": "MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Matched"
+                },
+                "sanctions": {
+                    "status": "NO_MATCH",
+                    "lastScreenDate": "2021-07-19T13:35:41Z",
+                    "reason": "Incorrect data"
+                }
             },
-            "type": "PERSON",
-            "restrictions": []
+            "type": "PERSON"
         }
-
 
 
 + Response 400 (application/json)
@@ -3674,6 +3931,11 @@ Update customer information.
 
 ### Get customer instruments [GET /digitalwallets/v1/instruments?{customerId}]
 
+Retrieve list of active instruments for the customer.
+
+For cards, the PAN will be returned masked in the format 5xxxxxxxxxxx2922.
+For bank accounts, the full IBAN/bank account number is returned.
+
 + Request
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
@@ -3685,6 +3947,37 @@ Update customer information.
 
     + Attributes (array[WalletPaymentInstrument])
 
+    + Body
+
+        [
+            {
+                "id": "1100000000000006",
+                "instrumentType": "UK_BANK_ACCOUNT",
+                "externallyVerified": true,
+                "accountHolderName": "John Doe",
+                "accountNumber": "7762494464",
+                "sortCode": "RABO"
+            },
+            {
+                "id": "1100000000000007",
+                "instrumentType": "SEPA_BANK_ACCOUNT",
+                "externallyVerified": true,
+                "accountHolderName": "John Doe",
+                "iban": "NL94RABO7762494464",
+                "bic": "RABONL2U"
+            },
+            {
+                "id": "1100000000000009",
+                "instrumentType": "CARD",
+                "externallyVerified": false,
+                "cardHolderName": "John Doe",
+                "pan": "5xxxxxxxxxxx1012",
+                "expiryDate": {
+                    "year": 2023,
+                    "month": 10
+                }
+            }
+        ]
 
 # Group Accounts
 
@@ -3717,11 +4010,12 @@ Get all accounts for a customer.
         [
             {
                 "id": "509876034",
-                "customerId": "404972684",
-                "currencyCode": "EUR",
+                "customerId": "5435323362",
+                "currencyCode": "GBP",
                 "totalBalance": 55000,
                 "availableBalance": 50000,
                 "iban": "NL74ABNA1231242344",
+                "bic": "ABNANL2A",
                 "creationTime": "2019-08-24T14:15:22Z",
                 "hasIban": true
             }
@@ -3756,11 +4050,12 @@ Retrieve the account with the provided id.
 
         {
             "id": "509876034",
-            "customerId": "404972684",
-            "currencyCode": "EUR",
+            "customerId": "5435323362",
+            "currencyCode": "GBP",
             "totalBalance": 55000,
             "availableBalance": 50000,
             "iban": "NL74ABNA1231242344",
+            "bic": "ABNANL2A",
             "creationTime": "2019-08-24T14:15:22Z",
             "hasIban": true
         }
@@ -3774,12 +4069,24 @@ Retrieve the account with the provided id.
 
 ### Get transactions list [GET]
 
-Retrieve transactions for an account, ordered by creationTime descending
+Retrieve transactions for an account, ordered by creationTime descending.
+
+> Note: Either `accountId` or `merchantRefNum` must be provided when calling this endpoint. If both are missing, HTTP 400 will be returned.
+
+> Note: As transfers are processed asynchronously, **until the transfer is processed**, calling this endpoint with `merchantRefNum` will return an empty result.
+
 
 + Parameters
-    + accountId (string, required)
+    + accountId (string, optional)
 
         Filter by account ID
+
+    + merchantRefNum (string, optional)
+
+        Filter transactions by merchant's reference number
+
+        + Sample: bd58200e-5df9-47d4-b062-a03a62504585
+
     + limit (number, optional)
 
         Limit number of results
@@ -3793,6 +4100,7 @@ Retrieve transactions for an account, ordered by creationTime descending
         Filter by creation time
 
         + Sample: 2021-10-05T14:43:33Z
+
     + endDate (string, optional)
 
         Filter by creationType after
@@ -3812,49 +4120,71 @@ Retrieve transactions for an account, ordered by creationTime descending
     + Attributes (TransactionList)
 
     + Body
+
         {
             "transactions": [
                 {
                     "id": "5040057610",
                     "slipId": "5009964049",
-                    "customerId": "500014306996",
+                    "customerId": "5435323362",
                     "accountId": "5014567344",
                     "type": "TRANSFER_OUT",
                     "amount": 900,
                     "currencyCode": "GBP",
                     "fee": 100,
                     "creationTime": "2021-07-15T17:54:12Z",
+                    "lastChangeDate": "2021-07-15T17:54:12Z",
                     "direction": "DEBIT",
+                    "instrumentId": "1100000000000009",
                     "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
                     "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
+                    "merchantRefNum": "5040452805",
+                    "balance": 50000
                 },
                 {
                     "id": "5040057611",
                     "slipId": "5009964049",
-                    "customerId": "500014306996",
+                    "customerId": "5435323362",
                     "accountId": "5014567344",
                     "type": "MERCHANT_FEE",
                     "amount": 100,
                     "currencyCode": "GBP",
                     "creationTime": "2021-07-15T17:54:12Z",
+                    "lastChangeDate": "2021-07-15T17:54:12Z",
                     "direction": "DEBIT",
+                    "instrumentId": "1100000000000009",
                     "fee": 0,
                     "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
+                    "status": "COMPLETED",
+                    "merchantRefNum": "5040452805",
+                    "balance": 40000
+                },
+                {
+                    "id": "5040057612",
+                    "slipId": "5009964050",
+                    "customerId": "5435323362",
+                    "accountId": "5014567344",
+                    "type": "WITHDRAWAL",
+                    "amount": 100,
+                    "currencyCode": "GBP",
+                    "creationTime": "2021-07-15T17:54:12Z",
+                    "lastChangeDate": "2021-07-15T17:54:12Z",
+                    "direction": "DEBIT",
+                    "instrumentId": "1100000000000009",
+                    "fee": 0,
+                    "paymentType": "BANK_TRANSFER",
                     "status": "FAILED",
                     "statusReason": "INSUFFICIENT_FUNDS",
-                    "merchantRefNum": "abcd1234"
+                    "merchantRefNum": "5040452805",
+                    "balance": 10
                 }
             ],
             "meta": {
-                "numberOfRecords": 1,
-                "limit": 1,
+                "numberOfRecords": 2,
+                "limit": 2,
                 "page": 1
             }
         }
-
 
 ### Get transaction details [GET /digitalwallets/v1/transactions/{transactionId}]
 
@@ -3879,23 +4209,23 @@ Retrieve details on a transaction with the specified id. List of transactions ca
     + Body
 
         {
-            "id": "5040057611",
+            "id": "5040057610",
             "slipId": "5009964049",
-            "customerId": "500014306996",
+            "customerId": "5435323362",
             "accountId": "5014567344",
-            "type": "MERCHANT_FEE",
-            "amount": 100,
+            "type": "TRANSFER_OUT",
+            "amount": 900,
             "currencyCode": "GBP",
+            "fee": 100,
             "creationTime": "2021-07-15T17:54:12Z",
+            "lastChangeDate": "2021-07-15T17:54:12Z",
             "direction": "DEBIT",
-            "fee": 0,
+            "instrumentId": "1100000000000009",
             "paymentType": "TRANSFER",
-            "description": "Transfer description.",
             "status": "COMPLETED",
-            "merchantRefNum": "abcd1234"
+            "merchantRefNum": "5040452805",
+            "balance": 50000
         }
-
-
 
 + Response 404
 
@@ -3920,15 +4250,10 @@ Create a new authorization hold.
     + Body
 
         {
-            "customerId": "500014306996",
+            "customerId": "5435323362",
             "accountId": "5014567344",
-            "amount": 1000,
-            "currencyCode": "EUR",
-            "deviceInfo": {
-                "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
-                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
-            },
-            "customerIp": "73.82.192.17"
+            "amount": 10000,
+            "currencyCode": "GBP",
         }
 
 + Response 200 (application/json)
@@ -3939,11 +4264,12 @@ Create a new authorization hold.
 
         {
             "id": "5983745394",
-            "customerId": "500014306996",
+            "customerId": "5435323362",
             "accountId": "5014567344",
             "amount": 10000,
-            "currencyCode": "EUR",
+            "currencyCode": "GBP",
             "createdOn": "2021-07-15T17:54:12Z",
+            "expiresOn": "2100-01-01T00:00:00Z",
             "status": "ACTIVE"
         }
 
@@ -3968,14 +4294,17 @@ Create a new authorization hold.
     + Body
 
         {
-            "id": "5983745394",
-            "customerId": "500014306996",
+            "id": "3423566434",
+            "customerId": "5435323362",
             "accountId": "5014567344",
-            "amount": 10000,
-            "currencyCode": "EUR",
+            "amount": 50,
+            "currencyCode": "GBP",
             "createdOn": "2021-07-15T17:54:12Z",
+            "expiresOn": "2100-01-01T00:00:00Z",
+            "lastChangeDate": "2021-07-15T17:54:12Z",
             "status": "RELEASED"
         }
+
 
 + Response 404
 
@@ -3988,7 +4317,11 @@ Create a new authorization hold.
 Retrieve list of active authorization holds only.
 
 + Parameters
-    + accountId (string, required)
+    + customerId (string, required)
+
+        Filter by Customer ID
+
+    + accountId (string, optional)
 
         Filter by Account ID
 
@@ -4017,30 +4350,33 @@ Retrieve list of active authorization holds only.
             "authorizationHolds": [
                 {
                     "id": "3423566434",
-                    "customerId": "500014306996",
+                    "customerId": "5435323362",
                     "accountId": "5014567344",
                     "amount": 50,
-                    "currencyCode": "EUR",
+                    "currencyCode": "GBP",
                     "createdOn": "2021-07-15T17:54:12Z",
+                    "expiresOn": "2100-01-01T00:00:00Z",
+                    "lastChangeDate": "2021-07-15T17:54:12Z",
                     "status": "ACTIVE"
                 },
                 {
                     "id": "3423566465",
-                    "customerId": "500014306996",
+                    "customerId": "5435323362",
                     "accountId": "5014567344",
                     "amount": 20,
-                    "currencyCode": "EUR",
+                    "currencyCode": "GBP",
                     "createdOn": "2021-06-15T17:54:12Z",
+                    "expiresOn": "2100-01-01T00:00:00Z",
+                    "lastChangeDate": "2021-07-16T17:54:12Z",
                     "status": "USED"
                 }
             ],
             "meta": {
                 "numberOfRecords": 2,
-                "limit": 10,
-                "page": 1
+                "limit": 1,
+                "page": 0
             }
         }
-
 
 ### Get details for Authorization Hold [GET /authorization-holds/{id}]
 
@@ -4066,11 +4402,13 @@ Retrieve details on an authorization hold by ID.
 
         {
             "id": "3423566434",
-            "customerId": "500014306996",
+            "customerId": "5435323362",
             "accountId": "5014567344",
             "amount": 50,
-            "currencyCode": "EUR",
+            "currencyCode": "GBP",
             "createdOn": "2021-07-15T17:54:12Z",
+            "expiresOn": "2100-01-01T00:00:00Z",
+            "lastChangeDate": "2021-07-15T17:54:12Z",
             "status": "ACTIVE"
         }
 
@@ -4090,17 +4428,16 @@ Retrieve details on an authorization hold by ID.
 Customer to merchant transfers allow for the reserevation of funds using the **AuthorizationHold** API.
 
 1. (optional) Create **AuthorizationHold** to reserve funds for the purchase
-2. Omit **recipient** field in the request
-3. Set **sender** field in the request
-4. Set the **authorizationHoldId** property with previously allocated amount
+2. Set **sender** field to the customer that the amount should be debited
+3. Set **recipient** field to the Merchant customer id and account id
+4. (optional) Set the **authorizationHoldId** property with the id of previously aquired authorization hold
 
 &nbsp;
 
 **Merchant to Customer transfer** (e.g. sell crypto)
 
-1. Omit **sender** field in the request
-2. Set **recipient** field in the request
-3. Passing **authorizationHoldId** property is not required.
+1. Set **sender** field to the Merchant customer id and account id
+2. Set **recipient** field to the customer that the amount should be credited
 
 &nbsp;
 
@@ -4108,9 +4445,9 @@ Customer to merchant transfers allow for the reserevation of funds using the **A
 
 Customer to customer transfer requires both **sender** and **recipient** properties.
 
-1. Set **sender** field in the request
-2. Set **recipient** field in the request
-3. Passing **authorizationHoldId** property is not required.
+1. Set **sender** field to the customer that the amount should be debited
+2. Set **recipient** field to the customer that the amount should be credited
+3. (optional) Set the **authorizationHoldId** property with the id of previously aquired authorization hold
 
 &nbsp;
 
@@ -4120,16 +4457,20 @@ The transfers can be queued on Paysafe's side if the rate of transfer requests i
 
 If this is the case:
 
-* the response will contain a transaction status `PENDING`
-* the response will only contain the `merchantRefNum` field from the list of identifiers
-* the Merchant must wait for the webhook for this transaction to confirm the final status of the operation - successful or not.
-
-Until the webhook is received, the submitted transaction will not be available for fetching via the GET Transactions endpoint.
+* the response will contain the submitted information, without the `deviceInfo` section
+* Merchant must wait for the webhook for this transaction to confirm the final status of the operation - successful or not.
+* Until the webhook is received, Merchant can query the transfer using the Transactions endpoint, using merchantRefNum. While the transfer is still in queue, an empty response will be returned.
 
 
 ### Perform transfer [POST]
 
+Transfers are asynchronous, and as such when submitted, the transfer requests are enqueued for later processing.
+
+After the transfer is processed, a several webhooks will be sent back to signify the status of the transaction.
+
+
 + Request Transfer from customer to merchant (application/json)
+
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
 
@@ -4146,125 +4487,41 @@ Until the webhook is received, the submitted transaction will not be available f
                 "customerId": "500014306996",
                 "accountId": "5014567344"
             },
-            "description": "Transfer description.",
-            "merchantRefNum": "abcd1234",
+            "recipient": {
+                "customerId": "99999",
+                "accountId": "999991"
+            },
+            "merchantRefNum": "5040452805",
             "deviceInfo": {
                 "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
-                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+                "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                "appType": "WEB_APP"
             },
-            "customerIp": "73.82.192.17"
-
+            "customerIp": "115.148.82.143"
         }
 
-+ Response 201 (application/json)
++ Response 202 (application/json)
 
-        Created
+        Accepted
 
     + Body
 
         {
-            "slipId": "5009964049",
             "amount": 1000,
             "fee": 100,
             "currencyCode": "GBP",
             "authorizationHoldId": "50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe",
             "sender": {
                 "customerId": "500014306996",
-                "accountId": "5014567344",
-                "transactions": [
-                {
-                    "id": "5040057610",
-                    "slipId": "5009964049",
-                    "customerId": "500014306996",
-                    "accountId": "5014567344",
-                    "type": "TRANSFER_OUT",
-                    "amount": 900,
-                    "currencyCode": "GBP",
-                    "fee": 100,
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057611",
-                    "slipId": "5009964049",
-                    "customerId": "500014306996",
-                    "accountId": "5014567344",
-                    "type": "MERCHANT_FEE",
-                    "amount": 100,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "fee": 0,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                }
-                ]
+                "accountId": "5014567344"
             },
-            "merchant": {
+            "recipient": {
                 "customerId": "99999",
-                "accountId": "999991",
-                "transactions": [
-                {
-                    "id": "5040057608",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "TRANSFER_IN",
-                    "amount": 900,
-                    "currencyCode": "GBP",
-                    "fee": 100,
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "CREDIT",
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057611",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "MERCHANT_FEE",
-                    "amount": 100,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "CREDIT",
-                    "fee": 10,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057609",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "TRANSACTION_FEE",
-                    "amount": 10,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "fee": 0,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                }
-                ]
+                "accountId": "999991"
             },
-            "description": "Transfer description.",
-            "merchantRefNum": "abcd1234",
-            "status": "COMPLETED"
+            "merchantRefNum": "5040452805",
+            "customerIp": "115.148.82.143"
         }
-
 
 + Request Transfer merchant to customer (application/json)
 
@@ -4274,122 +4531,41 @@ Until the webhook is received, the submitted transaction will not be available f
             "amount": 1000,
             "fee": 100,
             "currencyCode": "GBP",
+            "sender": {
+                "customerId": "99999",
+                "accountId": "999991"
+            },
             "recipient": {
                 "customerId": "500014306996",
                 "accountId": "5014567344"
             },
-            "description": "Transfer description.",
-            "merchantRefNum": "abcd1234",
+            "merchantRefNum": "5040452805",
             "deviceInfo": {
                 "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
-                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
-            }
+                "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                "appType": "WEB_APP"
+            },
+            "customerIp": "115.148.82.143"
         }
 
-+ Response 201 (application/json)
++ Response 202 (application/json)
 
     + Body
 
         {
-            "slipId": "5009964049",
             "amount": 1000,
             "fee": 100,
             "currencyCode": "GBP",
-            "merchant": {
+            "sender": {
                 "customerId": "99999",
-                "accountId": "999991",
-                "transactions": [
-                {
-                    "id": "5040057608",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "TRANSFER_OUT",
-                    "amount": 1000,
-                    "currencyCode": "GBP",
-                    "fee": 100,
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057609",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "MERCHANT_FEE",
-                    "amount": 100,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "CREDIT",
-                    "fee": 10,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057609",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "TRANSACTION_FEE",
-                    "amount": 10,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "fee": 0,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                }
-                ]
+                "accountId": "999991"
             },
             "recipient": {
                 "customerId": "500014306996",
-                "accountId": "5014567344",
-                "transactions": [
-                {
-                    "id": "5040057610",
-                    "slipId": "5009964049",
-                    "customerId": "5014567344",
-                    "accountId": "5014567344",
-                    "type": "TRANSFER_IN",
-                    "amount": 1000,
-                    "currencyCode": "GBP",
-                    "fee": 40,
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "CREDIT",
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057611",
-                    "slipId": "5009964049",
-                    "customerId": "5014567344",
-                    "accountId": "5014567344",
-                    "type": "MERCHANT_FEE",
-                    "amount": 100,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "fee": 0,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                }
-                ]
+                "accountId": "5014567344"
             },
-            "description": "Transfer description.",
-            "merchantRefNum": "abcd1234",
-            "status": "COMPLETED"
+            "merchantRefNum": "5040452805",
+            "customerIp": "115.148.82.143"
         }
 
 + Request Transfer customer to customer (application/json)
@@ -4406,126 +4582,35 @@ Until the webhook is received, the submitted transaction will not be available f
             },
             "recipient": {
                 "customerId": "500014306997",
-                "accountId": "5014567345"
+                "accountId": "5014567346"
             },
-            "description": "Transfer description.",
-            "merchantRefNum": "abcd1234",
+            "merchantRefNum": "5040452805",
             "deviceInfo": {
                 "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
-                "trheatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
-            }
+                "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                "appType": "WEB_APP"
+            },
+            "customerIp": "115.148.82.143"
         }
 
-+ Response 201 (application/json)
++ Response 202 (application/json)
 
     + Body
 
         {
-            "slipId": "5009964049",
             "amount": 1000,
             "fee": 100,
             "currencyCode": "GBP",
             "sender": {
                 "customerId": "500014306996",
-                "accountId": "5014567344",
-                "transactions": [
-                {
-                    "id": "5040057610",
-                    "slipId": "5009964049",
-                    "customerId": "500014306996",
-                    "accountId": "5014567344",
-                    "type": "TRANSFER_OUT",
-                    "amount": 900,
-                    "currencyCode": "GBP",
-                    "fee": 100,
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057611",
-                    "slipId": "5009964049",
-                    "customerId": "500014306996",
-                    "accountId": "5014567344",
-                    "type": "MERCHANT_FEE",
-                    "amount": 100,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "fee": 0,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                }
-                ]
-            },
-            "merchant": {
-                "customerId": "99999",
-                "accountId": "999991",
-                "transactions": [
-                {
-                    "id": "5040057608",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "MERCHANT_FEE",
-                    "amount": 100,
-                    "currencyCode": "GBP",
-                    "fee": 10,
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "CREDIT",
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                },
-                {
-                    "id": "5040057609",
-                    "slipId": "5009964049",
-                    "customerId": "99999",
-                    "accountId": "999991",
-                    "type": "TRANSACTION_FEE",
-                    "amount": 10,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
-                    "fee": 0,
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                }
-                ]
+                "accountId": "5014567344"
             },
             "recipient": {
                 "customerId": "500014306997",
-                "accountId": "5014567345",
-                "transactions": [
-                {
-                    "id": "5040057610",
-                    "slipId": "5009964049",
-                    "customerId": "500014306997",
-                    "accountId": "5014567345",
-                    "type": "TRANSFER_IN",
-                    "amount": 900,
-                    "currencyCode": "GBP",
-                    "fee": 100,
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "CREDIT",
-                    "paymentType": "TRANSFER",
-                    "description": "Transfer description.",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "abcd1234"
-                }
-                ]
+                "accountId": "5014567346"
             },
-            "description": "Transfer description.",
-            "merchantRefNum": "abcd1234",
-            "status": "COMPLETED"
+            "merchantRefNum": "5040452805",
+            "customerIp": "115.148.82.143"
         }
 
 # Group Webhooks
@@ -4553,12 +4638,12 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
                 "id": "2342352",
                 "externalId": "d4b70695-3ffb-4f58-97ad-b61e8631a3e2",
                 "restrictions": [
-                    {
-                        "name": "ALL_TRANSACTIONS",
-                        "reason": "CONFIRMED_FRAUD",
-                        "requiredActions": null,
-                        "lastChangeDate": "2021-09-17T15:23:11Z"
-                    }
+                {
+                    "name": "ALL_TRANSACTIONS",
+                    "reason": "CONFIRMED_FRAUD",
+                    "requiredActions": null,
+                    "lastChangeDate": "2021-09-17T15:23:11Z"
+                }
                 ]
             }
         }
@@ -4581,9 +4666,11 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 ### Transaction update [POST /webhook/path/at/merchant/system/transactions/events]
 
+This webhook will be sent when the status of all transaction types is updated - deposit, withdrawal or transfers
+
 + Attributes (TransactionUpdateWebhook)
 
-+ Request Transaction state change (application/json)
++ Request Deposit completed (application/json)
 
     + Body
 
@@ -4605,7 +4692,34 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
                 "description": "Transaction description.",
                 "status": "COMPLETED",
                 "statusReason": null,
-                "merchantRefNum": "abcd1234"
+                "merchantRefNum": "af9a4b8d-47da-401e-99b4-20b070f4190b"
+            }
+        }
+
+
++ Request Withdrawal completed (application/json)
+
+    + Body
+
+        {
+            "id": "00000003630052156492",
+            "timestamp": "2021-07-15T17:54:12Z",
+            "transaction": {
+                "id": "5040057608",
+                "slipId": "5009964049",
+                "customerId": "500014306996",
+                "accountId": "5014567344",
+                "type": "WITHDRAWAL",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "creationTime": "2021-07-15T17:54:12Z",
+                "direction": "DEBIT",
+                "paymentType": "CARD",
+                "instrumentId": "43235252",
+                "description": "Transaction description.",
+                "status": "COMPLETED",
+                "statusReason": null,
+                "merchantRefNum": "5dd3a306-aa5f-4cb3-ab44-47a82261a7a6"
             }
         }
 
@@ -5528,6 +5642,11 @@ The webhook is sent when there's an update on the customer account. The `operati
 + threatMetrixSessionId: `a71a475b-1956-4814-9c92-7faa8226b218` (string) - The Threat Metrix Session Id.
             _length<=100_
 + threatMetrixData: (string) - The URL-encoded response as received from Threat Metrix
++ appType: (enum[string])
+    + Members
+        + WEB_APP
+        + MOBILE_APP
+        + API
 
 ## `deviceInfoResponse`
 
@@ -6268,7 +6387,7 @@ List of accounts.
     + `RAPID_TRANSFER`
     + `SOFORT`
     + `TRANSFER`
-+ `description`: `Transaction description.` (string, optional) - Transaction description.
++ `instrumentId`: `2345678987654` (string, optional) - Id of the instrument used for the transaction.
 + `status` (enum[string], optional)
     + `PENDING`
     + `PROCESSING`
@@ -6305,8 +6424,6 @@ List of accounts.
     + `EXPIRED`
     + `USED`
     + `RELEASED`
-+ `deviceInfoRequest` (deviceInfoRequest, required)
-+ `customerIp` (string, required)
 
 ## AuthorizationHoldList (object)
 
@@ -6363,10 +6480,9 @@ Model for facilitation of internal Wallet transfer of funds.
 + `fee`: `100` (number, optional) - Transaction fee in minor units.
 + `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
 + `authorizationHoldId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
-+ `sender` (AccountSlip, optional) - Account specific view of the slip.
-+ `recipient` (AccountSlip, optional) - Account specific view of the slip.
++ `sender` (AccountSlip, required) - Account specific view of the slip.
++ `recipient` (AccountSlip, required) - Account specific view of the slip.
 + `merchant` (AccountSlip, optional) - Account specific view of the slip.
-+ `description`: `Transfer description.` (string, optional) - Transfer description.
 + `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
 + `status` (enum[string], optional)
     + `PENDING`
@@ -6697,9 +6813,11 @@ Account specific view of the slip.
 
 ### Properties
 
++ `id` (string)
 + `instrumentType`: (enum[string], required)
     + CARD
-    + BANK_ACCOUNT
+    + SEPA_BANK_ACCOUNT
+    + UK_BANK_ACCOUNT
 + Include WalletPaymentInstrumentBankAccount
 + Include WalletPaymentInstrumentCard
 
@@ -6714,7 +6832,6 @@ Account specific view of the slip.
 + `bic`
 + `sortCode`
 + `accountNumber`
-+ `countryCode`
 
 
 ## WalletPaymentInstrumentCard
