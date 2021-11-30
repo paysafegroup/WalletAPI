@@ -1610,6 +1610,25 @@ This is a read-only raw response returned by an acquirer.
 | 402         | ALTERNATE-PAYMENTS-GATEWAY-24 | There is an already existing third-party account with the details provided.              | There is an already existing third-party account with the details provided.                        |
 
 
+## Wallet Errors
+
+| HTTP Status Code | Error Code                                  | Message                                                          |
+|------------------|---------------------------------------------|------------------------------------------------------------------|
+| 400              | DW-CUSTOMER-ACCOUNT-ID-SHOULD-BE-NUMERIC    | AccountId should be numeric value                                |
+| 400              | DW-CUSTOMER-BAD-REQUEST                     | Bad request for customer operation.                              |
+| 400              | DW-CUSTOMER-BIRTH-DATE-CHANGE-NOT-SUPPORTED | Birth date change is not supported                               |
+| 400              | DW-CUSTOMER-COUNTRY-NOT-SUPPORTED           | Country is not supported                                         |
+| 400              | DW-CUSTOMER-CURRENCY-NOT-SUPPORTED          | Currency is not supported for the specified country              |
+| 400              | DW-CUSTOMER-EMAIL-CHANGE-NOT-SUPPORTED      | Email change is not supported                                    |
+| 400              | DW-CUSTOMER-ID-SHOULD-BE-NUMERIC            | CustomerId should be numeric value                               |
+| 400              | DW-TERMS-AND-CONDITIONS-NOT-ACCEPTED        | Terms and conditions are not accepted.                           |
+| 409              | DW-CUSTOMER-ALREADY-ACTIVATED               | Customer is already activated.                                   |
+| 409              | DW-CUSTOMER-ALREADY-DEACTIVATED             | Customer is already deactivated.                                 |
+| 409              | DW-CUSTOMER-ALREADY-ONBOARDED               | Customer with the same details has already been onboarded.       |
+| 409              | DW-CUSTOMER-CONFLICT                        | There was a conflict (validation error). Check body for details. |
+| 500              | DW-CUSTOMER-INTERNAL-SERVER-ERROR           | There was an error while processing the customer operation.      |
+| 503              | DW-SERVICE-UNAVAILABLE                      | Service Unavailable                                              |
+
 # Using the Example API Calls (Console Window)
 
 To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right-hand pane.
