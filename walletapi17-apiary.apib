@@ -5,11 +5,12 @@ HOST: https://api2.test.paysafe.com/
 
 ## Release Notes
 
-| Version | Date        | Details                                                         |
-|---------|-------------|-----------------------------------------------------------------|
-| V1      | 25 Nov 2021 | - Added risk fields for wallet creation and transaction         |
-| V1      | 25 Nov 2021 | - Examples & documentation updated; added appType in deviceInfo |
-|         |             | - Updated Payment Handle samples with <i>deviceInfo</i>
+| Version | Date        | Details                                                                                                     |
+|---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 1 Dec 2021  | - Marking required and optional fields; fixed error response format; documentation added                    |
+| V1      | 25 Nov 2021 | - Added risk fields for wallet creation and transaction                                                     |
+| V1      | 25 Nov 2021 | - Examples & documentation updated; added appType in deviceInfo                                             |
+|         |             | - Updated Payment Handle samples with <i>deviceInfo</i>                                                     |
 | V1      | 22 Nov 2021 | - Added bank account detail - BIC                                                                           |
 |         |             | - Updated examples                                                                                          |
 |         |             | - Removed initial balance when creating a wallet - a separate transfer transaction must be used             |
@@ -3460,7 +3461,7 @@ If initial balance must be granted to the customer, the operation will be treate
 + Request onboard a customer (application/json)
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
-            Signature: <<Add Header Value>>
+            Signature: <<HMAC signature>>
 
 
     + Attributes (WalletCreateRequest)
@@ -3738,8 +3739,7 @@ Deactivates a customer.
 + Request
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
-
-
+            Signature: <<HMAC signature>>
 
 + Response 200 (application/json)
 
@@ -3840,6 +3840,7 @@ Update customer information.
 
     + Headers
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Signature: <<HMAC signature>>
 
     + Body
 
@@ -4301,7 +4302,9 @@ Create a new authorization hold.
 
 + Request (application/json)
     + Headers
-            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
+        Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+        Signature: <<HMAC signature>>
 
     + Attributes (AuthorizationHold)
 
@@ -4340,10 +4343,18 @@ Create a new authorization hold.
 
 ### Release authorization hold [DELETE /digitalwallets/v1/authorization-holds/{id}]
 
+
 + Parameters
     + id (string, required)
 
         Authorization hold id.
+
++ Request
+
+    + Headers
+
+        Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+        Signature: <<HMAC signature>>
 
 
 + Response 200 (application/json)
@@ -4531,7 +4542,9 @@ After the transfer is processed, a several webhooks will be sent back to signify
 + Request Transfer from customer to merchant (application/json)
 
     + Headers
-            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
+        Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+        Signature: <<HMAC signature>>
 
     + Attributes (Transfer)
 
@@ -4693,6 +4706,10 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 + Request Customer Restrictions Applied (application/jbson)
 
+    + Headers
+
+        Signature: <<Paysafe's HMAC signature>>
+
 
     + Body
 
@@ -4736,6 +4753,10 @@ This webhook will be sent when the status of all transaction types is updated - 
 + Attributes (TransactionUpdateWebhook)
 
 + Request Deposit completed (application/json)
+
+    + Headers
+
+        Signature: <<Paysafe's HMAC signature>>
 
     + Body
 
@@ -4799,6 +4820,10 @@ The webhook is sent when there's an update on the customer account. The `operati
 + Attributes (AccountUpdateWebhook)
 
 + Request Account change (application/json)
+
+    + Headers
+
+        Signature: <<Paysafe's HMAC signature>>
 
     + Body
 
@@ -5704,14 +5729,15 @@ The webhook is sent when there's an update on the customer account. The `operati
 
 ## `deviceInfoRequest`
 
-+ threatMetrixSessionId: `a71a475b-1956-4814-9c92-7faa8226b218` (string) - The Threat Metrix Session Id.
-            _length<=100_
-+ threatMetrixData: (string) - The URL-encoded response as received from Threat Metrix
-+ appType: (enum[string])
++ appType: (enum[string], required)
     + Members
         + WEB_APP
         + MOBILE_APP
         + API
++ threatMetrixSessionId: `a71a475b-1956-4814-9c92-7faa8226b218` (string, optional) - The Threat Metrix Session Id.
+    _length<=100_
++ threatMetrixData: (string, optional) - The URL-encoded response as received from Threat Metrix
+    _length<=25600_
 
 ## `deviceInfoResponse`
 
@@ -6273,22 +6299,37 @@ Wallet composite model
 ### Properties
 + `id` (string, optional)
 + `firstName` (string, required)
+    _length<=50_
 + `lastName` (string, required)
+    _length<=50_
 + `title` (string, optional) - Personal title, Mr., Dr., etc.
+    _length<=15_
 + `email` (string, optional) - Primary email address; At least one of **`email` or `mobile` is required** when creating a new wallet!
+    _length<=150_
 + `mobile` (string, optional) - Mobile phone number; At least one of **`email` or `mobile` is required** when creating a new wallet!
+    _length<=50_
 + `address1` (string, required)
+    _length<=200_
 + `address2` (string, optional)
-+ `city` (string, required)
+    _length<=200_
++ `city` (string, optional)
+    _length<=100_
 + `zip` (string, required)
+    _length<=30_
 + `state` (string, optional)
+    _length<=100_
 + `countryCode`: `GB` (string, required) - ISO-3166 Alpha 2 country code
+    _length==2_
 + `birthDate` (string, required)
-+ `customerIp` (string, required)
-+ `registrationIp` (string, optional) - IPv4 address from which the customer has registered.
-+ `registrationDate` (string, required) - Date of registration at the Merchant system
+    _ISO 8601 date_
++ `registrationIp` (string, required) - IPv4 address from which the customer has registered.
+    _IPv4_
++ `registrationDate` (string, optional) - Date of registration at the Merchant system
+    _ISO 8601 datetime_
 + `nationality`: `GB` (string, required) - ISO-3166 Alpha 2 country code
+    _length==2_
 + `externalId`: `d6f475fe-57c9-4865-9316-0c3b8e8128d4` (string, required) - Any external id, e.g. UUID or a numeric id
+    _length==40_
 + `kyc` (KYC, required)
 + `type` (enum[string], required) - Type of Customer
     + `PERSON`
@@ -6403,8 +6444,9 @@ Wallet composite model
 ## AccountRequest (object)
 
 ### Properties
-+ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
-+ `hasIban` (boolean, optional)
++ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
+    _length==3_
++ `hasIban` (boolean, required)
 
 
 ## AccountList (object)
@@ -6438,6 +6480,9 @@ List of accounts.
 + `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
 + `fee`: `100` (number, optional) - Transaction fee in minor units.
 + `creationTime`: `2021-07-15T17:54:12Z` (string, optional)
+    _ISO 8601, Read Only_
++ `lastChangeDate`: `2021-07-15T17:54:12Z` (string, optional)
+    _ISO 8601, Read Only_
 + `direction` (enum[string], optional) - Transaction direction.
     + `CREDIT`
     + `DEBIT`
@@ -6461,11 +6506,15 @@ List of accounts.
     + `COMPLETED`
     + `FAILED`
     + `CANCELLED`
-+ `statusReason` - For non-successful transactions, this field might contain the reason why
++ `statusReason` (enum[string]) - For non-successful transactions, this field might contain the reason why
+    _Read Only_
     + `INSUFFICIENT_FUNDS`
     + `RISK_ENGINE_DECLINE`
     + `CUSTOMER_RESTRICTED`
-+ `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
++ `merchantRefNum`: `6324e523-61f0-4880-9d64-49ceb9cc3b0c` (string, optional) - Merchant reference number associated witht the transaction.
+    _length<=40_
++ `balance`: `1500` (number, optional) - Balance of the account after the transaction in minor currency units.
+    _Read Only_
 
 
 ## TransactionList (object)
@@ -6482,10 +6531,13 @@ List of accounts.
 ### Properties
 + `id` (string, optional)
 + `customerId` (string, required)
-+ `accountId` (string, required)
++ `accountId` (string, optional)
 + `amount` (number, required)
 + `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
+    _length==3_
 + `createdOn`: `2021-07-15T17:54:12Z` (string, optional)
++ `expiresOn`: `2021-07-15T17:54:12Z` (string, optional)
+    _ISO 8601_
 + `status` (enum[string], optional)
     + `ACTIVE`
     + `EXPIRED`
@@ -6518,7 +6570,7 @@ Additional details about an error
 + `code` (string, optional) - The error code.
 + `message` (string, optional) - A description of the error.
 + `details` (array[string], optional) - Details of any parameter value errors.
-+ `fieldErrors` (FieldError, optional) - Represents Field validation Error.
++ `fieldErrors` (array[FieldError], optional) - Represents Field validation Error.
 
 
 ## FieldError (object)
@@ -6546,6 +6598,7 @@ Model for facilitation of internal Wallet transfer of funds.
 + `amount`: `1000` (number, required) - Transaction amount in minor units.
 + `fee`: `100` (number, optional) - Transaction fee in minor units.
 + `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
+    _length==3_
 + `authorizationHoldId`: `50ecdb78-f2ab-4c2f-8696-ca7aedd7f8fe` (string, optional)
 + `sender` (AccountSlip, required) - Account specific view of the slip.
 + `recipient` (AccountSlip, required) - Account specific view of the slip.
@@ -6744,12 +6797,12 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
     + `COMPLETED`
     + `IN_PROGRESS`
     + `NOT_COMPLETED`
-+ `idVerification` (KycVerificationItem, optional)
-+ `addressVerification` (KycVerificationItem, optional)
-+ `faceMatch` (KycVerificationItem, optional)
-+ `EDD` (KycVerificationItem, optional)
-+ `pep` (KycScreenItem, optional)
-+ `sanctions` (KycScreenItem, optional)
++ `idVerification` (KycVerificationItem, optional) - If idVerification is not performed, do not send this object
++ `addressVerification` (KycVerificationItem, optional) - If addressVerification is not performed, do not send this object
++ `faceMatch` (KycVerificationItem, optional) - If faceMatch is not performed, do not send this object
++ `EDD` (KycVerificationItem, optional) - If EDD is not performed, do not send this object
++ `pep` (KycScreenItem, optional) - If pep screening is not performed, do not send this object
++ `sanctions` (KycScreenItem, optional) - If sanctions screening is not performed, do not send this object
 + `addressVerificationDocumentsReceived` (array, optional)
     + (enum[string])
         + Members
@@ -6771,8 +6824,9 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
 ## KycVerificationItem (object)
 
 ### Properties
-+ `status` (enum[string], optional)
++ `status` (enum[string], required)
     + `COMPLETED`
+    + `IN_PROGRESS`
     + `NOT_COMPLETED`
 + `date`: `2021-07-19T13:23:41Z` (string, optional)
 + `documentUrls` (array[string], optional)
@@ -6787,6 +6841,7 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
     + `NO_MATCH`
     + `RESOLVED`
     + `DISMISSED`
+    + `IN_PROGRESS`
 + `lastScreenDate`: `2021-07-19T13:23:41Z` (string, optional)
 + `reason` (string, optional)
 
@@ -6796,6 +6851,7 @@ Account specific view of the slip.
 ### Properties
 + `accountId`: `5014567344` (string, optional)
 + `customerId`: `500014306996` (string, optional)
++ `slipId`: `50485739386` (string, optional)
 + `transactions` (array[Transaction], optional)
 
 
