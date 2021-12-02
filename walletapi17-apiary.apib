@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 2 Dec 2021  | - Added customer's externalId to the response of the Get accounts endpoints                                 |
 | V1      | 1 Dec 2021  | - Marking required and optional fields; fixed error response format; documentation added                    |
 | V1      | 25 Nov 2021 | - Added risk fields for wallet creation and transaction                                                     |
 | V1      | 25 Nov 2021 | - Examples & documentation updated; added appType in deviceInfo                                             |
@@ -4071,6 +4072,7 @@ Get all accounts for a customer.
             {
                 "id": "509876034",
                 "customerId": "5435323362",
+                "externalId": "22e8b836-2302-49f5-b13d-537ccdbbb41d",
                 "currencyCode": "GBP",
                 "totalBalance": 55000,
                 "availableBalance": 50000,
@@ -4111,6 +4113,7 @@ Retrieve the account with the provided id.
         {
             "id": "509876034",
             "customerId": "5435323362",
+            "externalId": "22e8b836-2302-49f5-b13d-537ccdbbb41d",
             "currencyCode": "GBP",
             "totalBalance": 55000,
             "availableBalance": 50000,
@@ -6434,6 +6437,7 @@ Wallet composite model
 ### Properties
 + `id` (string, required)
 + `customerId` (string, required)
++ `externalId` (string, optional) - The Merchant id for the customer
 + `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
 + `totalBalance` (number, optional) - Amount in minor units
 + `availableBalance` (number, required) - Amount in minor units
