@@ -4349,7 +4349,6 @@ Create a new authorization hold.
     + Headers
 
         Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
-        Signature: <<HMAC signature>>
 
     + Attributes (AuthorizationHold)
 
@@ -4399,7 +4398,6 @@ Create a new authorization hold.
     + Headers
 
         Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
-        Signature: <<HMAC signature>>
 
 
 + Response 200 (application/json)
@@ -4536,7 +4534,7 @@ Retrieve details on an authorization hold by ID.
 
 # Group Transfers
 
-## Transfer funds [/transfers]
+## Transfer funds [/digitalwallets/v1/transfers]
 
 **Customer to Merchant transfer** (e.g. buy crypto)
 
