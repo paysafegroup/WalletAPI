@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 21 Dec 2021 | - Updated error documentation                                                                               |
 | V1      | 2 Dec 2021  | - Added customer's externalId to the response of the Get accounts endpoints                                 |
 | V1      | 1 Dec 2021  | - Marking required and optional fields; fixed error response format; documentation added                    |
 | V1      | 25 Nov 2021 | - Added risk fields for wallet creation and transaction                                                     |
@@ -1614,22 +1615,111 @@ This is a read-only raw response returned by an acquirer.
 
 ## Wallet Errors
 
-| HTTP Status Code | Error Code                                  | Message                                                          |
-|------------------|---------------------------------------------|------------------------------------------------------------------|
-| 400              | DW-CUSTOMER-ACCOUNT-ID-SHOULD-BE-NUMERIC    | AccountId should be numeric value                                |
-| 400              | DW-CUSTOMER-BAD-REQUEST                     | Bad request for customer operation.                              |
-| 400              | DW-CUSTOMER-BIRTH-DATE-CHANGE-NOT-SUPPORTED | Birth date change is not supported                               |
-| 400              | DW-CUSTOMER-COUNTRY-NOT-SUPPORTED           | Country is not supported                                         |
-| 400              | DW-CUSTOMER-CURRENCY-NOT-SUPPORTED          | Currency is not supported for the specified country              |
-| 400              | DW-CUSTOMER-EMAIL-CHANGE-NOT-SUPPORTED      | Email change is not supported                                    |
-| 400              | DW-CUSTOMER-ID-SHOULD-BE-NUMERIC            | CustomerId should be numeric value                               |
-| 400              | DW-TERMS-AND-CONDITIONS-NOT-ACCEPTED        | Terms and conditions are not accepted.                           |
-| 409              | DW-CUSTOMER-ALREADY-ACTIVATED               | Customer is already activated.                                   |
-| 409              | DW-CUSTOMER-ALREADY-DEACTIVATED             | Customer is already deactivated.                                 |
-| 409              | DW-CUSTOMER-ALREADY-ONBOARDED               | Customer with the same details has already been onboarded.       |
-| 409              | DW-CUSTOMER-CONFLICT                        | There was a conflict (validation error). Check body for details. |
-| 500              | DW-CUSTOMER-INTERNAL-SERVER-ERROR           | There was an error while processing the customer operation.      |
-| 503              | DW-SERVICE-UNAVAILABLE                      | Service Unavailable                                              |
+| HTTP Status Code |        Error Code        |         Message         |
+|------------------|--------------------------|-------------------------|
+|              400 | DW-NO-SUCH-CUSTOMER      | Customer was not found. |
+|              500 | DW-INTERNAL-SERVER-ERROR | Internal Server Error.  |
+|              503 | DW-SERVICE-UNAVAILABLE   | Service Unavailable.    |
+
+#### Customer Management Errors
+
+| HTTP Status Code |                     Error Code                     |                                   Message                                   |
+|------------------|----------------------------------------------------|-----------------------------------------------------------------------------|
+|              409 | DW-CUSTOMER-ALREADY-ONBOARDED                      | Customer with the same details has already been onboarded.                  |
+|              400 | DW-TERMS-AND-CONDITIONS-NOT-ACCEPTED               | Terms and conditions are not accepted.                                      |
+|              400 | DW-CUSTOMER-BAD-REQUEST                            | Bad request for customer operation.                                         |
+|              409 | DW-CUSTOMER-CONFLICT                               | There was a conflict (validation error). Check body for details.            |
+|              400 | DW-CUSTOMER-COUNTRY-NOT-SUPPORTED                  | Country is not supported.                                                   |
+|              400 | DW-CUSTOMER-CURRENCY-NOT-SUPPORTED                 | Currency is not supported for the specified country.                        |
+|              400 | DW-CUSTOMER-ID-SHOULD-BE-NUMERIC                   | CustomerId should be numeric value.                                         |
+|              400 | DW-CUSTOMER-ACCOUNT-ID-SHOULD-BE-VALID             | AccountId is not supported.                                                 |
+|              400 | DW-CUSTOMER-TRANSACTION-ID-SHOULD-BE-VALID         | TransactionId is not supported.                                             |
+|              400 | DW-CUSTOMER-EMAIL-CHANGE-NOT-SUPPORTED             | Email change is not supported.                                              |
+|              400 | DW-CUSTOMER-BIRTH-DATE-CHANGE-NOT-SUPPORTED        | Birth date change is not supported.                                         |
+|              400 | DW-SIGNATURE-HEADER-REQUIRED                       | Signature header is required.                                               |
+|              400 | DW-HMAC-SIGNATURE-INVALID                          | Signature is invalid.                                                       |
+|              400 | DW-CUSTOMER-KYC-NOT-COMPLETED                      | Invalid KYC status.                                                         |
+|              400 | DW-CUSTOMER-KYC-ID-VERIFICATION-NOT-COMPLETED      | Invalid ID verification status.                                             |
+|              400 | DW-CUSTOMER-KYC-ADDRESS-VERIFICATION-NOT-COMPLETED | Invalid Address verification status.                                        |
+|              400 | DW-CUSTOMER-KYC-FACE-MATCH-NOT-COMPLETED           | Invalid Face match status.                                                  |
+|              400 | DW-INVALID-MOBILE-NUMBER                           | Mobile number is invalid.                                                   |
+|              409 | DW-MOBILE-NUMBER-ALREADY-EXISTS                    | Mobile number is already added.                                             |
+|              400 | DW-CUSTOMER-EMAIL-AND-MOBILE-MISSING               | Both email and mobile are missing. At least one of them should be provided. |
+
+#### Restrictions Errors
+
+| HTTP Status Code |            Error Code           |             Message              |
+|------------------|---------------------------------|----------------------------------|
+|              409 | DW-CUSTOMER-ALREADY-ACTIVATED   | Customer is already activated.   |
+|              409 | DW-CUSTOMER-ALREADY-DEACTIVATED | Customer is already deactivated. |
+
+#### Transfer Errors
+
+| HTTP Status Code |           Error Code          |              Message               |
+|------------------|-------------------------------|------------------------------------|
+|              400 | DW-TRANSFER-INVALID-CURRENCY  | Invalid currency                   |
+|              400 | DW-TRANSFER-FEE-NOT-SUPPORTED | Fees not supported for transfers   |
+|              400 | DW-TRANSFER-SELF-TRANSFER     | Recipient and sender are identical |
+
+#### Authorization Hold Errors
+
+| HTTP Status Code |                   Error Code                   |                                   Message                                    |
+|------------------|------------------------------------------------|------------------------------------------------------------------------------|
+|              404 | DW-NO-MATCHING-ACCOUNTS                        | Could not find matching accounts for customer.                               |
+|              404 | DW-AUTHORIZATION-HOLD-NOT-FOUND                | Could not find authorization hold.                                           |
+|              400 | DW-INVALID-AUTHORIZATION-HOLD-STATUS           | Invalid authorization hold status requested.                                 |
+|              404 | DW-CUSTOMER-ACCOUNT-FOR-CURRENCY-NOT-FOUND     | Couldn't find an account matching the specified customer id and currency.    |
+|              404 | DW-ACCOUNT-NOT-FOUND                           | Couldn't find account with specified id.                                     |
+|              400 | DW-INSUFFICIENT-BALANCE-FOR-AUTHORIZATION-HOLD | Customer does not have sufficient balance for authorization hold.            |
+|              400 | DW-CUSTOMER-IS-RESTRICTED-FOR-TRANSFERS        | Cannot create an authorization hold for customer that cannot transfer money. |
+
+
+#### Deposit Errors
+
+| HTTP Status Code |                      Error Code                      |                        Message                         |
+|------------------|------------------------------------------------------|--------------------------------------------------------|
+|              400 | DW-INVALID-OR-EXPIRED-PAYMENT-INSTRUMENT             | The payment instrument is either invalid or expired.   |
+|              400 | DW-BANK-ACCOUNT-NOT-VERIFIED                         | The bank account is not verified.                      |
+|              400 | DW-PAYMENT-METHOD-NOT-AVAILABLE                      | This payment method is not available.                  |
+|              400 | DW-PAYMENT-INSTRUMENT-NOT-FOUND                      | This payment instrument is not found.                  |
+|              500 | DW-SLIP-NOT-CREATED                                  | There was an error while creating the slip.            |
+|              403 | DW-PERMISSION-TO-DEPOSIT                             | You do not have permission to deposit.                 |
+|              400 | DW-PAYMENT-INSTRUMENT-NOT-CREATED                    | We are unable to create the payment instrument.        |
+|              400 | DW-INVALID-PAYMENT-OPTION                            | The payment option provided is invalid.                |
+|              400 | DW-SLIP-NOT-FOUND                                    | The deposit slip was not found.                        |
+|              500 | DW-DEPOSIT-NOT-FINALIZED                             | There was an error while finalizing the deposit.       |
+|              400 | DW-INVALID-ACCOUNT-CURRENCY                          | The provided currency is not valid.                    |
+|              404 | DW-CUSTOMER-DELETED-OR-HAS-NO-ACTIVE-EWALLET-ACCOUNT | Customer is deleted or has no active e-wallet account. |
+|              400 | DW-INVALID-TRANSACTION-STATUS                        | The transaction status is invalid.                     |
+|              500 | DW-DEPOSIT-RESPONSE-NOT-CREATED                      | Error while creating deposit response.                 |
+
+
+#### Withdrawal Errors
+
+| HTTP Status Code |         Error Code        |                    Message                     |
+|------------------|---------------------------|------------------------------------------------|
+|              400 | DW-INVALID-SLIP-PROVIDED  | Provided slip does not belong to the customer. |
+|              403 | DW-PERMISSION-TO-WITHDRAW | You do not have permission to withdraw.        |
+|              400 | DW-BANK-VALIDATION-FAILED | Bank validation failed.                        |
+|              400 | DW-BANK-DECLINE           | Declined by the processing bank.               |
+
+
+### Transfer webhook errors
+
+|              Error Code              |                                                 Message                                                 |
+|--------------------------------------|---------------------------------------------------------------------------------------------------------|
+| TRANSFER_NOT_ENOUGH_BALANCE          | The sending customer has insufficient balance for the transaction                                       |
+| TRANSFER_AUTH_HOLD_AMOUNT_MISMATCH   | The provided authorization hold blocks a lower amount than the requested for the transfer               |
+| TRANSFER_AUTH_HOLD_NOT_FOUND         | The requested authorization hold was not found                                                          |
+| TRANSFER_AUTH_HOLD_STATUS_MISMATCH   | The requested authorization hold has either been released or used                                       |
+| TRANSFER_AUTH_HOLD_CURRENCY_MISMATCH | The requested authorization hold blocks an amount in a different currency from the one requested        |
+| TRANSFER_NOT_ALLOWED                 | Either the sender or recipient are restricted for transfers                                             |
+| TRANSFER_LIMIT_EXCEEDED              | The sending customer exceeds/has exceeded their transfer limit for the transaction/for a period of time |
+| TRANSFER_PARTY_NOT_FOUND             | Either the sender or recipient was not found                                                            |
+| TRANSFER_REQUEST_INVALID_CURRENCY    | The transfer was requested for a currency different that of the sender                                  |
+| TRANSFER_GENERAL_ERROR               | Error during processing the transfer. Transaction was not created.                                      |
+| TRANSFER_DUPLICATE_MERCHANT_REF      | Duplicate merchant reference provided. Transfer was failed.                                             |
+
 
 # Using the Example API Calls (Console Window)
 
