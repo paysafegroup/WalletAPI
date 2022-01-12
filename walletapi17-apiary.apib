@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 12 Jan 2022 | - Added support for corporate customers                                                                     |
 | V1      | 27 Dec 2021 | - Added new restrictions synchronization APIs                                                               |
 | V1      | 21 Dec 2021 | - Updated error documentation                                                                               |
 | V1      | 2 Dec 2021  | - Added customer's externalId to the response of the Get accounts endpoints                                 |
@@ -4897,6 +4898,9 @@ When applying restrictions to a customer, the system has two distinct behaviours
                 }
             }
 
++ Response 200
+
+
 + Request Customer Restrictions Applied (application/jbson)
 
     + Headers
@@ -4925,6 +4929,9 @@ When applying restrictions to a customer, the system has two distinct behaviours
                 }
             }
 
++ Response 200
+
+
 + Request Customer Restrictions Lifted (application/json)
 
     + Body
@@ -4940,6 +4947,7 @@ When applying restrictions to a customer, the system has two distinct behaviours
                 }
             }
 
++ Response 200
 
 
 ### Transaction update [POST /webhook/path/at/merchant/system/transactions/events]
@@ -4978,6 +4986,8 @@ This webhook will be sent when the status of all transaction types is updated - 
                 }
             }
 
++ Response 200
+
 
 + Request Withdrawal completed (application/json)
 
@@ -5004,6 +5014,8 @@ This webhook will be sent when the status of all transaction types is updated - 
                     "merchantRefNum": "5dd3a306-aa5f-4cb3-ab44-47a82261a7a6"
                 }
             }
+
++ Response 200
 
 
 ### Account update [POST /webhook/path/at/merchant/system/accounts/events]
@@ -5032,6 +5044,8 @@ The webhook is sent when there's an update on the customer account. The `operati
                     "customerId": "500014306996"
                 }
             }
+
++ Response 200 
 
 
 # Data Structures
@@ -6528,13 +6542,11 @@ Wallet composite model
 + `externalId`: `d6f475fe-57c9-4865-9316-0c3b8e8128d4` (string, required) - Any external id, e.g. UUID or a numeric id
     _length==40_
 + `kyc` (KYC, required)
++ `restrictions` (array[Restriction], optional)
 + `type` (enum[string], required) - Type of Customer
     + `PERSON`
     + `LEGAL_ENTITY`
-+ `legalEntityName` (string, optional)
-+ `legalEntityIdentifier` (string, optional)
-+ `restrictions` (array[Restriction], optional)
-
++ `legalEntityDetails` (LegalEntityDetails) - Only required when `type == 'LEGAL_ENTITY'`
 
 ## Restriction (object)
 
@@ -7283,3 +7295,69 @@ Account specific view of the slip.
 + isScaPerformed (boolean, optional)
 + isCustomerIPTrusted (boolean, optional)
 + isBeneficiaryTrusted (boolean, optional)
+
+## LegalEntityDetails
+
+### Properties
++ `customerRole` (enum[string], required) - role of the customer in the legal entity
+    + OWNER
+    + INVESTOR
+    + MANAGER
++ `companyName`: `Example Corp` (string, required) - Name of the company
+    _length<=100_
++ `companyId`: `GB999 9999 73` (string, required) - official company id according to local business registration agency in the country of registration; e.g. VAT Reg No in UK, Umsatzsteuer-Identifikationsnummer in Germany
+    _length<=100_
++ `sourceOfFunding` (string, required)
+    _length<=100_
++ `natureOfBusiness` (string, required)
+    _length<=100_
++ `reasonToApply` (string)
+    _length<=200_
++ `registrationAddress` (CoarseAddress, required)
++ `operatingAddress` (CoarseAddress, required)
++ `phone`: `+445432432` (string, required)
+    _length<=50_
++ `websiteUrl`: `https://example.com` (string, required)
+    _length<=500_
++ `directors` (array[LegalEntityPerson], required)
++ `ultimateBeneficialOwners` (array[LegalEntityPersonUbo], required):
++ `authorizedDealer` (LegalEntityPerson, required)
+    + `email`: `dealer@example.com` (string, required)
+
+
+## LegalEntityPerson
+
+### Properties
+
++ `firstName`: `John` (string, required)
+    _length<=50_
++ `middleName`: `Paul` (string)
+    _length<=50_
++ `lastName`: `Doe` (string, required)
+    _length<=50_
++ `dateOfBirth`: `1982-08-12` (string, required)
++ `countryCode`: `GB` (string)
+    _length<=2_
++ `identificationNumber`: `AA 01 23 44 B` (string, required) - Official person id as registered in a national agency; e.g. NINO in UK, Taxpayer Identification Number in Germany, INSEE in France, etc.
+    _length<=40_
++ `identificationNumberIssuingCountryCode`: `GB` (string)
+    _length<=2_
+
+
+## LegalEntityPersonUbo (LegalEntityPerson)
+
+### Properties
+
++ `ownershipPercentage`: `51%` (string, required) - Could be specified as a percentage (51%), a fraction (1/17) or other formats
+
+
+## CoarseAddress
+
+### Properties
+
++ `countryCode`: `GB` (string, required)
+    _length<=2_
++ `city`: `London` (string, required)
+    _length<=50_
++ `streetAddress`: `345 Oxford Str` (string, required)
+    _length<=400_
