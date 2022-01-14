@@ -35,6 +35,64 @@
     deactivate PaysafeAPI
 @enduml
 
+@startuml "2-Deposit-card-merchant-3ds"
+    !theme cerulean-outline
+
+    skinparam dpi 72
+    skinparam shadowing false
+    skinparam backgroundColor #FFFFFF
+    skinparam Sequence {
+        ParticipantBorderColor #282828
+        ParticipantBackgroundColor #282828
+        ParticipantFontSize 17
+        ParticipantFontColor #FFFFFF
+        ArrowColor #282828
+        ArrowFontSize 17
+        LifeLineBorderColor #FBC9D6
+    }
+
+	participant Customer
+    participant Merchant
+    box "Paysafe"
+        participant "Paysafe API" as PaysafeAPI
+        participant "Customer wallet" as CW
+        participant "Merchant wallet" as MW
+    end box
+    participant "3DS auth" as PSP
+
+    autonumber
+
+	Customer -> Merchant : Initiates Deposit with Card by providing card details
+   
+	alt 3DS is required
+        Merchant -> PSP: Call the 3DS provider and redirect the customer to 3DS Page
+        Customer -> PSP: Customer authenticates the payment
+        PSP -> Merchant : Redirects the customer \n {eci, cavv, 3ds result ..}
+    end alt
+
+    Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount\ncurrencyCode: EUR\nauthentication: {eci, cavv, threeDResult, threeDSecureVersion, directoryServerTransactionId}\nwallet: {customerId, fee}
+	
+	Merchant <- PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE\
+
+    ...
+
+
+    Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
+    activate PaysafeAPI
+
+        PaysafeAPI [#FF0000]-> CW: Credit deposited amount\nto customer wallet
+        PaysafeAPI <-[#FF0000] CW: Debit merchant's fee\nfrom the customer wallet\n(if fee is specified)
+        PaysafeAPI [#FF0000]-> MW: Credit merchant's fee\ninto the Merchant wallet
+        PaysafeAPI <-[#FF0000] MW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
+
+        Merchant <-- PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
+    deactivate PaysafeAPI
+
+	== T + 1 ==
+
+ 	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
+    note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+@enduml
 
 
 @startuml "2-Deposit-card"
@@ -127,37 +185,50 @@
 
     autonumber
 
-    Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **RAPID_TRANSFER**\nrapidTransfer:\n    sepa:\n        {accountHolderName, bic, iban}\nbillingDetails: {street, country, zip}\namount: 100000\ncurrencyCode: EUR\nwallet: {customerId, fee}
+    Merchant -> PaysafeAPI: Create a payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **RAPID_TRANSFER**\nrapidTransfer:\n    sepa:\n        {accountHolderName, bic, iban}\nbillingDetails: {street, country, zip}\namount: 100000\ncurrencyCode: EUR\nwallet: {customerId, fee}
     Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **INITIATED**\nlinks: [{rel: redirect_payment, href: https://...., method: GET}, ...]
 
     Merchant --> PSP: Redirect Customer to Rapid Transfer
-    Merchant <-- PSP: Redirect Customer back to Merchant's system
+    PSP --> PSP : Customer authenticates the payment
+    PSP --> PaysafeAPI : Redirect Customer back to Paysafe
+    
+    par   
+    alt rely on customer redirection
+	    PaysafeAPI --> Merchant : Redirect Customer back to Merchant's system
+  	    Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
+        Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
+	    note left: Poll the status until the status is PAYABLE
+    else rely on webhooks ( **recommended** )
+		PaysafeAPI -> Merchant : Payment Handle webhook\n id\n merchantRefNum\n status: **PAYABLE**\n paymentHandleToken: XXXX ....    	
+    end
+        |||
 
-    ...
+    Merchant -> PaysafeAPI: Process Payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
+    
+    Merchant <-- PaysafeAPI: Return Payment\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
 
-    Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
-    note right: Only needed if status != PAYABLE
-    Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
 
-    |||
 
-    Merchant -> PaysafeAPI: Process payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
-    activate PaysafeAPI
+    else 
+        PSP -> PaysafeAPI : Notification of successful transfer
+        activate PaysafeAPI
 
         PaysafeAPI [#FF0000]-> CW: Credit deposited amount\nto customer wallet
         PaysafeAPI <-[#FF0000] CW: Debit merchant's fee\nfrom the customer wallet\n(if fee is specified)
         PaysafeAPI [#FF0000]-> MW: Credit merchant's fee\ninto the Merchant wallet
         PaysafeAPI <-[#FF0000] MW: (if applicable)\nDebit Paysafe's fees from the Merchant wallet
 
-        Merchant <-- PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
-    deactivate PaysafeAPI
+       deactivate PaysafeAPI
+
+    PaysafeAPI -> Merchant : Transaction webhooks\n id\n timestamp\ntransaction\n	{id, status: **COMPLETED**, slipId, customerId, accountId, merchantRefNum, direction ...}
+   end
+
 
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
     note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
 @enduml
-
 
 @startuml "2-Deposit-bank-transfer"
     !theme cerulean-outline
