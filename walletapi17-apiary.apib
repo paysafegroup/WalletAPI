@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 15 Jan 2022 | - Updated Card & RT flows
 | V1      | 12 Jan 2022 | - Added support for corporate customers                                                                     |
 | V1      | 27 Dec 2021 | - Added new restrictions synchronization APIs                                                               |
 | V1      | 21 Dec 2021 | - Updated error documentation                                                                               |
@@ -337,7 +338,7 @@ Direct update and delete acounts is not supported via API.
 
 ## Deposit with a card
 
-* Merchant customers will be able to deposit with Visa and Mastercard credit and debit cards in EUR and GBP. Merchant will manage the user experience however for card processing it is required that Paysafe integrated 3DS solution is used. Once card payment is processed successfully, the customers wallet balance will be increased with the deposit amount. Merchant will be able to apply a fee to the customer’s card deposits.
+* Merchant customers will be able to deposit with Visa and Mastercard credit and debit cards in EUR and GBP. Merchant will manage the user experience and can use either Paysafe integrated 3DS solution or with any other 3DS provider directly. Once card payment is processed successfully, the customers wallet balance will be increased with the deposit amount. Merchant will be able to apply a fee to the customer’s card deposits.
 
 * Merchant customers will choose the deposit amount and will provide their card details at Bianance’s website or mobile app.
 
@@ -351,7 +352,7 @@ Direct update and delete acounts is not supported via API.
 
 &nbsp;
 
-![Diagram: Deposit with a card](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/2-Deposit-card.svg)
+![Diagram: Deposit with a card](https://github.com/paysafegroup/WalletAPI/raw/CardsRTNewFlows/diagrams/card_merchant_3ds.png)
 
 &nbsp;
 
@@ -383,7 +384,7 @@ Transaction limits for Rapid Transfer
 
 &nbsp;
 
-![Diagram: Deposit with RapidTransfer](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/2-Deposit-rapid-transfer.svg)
+![Diagram: Deposit with RapidTransfer](https://github.com/paysafegroup/WalletAPI/raw/CardsRTNewFlows/diagrams/deposit_rapid_transfer_version2.png)
 
 &nbsp;
 
@@ -465,7 +466,7 @@ Customers can withdraw from fiat balance to their cards as well (Visa Direct - c
 
 * Customer initiates fiat withdrawal to bank account on Merchant's platform.
 
-* Merchant requests the withdrawal from Paysafe and includes customer’s bank account or card details in the request.
+* Merchant requests the withdrawal from Paysafe and includes customer’s card details in the request.
 
 * Paysafe validates there is available balance in customer’s wallet.
 
@@ -477,7 +478,6 @@ Customers can withdraw from fiat balance to their cards as well (Visa Direct - c
 
 * Paysafe returns a payment details response to the Merchant.
 
-Paysafe will also make sure any returned withdrawals are processed by crediting the returned amount back to the customer’s wallet. The Merchant will receive a notification for such returned withdrawals.
 
 &nbsp;
 
@@ -694,30 +694,45 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 <a name="authenticationobject" title="Authentications Object"></a>
 ## authentication
 
-| Element          | Type                     | Required  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Element          | Type                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 |------------------|--------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id               | string<br/>`length<=36`  | Read Only | This is the ID returned in the response.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| eci              | number                   | Read Only | This is the E-Commerce Indicator (ECI). This value is returned only on payer authentication transactions or for enrollments where the issuer is non-participating, and the card scheme supports it. You must append this value to the authorization request, where it enables the interchange benefits granted to merchants who are processing payer Authentication transactions.<br/>**Visa**<br/><ul><li>5 &ndash; Identifies a successfully authenticated transaction. </li><li>6 &ndash; Identifies an attempt to authenticate the transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**Mastercard**<br/><br/><ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul> |
-| cavv             | string<br/>`length<=80`  | Read Only | This is the Cardholder Authentication Verification Value, indicating that the transaction is authenticated. You should append this value to the authorization request signifying that the transaction is successfully authenticated.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| xid              | string<br/>`length<=40`  | Read Only | This is the transaction identifier returned by the card issuer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| status           | enum                     | Read Only | This is the status of the Enrollment Lookup request. Possible values are:<br/><ul><li>COMPLETED - The transaction is completed.</li><li>FAILED - The authentication request failed. Check the error code for details.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| merchantRefNum   | string<br/>`length<=255` | Read Only | This is the merchant reference number created by the merchant and submitted as part of the request. This number must be unique for each request. Paysafe recommends using a unique merchant reference number for every transaction. The merchant reference number must not be the same for multiple transactions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| threeDEnrollment | enum                     | Read Only | This indicates whether or not the cardholder is enrolled in 3D Secure. Possible values are:<br/><ul><li>Y &ndash; Cardholder authentication available</li><li>N &ndash; Cardholder not enrolled in authentication</li><li>U &ndash; Cardholder authentication unavailable</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| threeDResult     | enum                     | Read Only | This indicates the outcome of the Authentication.<br/><ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li><li>N &ndash; The cardholder failed to successfully authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li></ul>                                                                                                                                                                                                                                                                                                                                                      |
-| signatureStatus  | enum                     | Read Only | This is the 3D Secure signature verification result value.<br/><ul><li>Y &ndash; All transactions and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| error            | [complex](#errorobject)  | Read Only | This is the error details of the authentication.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| eci              | number                 | This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. Note that in some cases the eci value includes a leading zero, e.g., 01 or 02.<br/>**Visa**<br/><ul><li>5 &ndash; Identifies a successfully authenticated transaction. </li><li>6 &ndash; Identifies an attempt to authenticate the transaction.</li><li>7 &ndash; Identifies a non-authenticated transaction.</li></ul><br/>**Mastercard**<br/><br/><ul><li>1 &ndash; Identifies a non-authenticated transaction.</li><li>2 &ndash; Identifies a successfully authenticated transaction.</li></ul> |
+| cavv             | string<br/>`length<=80` | This is the Cardholder Authentication Verification Value, indicating that the transaction is authenticated. You should append this value to the authorization request signifying that the transaction is successfully authenticated.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| xid              | string<br/>`length<=40` | This is the transaction identifier returned by the card issuer.<br/><br/>**Note:** This exists only for version 3DS version 1.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| threeDEnrollment | enum                    | This indicates whether or not the cardholder is enrolled in 3D Secure. Possible values are:<br/><ul><li>Y &ndash; Cardholder authentication available</li><li>N &ndash; Cardholder not enrolled in authentication</li><li>U &ndash; Cardholder authentication unavailable</li></ul><br/><br/>**Note**: This exists only for version 3DS version 1.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| threeDResult     | enum                    | This indicates the outcome of the Authentication.<br/><ul><li>Y &ndash; The cardholder successfully authenticated with their card issuer.</li><li>A &ndash; The cardholder authentication was attempted.</li><li>N &ndash; The cardholder failed to successfully authenticate with their card issuer.</li><li>U &ndash; Authentication with the card issuer was unavailable.</li><li>E &ndash; An error occurred during authentication.</li><li>R &ndash; Rejected transaction.</li></ul><br/><br/>**Note**: The R value exists only for 3DS version 2.                                                                                                                                                                                                                                                                                                                                                      |
+| signatureStatus  | enum                    | This is the 3D Secure signature verification result value.<br/><ul><li>Y &ndash; All transactions and signature checks satisfied.</li><li>N &ndash; At least one transaction or signature check failed.</li></ul><br/><br/>**Note:** This exists only for 3DS version 1.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| directoryServerTransactionId  | string<br/>`length<=36`   | This is the unique directory server transaction ID required for Mastercard.<br/><br/>**Note:** This exists only for 3DS version 2.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| threeDSecureVersion  | string<br/>`min=5`<br>`max=8`   | This is the 3D secure protocol version..<br/><br/>**Note:** Paysafe strongly recommends including the correct 3D Secure version, exactly as it is returned from the 3D Secure API. If no version is specified in the request, the value defaults to 1.0.2. and is echoed in the response.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+
+The following is an example of the 3DS version 1 authentication object:
 
 ```apib
   {
-  "authentication":{
-    "eci":5,
-    "cavv":"AAABCIEjYgAAAAAAlCNiENiWiV+=",
-    "xid":"OU9rcTRCY1VJTFlDWTFESXFtTHU=",
-    "threeDEnrollment":"Y",
-    "threeDResult":"Y",
-    "signatureStatus":"Y"
-  }
-  }
+        "authentication": {
+            "eci": 5,
+            "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+            "xid": "OU9rcTRCY1VJTFlDWTFESXFtTHU=",
+            "threeDEnrollment": "Y",
+            "threeDResult": "Y",
+            "threeDSecureVersion": "1.0.2",
+            "signatureStatus": "Y"
+        }
+    }
+```
+
+The following is an example of the 3D Secure 2 authentication object:
+
+```apib
+  {
+        "authentication": {
+            "eci": 5,
+            "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+            "threeDResult": "Y",
+            "threeDSecureVersion": "2.1.0",
+            "directoryServerTransactionId": "a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
+        }
+    }
 ```
 
 <a name="billingdetailsobject" title="Billing Details Object"></a>
@@ -1787,7 +1802,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
 + Attributes
     + Include PaymentHandleRequest
 
-+ Request Create Payment Handle for Card without 3D Secure Enabled (application/json)
++ Request Create Payment Handle for Card without 3D Secure (application/json)
 
     + Headers
 
@@ -1915,7 +1930,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
               "transactionType": "PAYMENT"
             }
 
-+ Request Create Payment Handle for Card with 3D Secure Enabled (application/json)
++ Request Create Payment Handle for Card with 3D Secure authentication (application/json)
 
     + Headers
 
@@ -1935,6 +1950,13 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                     },
                     "cvv": "111",
                     "holderName": "poorna"
+                },
+                "authentication": {
+                    "eci": 5,
+                    "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "threeDResult": "Y",
+                    "threeDSecureVersion": "2.1.0",
+                    "directoryServerTransactionId": "a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
                 },
                 "paymentType": "CARD",
                 "amount": 3000,
@@ -1991,10 +2013,10 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
                 "amount": 3000,
                 "merchantRefNum": "merchantRefNum-124",
-                "action": "REDIRECT",
+                "action": "NONE",
                 "currencyCode": "GBP",
                 "usage": "SINGLE_USE",
-                "status": "INITIATED",
+                "status": "PAYABLE",
                 "paymentType": "CARD",
                 "executionMode": "SYNCHRONOUS",
                 "customerIp": "73.82.192.17",
@@ -2013,9 +2035,16 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                         "year": "2020"
                     },
                     "holderName": "poorna",
-                    "cardType": "VI",
+                    "cardType": "MC",
                     "cardBin": "453826",
                     "lastDigits": "0003"
+                },
+                "authentication": {
+                    "eci": 5,
+                    "cavv": "AAABCIEjYgAAAAAAlCNiENiWiV+=",
+                    "threeDResult": "Y",
+                    "threeDSecureVersion": "2.1.0",
+                    "directoryServerTransactionId": "a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2"
                 },
                 "wallet":{
                    "customerId" : "GGG",
@@ -2039,11 +2068,6 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                         "method": "GET"
                     }
                 ],
-                "links": [{
-                    "rel": "redirect_payment",
-                    "href": "http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
-                    "method": "GET"
-                }],
                 "timeToLiveSeconds": 899,
                 "transactionType": "PAYMENT"
             }
@@ -5122,40 +5146,38 @@ The webhook is sent when there's an update on the customer account. The `operati
 
 ## Authentications Object
 + authentication (object) - These are the 3D Secure authentication details.
-    + `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of authentication, returned in the response.
-        _Read Only, length<=36_
-    + `eci`:`5` (number) - This is the [E-Commerce Indicator](#authenticationobject).
-    + `cavv`:`AAABBhkXYgAAAAACBxdiENhf7A+=` (string) - This is the Cardholder Authentication Verification Value, indicating that the transaction has been authenticated.
-        _Read Only, length<=80_
-    + `xid`:`aWg4N1ZZOE53TkFrazJuMmkyRDA=` (string) - This is the transaction identifier returned by the card issuer.
-        _Read Only, length<=40_
-    + `status` (enum) - This is the status of authentication request.
-        _Read Only_
+    + `eci`: `5`(enum) - This is the Electronic Commerce Indicator code, which gets returned by the card issuer indicating whether the cardholder was successfully authenticated. Note that in some cases the eci value includes a leading zero, e.g., 01 or 02..
         + Members
-            + COMPLETED
-            + FAILED
-    + `merchantRefNum`:`merchantABC-123-authentications` (string) - This is the merchant reference number for the authentication request.
-        _Read Only, length<=255_
-    + `threeDEnrollment`:`Y` (enum) - This indicates whether or not the cardholder is enrolled in 3D Secure.
-        _Read Only_
+            + 1 - Identifies a non-authenticated transaction for MASTER CARD.
+            + 2 - Identifies a successfully authenticated transaction for MASTER CARD.
+            + 5 - Identifies a successfully authenticated transaction for VISA.
+            + 6 - Identifies an attempt to authenticate the transaction for VISA.
+            + 7 - Identifies a non-authenticated transaction fro VISA.
+    + `cavv`:`AAABBhkXYgAAAAACBxdiENhf7A+=` (string) - This is the Cardholder Authentication Verification Value, indicating that the transaction has been authenticated.
+         length<=80
+    + `xid`:`aWg4N1ZZOE53TkFrazJuMmkyRDA=` (string) - This is the transaction identifier returned by the card issuer. Note: This exists only for version 3DS version 1.
+         length<=40
+    + `threeDEnrollment`:`Y` (enum) - This indicates whether or not the cardholder is enrolled in 3D Secure.Note: This exists only for version 3DS version 1. 
         + Members
             + Y - Cardholder authentication available
             + N - Cardholder not enrolled in authentication
             + U - Cardholder authentication unavailable
     + `threeDResult`:`Y` (enum) - This indicates the outcome of the Authentication.
-        _Read Only_
         + Members
             + Y - The cardholder successfully authenticated with their card issuer.
             + A - The cardholder authentication was attempted.
             + N - The cardholder failed to successfully authenticate with their card issuer.
             + U - Authentication with the card issuer was unavailable.
             + E - An error occurred during authentication.
-    + `signatureStatus`:`Y` (enum) - This is the 3D Secure signature verification result value.
-        _Read Only_
+            + R - Rejected transaction. This exists only for 3DS version 2.
+    + `signatureStatus`:`Y` (enum) - This is the 3D Secure signature verification result value. Note: This exists only for 3DS version 1. 
         + Members
             + Y - All transaction and signature checks satisfied.
             + N - At least one transaction or signature check failed.
-    + Include Authentication Errors
+    + `directoryServerTransactionId`:`a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2` (string) - This is the unique directory server transaction ID required for Mastercard. Note: This exists only for 3DS version 2. 
+         length<=36
+    + `threeDSecureVersion`:`2.1.0` (string) - This is the 3D secure protocol version. Note: Paysafe strongly recommends including the correct 3D Secure version, exactly as it is returned from the 3D Secure API. If no version is specified in the request, the value defaults to 1.0.2. and is echoed in the response. 
+         length<=8, length>=5
 
 ## Authentication Errors
 + error (object) - This is the error details of authentication.
@@ -5701,6 +5723,7 @@ The webhook is sent when there's an update on the customer account. The `operati
         + on_failed (string) - Will be returned to this URL if the payment fails.
     + `href` - The actual URL
     + `method` - The HTTP method
++ Include Authentications Object    
 + links (object) - This is an array of links related to the resource.
     _Read Only_
     + `rel`: `redirect_payment` (enum)
