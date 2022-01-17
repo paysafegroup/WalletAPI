@@ -8,6 +8,7 @@ HOST: https://api2.test.paysafe.com/
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
 | V1      | 15 Jan 2022 | - Updated Card & RT flows
+|         |             | - Added PAyment Handle webhooks
 | V1      | 12 Jan 2022 | - Added support for corporate customers                                                                     |
 | V1      | 27 Dec 2021 | - Added new restrictions synchronization APIs                                                               |
 | V1      | 21 Dec 2021 | - Updated error documentation                                                                               |
@@ -481,7 +482,7 @@ Customers can withdraw from fiat balance to their cards as well (Visa Direct - c
 
 &nbsp;
 
-![Diagram: Withdraw to a card](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/3-Withdraw-card.svg)
+![Diagram: Withdraw to a card](https://raw.githubusercontent.com/paysafegroup/WalletAPI/CardsRTNewFlows/diagrams/card_withdrawal.png)
 
 
 &nbsp;
@@ -2793,17 +2794,6 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                     "currencyCode": "GBP",
                     "creationTime": "2021-07-15T17:54:12Z",
                     "direction": "CREDIT",
-                    "fee": 40,
-                    "paymentType": "CARD",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "testTran"
-                }, {
-                    "id": "12324",
-                    "type": "FEE",
-                    "amount": 40,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
                     "fee": 0,
                     "paymentType": "CARD",
                     "status": "COMPLETED",
@@ -2906,18 +2896,6 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                        "currencyCode": "GBP",
                        "creationTime": "2021-07-15T17:54:12Z",
                        "direction": "CREDIT",
-                       "fee": 40,
-                       "paymentType": "RAPID_TRANSFER",
-                       "status": "COMPLETED",
-                       "merchantRefNum": "testTran"
-                      },
-                      {
-                       "id": "12324",
-                       "type": "FEE",
-                       "amount": 40,
-                       "currencyCode": "GBP",
-                       "creationTime": "2021-07-15T17:54:12Z",
-                       "direction": "DEBIT",
                        "fee": 0,
                        "paymentType": "RAPID_TRANSFER",
                        "status": "COMPLETED",
@@ -3010,17 +2988,6 @@ Click **Get Payments** above to look up a Payment using the ID returned in the r
                     "currencyCode": "GBP",
                     "creationTime": "2021-07-15T17:54:12Z",
                     "direction": "CREDIT",
-                    "fee": 0,
-                    "paymentType": "CARD",
-                    "status": "COMPLETED",
-                    "merchantRefNum": "testTran"
-                }, {
-                    "id": "12324",
-                    "type": "FEE",
-                    "amount": 40,
-                    "currencyCode": "GBP",
-                    "creationTime": "2021-07-15T17:54:12Z",
-                    "direction": "DEBIT",
                     "fee": 0,
                     "paymentType": "CARD",
                     "status": "COMPLETED",
