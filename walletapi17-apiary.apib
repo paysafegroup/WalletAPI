@@ -5038,6 +5038,82 @@ The webhook is sent when there's an update on the customer account. The `operati
 
 + Response 200 
 
+### Payment Handle update [POST /webhook/path/at/merchant/system/paymenthandles/events]
+
+The webhook is sent when there's an update on the Payment Handle. The `eventType` signifies the change that occurred.
+
+
++ Attributes (PaymentHandleWebhook)
+
++ Request Payment Handle change (application/json)
+
+    + Headers
+
+            Signature: <<Paysafe's HMAC signature>>
+
+    + Body
+
+            {
+              "resourceId": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+              "eventDate": "2021-07-15T17:54:12Z",
+              "eventType": "PAYMENT_HANDLE_PAYABLE",
+              "payload": {
+                "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+                "amount": 3000,
+                "merchantRefNum": "merchantRefNum-124",
+                "action": "REDIRECT",
+                "currencyCode": "GBP",
+                "usage": "SINGLE_USE",
+                "status": "PAYABLE",
+                "paymentType": "RAPID_TRANSFER",
+                "executionMode": "SYNCHRONOUS",
+                "customerIp": "73.82.192.17",
+                "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+                "billingDetails": {
+                  "street": "100 Queen",
+                  "street2": "Unit 201",
+                  "city": "Toronto",
+                  "country": "CA",
+                  "zip": "M5H 2N2"
+                },
+                "rapidTransfer": {
+                  "sepa": {
+                    "accountHolderName": "John Doe",
+                    "rapidTransferBankId": "1000203",
+                    "bic": "ABNANL2APIP",
+                    "lastDigits": "00"
+                  }
+                },
+                "wallet": {
+                  "customerId": "GGG",
+                  "slipId": "100753"
+                },
+                "returnLinks": [
+                  {
+                    "rel": "on_completed",
+                    "href": "https://US_commerce_site/payment/return/success",
+                    "method": "GET"
+                  },
+                  {
+                    "rel": "on_failed",
+                    "href": "https://US_commerce_site/payment/return/failed",
+                    "method": "GET"
+                  }
+                ],
+                "links": [
+                  {
+                    "rel": "redirect_payment",
+                    "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+                    "method": "GET"
+                  }
+                ],
+                "timeToLiveSeconds": 899,
+                "transactionType": "PAYMENT"
+              }
+            }
+
++ Response 200 
+
 
 # Data Structures
 
@@ -5927,6 +6003,21 @@ The webhook is sent when there's an update on the customer account. The `operati
     + `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration.
         _Read Only, length<=899_
 
+
+## PaymentHandleWebhook
+
+### Properties
+
++ `resourceId` (string, required) - id of the Payment Handle
++ `eventDate`: `2021-07-15T17:54:12Z` - ISO timestamp
++ `eventType` (enum[string], required) - Specifies the change.
+    + `PAYMENT_HANDLE_INITIATED`
+    + `PAYMENT_HANDLE_PROCESSING`
+    + `PAYMENT_HANDLE_PAYABLE`
+    + `PAYMENT_HANDLE_COMPLETED`
+    + `PAYMENT_HANDLE_FAILED`
+    + `PAYMENT_HANDLE_EXPIRED`
++ `payload` (PaymentHandleRequest, required)
 
 ## `deviceInfoRequest`
 
