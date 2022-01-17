@@ -51,14 +51,14 @@
         LifeLineBorderColor #FBC9D6
     }
 
-	participant Customer
+    participant Customer
     participant Merchant
+    participant "3DS auth" as PSP
     box "Paysafe"
         participant "Paysafe API" as PaysafeAPI
         participant "Customer wallet" as CW
         participant "Merchant wallet" as MW
     end box
-    participant "3DS auth" as PSP
 
     autonumber
 
@@ -87,6 +87,7 @@
 
         Merchant <-- PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
     deactivate PaysafeAPI
+    PaysafeAPI -> Merchant : Transaction webhooks\n id\n timestamp\ntransaction\n	{id, status: **COMPLETED**, slipId, customerId, accountId, merchantRefNum, direction ...}
 
 	== T + 1 ==
 
@@ -396,7 +397,7 @@
 
         Merchant <-- PaysafeAPI: Return executed Payment Handle\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
     deactivate PaysafeAPI
-
+    PaysafeAPI -> Merchant : Transaction webhooks\n id\n timestamp\ntransaction\n	{id, status: **COMPLETED**, slipId, customerId, accountId, merchantRefNum, direction ...}
 	== T + 1 ==
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
