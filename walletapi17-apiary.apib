@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 18 Jan 2022 | - Updated RT examples for currency GBP
 | V1      | 17 Jan 2022 | - Updated Card & RT flows
 |         |             | - Added Payment Handle webhooks
 | V1      | 12 Jan 2022 | - Added support for corporate customers                                                                     |
@@ -735,6 +736,27 @@ The following is an example of the 3D Secure 2 authentication object:
         }
     }
 ```
+<a name="bacsobject" title="bacs Object"></a>
+## bacs
+
+| Element           | Type                     | Required  | Description                                                             |
+|-------------------|--------------------------|-----------|-------------------------------------------------------------------------|
+| nickName          | string <br/>`length<=50` | Optional  | This is alias name for the bank account.                                |
+| accountHolderName | string<br/>`length<=18`   | Mandatory | This is the name of the customer or company that owns the bank account. |
+| sortCode          | string<br/>`length=6`    | Mandatory | This is the sort code of the Bank.                                      |
+| accountNumber     | string<br/>`length=8-10` | Mandatory | This is the costumer's bank account number.                             |
+| lastDigits        | string<br/>`length=2`    | Read Only | Last 2 digits of the bank account number.                               |
+
+```apib
+    {
+    "bacs": {
+        "accountHolderName": "John Doe",
+        "sortCode": "321654",
+        "accountNumber": "98877219"
+      }
+    }
+```
+
 
 <a name="billingdetailsobject" title="Billing Details Object"></a>
 ## billingDetails
@@ -1202,7 +1224,8 @@ This is a read-only raw response returned by an acquirer.
 
 | Element | Type                | Required  | Description        |
 |---------|---------------------|-----------|--------------------|
-| sepa    | [sepa](#sepaObject) | Mandatory | Sepa bank account. |
+| sepa    | [sepa](#sepaobject) | Conditional (Either sepa or bacs are mandatory) | Sepa bank account. |
+| sepa    | [bacs](#bacsobject) | Conditional (Either sepa or bacs are mandatory) | Bacs bank account. |
 
 ```apib
     {
@@ -2073,7 +2096,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "transactionType": "PAYMENT"
             }
 
-+ Request Create Payment Handle for Rapid Transfer for Payment (application/json)
++ Request Create Payment Handle for Rapid Transfer for Payment with SEPA bank account (application/json)
 
     + Headers
 
@@ -2091,6 +2114,136 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                        "accountHolderName": "John Doe",
                        "bic": "ABNANL2APIP",
                        "iban": "DE89370400440532013000"
+                    }
+                },
+                "paymentType": "RAPID_TRANSFER",
+                "amount": 3000,
+                "currencyCode": "EUR",
+                "customerIp": "73.82.192.17",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "wallet":{
+                   "customerId" : "GGG",
+                   "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF"
+                   },
+                   "risk": {
+                       "customerRiskRating": 50,
+                       "isScaPerformed": true,
+                       "isCustomerIPTrusted": true,
+                       "isBeneficiaryTrusted": true
+                   },
+                   "customerAccount" : {
+                       "id":"abc"
+                   },
+                   "deviceInfo": {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                      "threatMetrixData" : "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                      "appType": "WEB_APP"
+                   }
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
+                    }
+                ]
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+                "amount": 3000,
+                "merchantRefNum": "merchantRefNum-124",
+                "action": "REDIRECT",
+                "currencyCode": "EUR",
+                "usage": "SINGLE_USE",
+                "status": "INITIATED",
+                "paymentType": "RAPID_TRANSFER",
+                "executionMode": "SYNCHRONOUS",
+                "customerIp": "73.82.192.17",
+                "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "country": "CA",
+                    "zip": "M5H 2N2"
+                },
+                "rapidTransfer" : {
+                   "sepa": {
+                       "nickName": "Sally's Barclays Account",
+                       "accountHolderName": "John Doe",
+                       "bic": "ABNANL2APIP",
+                       "lastDigits": "00"
+                    }
+                },
+                "wallet":{
+                   "customerId" : "GGG",
+                   "slipId" : "100753",
+                   "fee" : 400,
+                   "deviceInfo" : {
+                      "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218"
+                   },
+                   "customerAccount" : {
+                       "id":"abc"
+                   }
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://US_commerce_site/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://US_commerce_site/payment/return/failed",
+                        "method": "GET"
+                    }
+                ],
+                "links": [{
+                    "rel": "redirect_payment",
+                    "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+                    "method": "GET"
+                }],
+                "timeToLiveSeconds": 899,
+                "transactionType": "PAYMENT"
+            }
+
++ Request Create Payment Handle for Rapid Transfer for Payment with BACS bank account (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
+    + Body
+
+            {
+                "merchantRefNum": "merchantRefNum-124",
+                "transactionType": "PAYMENT",
+                "rapidTransfer" : {
+                   "bacs": {
+                       "nickName": "Sally's Barclays Account",
+                       "accountHolderName": "John Doe",
+                       "sortCode": "321654",
+                       "accountNumber": "98877219"
                     }
                 },
                 "paymentType": "RAPID_TRANSFER",
@@ -2165,11 +2318,11 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                     "zip": "M5H 2N2"
                 },
                 "rapidTransfer" : {
-                   "sepa": {
+                   "bacs": {
                        "nickName": "Sally's Barclays Account",
                        "accountHolderName": "John Doe",
-                       "bic": "ABNANL2APIP",
-                       "lastDigits": "00"
+                       "sortCode": "321654",
+                       "lastDigits": "19"
                     }
                 },
                 "wallet":{
@@ -2817,7 +2970,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
             {
               "merchantRefNum": "merchantRefNum-108",
               "amount": 1000,
-              "currencyCode": "GBP",
+              "currencyCode": "EUR",
               "settleWithAuth": true,
               "paymentHandleToken": "SCZJg09GWSv36NLB",
               "customerIp": "73.82.192.17",
@@ -2839,7 +2992,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
               "customerIp": "73.82.192.17",
               "dupCheck": true,
               "description": "Magazine subscription",
-              "currencyCode": "GBP",
+              "currencyCode": "EUR",
               "paymentType": "RAPID_TRANSFER",
               "status": "COMPLETED",
               "availableToSettle": 0,
@@ -2864,7 +3017,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                       "id": "12321",
                       "type": "DEPOSIT",
                       "amount": 1000,
-                      "currencyCode": "GBP",
+                      "currencyCode": "EUR",
                       "creationTime": "2021-07-15T17:54:12Z",
                       "direction": "CREDIT",
                       "fee": 400,
@@ -2876,7 +3029,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                       "id": "12322",
                       "type": "MERCHANT_FEE",
                       "amount": 400,
-                      "currencyCode": "GBP",
+                      "currencyCode": "EUR",
                       "creationTime": "2021-07-15T17:54:12Z",
                       "direction": "DEBIT",
                       "fee": 0,
@@ -2893,7 +3046,7 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
                        "id": "12323",
                        "type": "MERCHANT_FEE",
                        "amount": 400,
-                       "currencyCode": "GBP",
+                       "currencyCode": "EUR",
                        "creationTime": "2021-07-15T17:54:12Z",
                        "direction": "CREDIT",
                        "fee": 0,
@@ -5079,7 +5232,6 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
                 "rapidTransfer": {
                   "sepa": {
                     "accountHolderName": "John Doe",
-                    "rapidTransferBankId": "1000203",
                     "bic": "ABNANL2APIP",
                     "lastDigits": "00"
                   }
@@ -6117,21 +6269,38 @@ This is applicable only for STANDALONE_CREDIT.
 
     + rapidTranfer (object) - These are the details of the Rapid Transfer.
 
-        + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+        + One of
+        
+            + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+    
+                + Properties
+    
+                    + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+                _Optional, length<=50_
+                    + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+                _length<=32_
+                    + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
+                _Optional, length=8-11_
+                    + iban: `DE89370400440532013000` (string, required) - This is the International Bank Account Number for the costumer's bank account.
+                _length=8-34_
+                    + lastDigits:`11` (string) - These are the last two digits of the iban.
+                _Read Only, length=2_
 
-            + Properties
-
-                + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
-            _Optional, length<=50_
-                + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
-            _length<=32_
-                + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
-            _Optional, length=8-11_
-                + iban: `DE89370400440532013000` (string, required) - This is the International Bank Account Number for the costumer's bank account.
-            _length=8-34_
-
-                + lastDigits:`11` (string) - These are the last two digits of the iban.
-            _Read Only, length=2_
+            + bacs (object) - These are the details of the [bacs](#bacsobject) used for the request.
+            
+                + Properties
+            
+                    + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+                        _Optional, length<=50_
+                    + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
+                         _length<=18_
+                    + accountNumber: `98877219` (string, required) - This is the bank account number.
+                         _length=8-10_
+                    + sortCode:`321654` (string, required) - This is the 6-digit sort code that identifies the financial institution and branch of the customer’s bank.
+                        _length=6_
+                    + lastDigits: `11` (string) - These are the last two digits of the account number.
+                        _Read Only, length=2_
+            
 
     + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
 
@@ -6257,18 +6426,34 @@ This is applicable only for STANDALONE_CREDIT.
 
     + rapidTranfer (object) - These are the details of the Rapid Transfer.
 
-        + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
-
-            + Properties
-
-                + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
-            _Read Only, length<=50_
-                + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
-            _Read Only, length<=32_
-                + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
-            _Read Only, length=8-11_
-                + lastDigits:`11` (string) - These are the last two digits of the iban.
-            _Read Only, length=2_
+        + One of 
+        
+            + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
+    
+                + Properties
+    
+                    + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+                _Read Only, length<=50_
+                    + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
+                _Read Only, length<=32_
+                    + bic: `ABNANL2APIP` (string) - This is the Bank Identifier Code for the consumer's bank account.
+                _Read Only, length=8-11_
+                    + lastDigits:`11` (string) - These are the last two digits of the iban.
+                _Read Only, length=2_
+                
+            + bacs (object) - These are the details of the [bacs](#bacsobject) used for the request.
+            
+                + Properties
+            
+                    + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
+                        _Read Only, _Optional, length<=50_
+                    + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
+                         _Read Only, _length<=18_
+                    + sortCode:`321654` (string) - This is the 6-digit sort code that identifies the financial institution and branch of the customer’s bank.
+                        _Read Only, _length=6_
+                    + lastDigits: `11` (string) - These are the last two digits of the account number.
+                        _Read Only, length=2_
+                
 + Include Gateway Response
 + `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
 + Include Stored Credential
