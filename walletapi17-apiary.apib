@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 20 Jan 2022 | - Updated documentation for account assigned webhook format
 | V1      | 18 Jan 2022 | - Updated RT examples for currency GBP
 | V1      | 17 Jan 2022 | - Updated Card & RT flows
 |         |             | - Added Payment Handle webhooks
@@ -5189,7 +5190,7 @@ The webhook is sent when there's an update on the customer account. The `operati
                 }
             }
 
-+ Response 200 
++ Response 200
 
 ### Payment Handle update [POST /webhook/path/at/merchant/system/paymenthandles/events]
 
@@ -5264,7 +5265,7 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
               }
             }
 
-+ Response 200 
++ Response 200
 
 
 # Data Structures
@@ -5352,7 +5353,7 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
          length<=80
     + `xid`:`aWg4N1ZZOE53TkFrazJuMmkyRDA=` (string) - This is the transaction identifier returned by the card issuer. Note: This exists only for version 3DS version 1.
          length<=40
-    + `threeDEnrollment`:`Y` (enum) - This indicates whether or not the cardholder is enrolled in 3D Secure.Note: This exists only for version 3DS version 1. 
+    + `threeDEnrollment`:`Y` (enum) - This indicates whether or not the cardholder is enrolled in 3D Secure.Note: This exists only for version 3DS version 1.
         + Members
             + Y - Cardholder authentication available
             + N - Cardholder not enrolled in authentication
@@ -5365,13 +5366,13 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
             + U - Authentication with the card issuer was unavailable.
             + E - An error occurred during authentication.
             + R - Rejected transaction. This exists only for 3DS version 2.
-    + `signatureStatus`:`Y` (enum) - This is the 3D Secure signature verification result value. Note: This exists only for 3DS version 1. 
+    + `signatureStatus`:`Y` (enum) - This is the 3D Secure signature verification result value. Note: This exists only for 3DS version 1.
         + Members
             + Y - All transaction and signature checks satisfied.
             + N - At least one transaction or signature check failed.
-    + `directoryServerTransactionId`:`a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2` (string) - This is the unique directory server transaction ID required for Mastercard. Note: This exists only for 3DS version 2. 
+    + `directoryServerTransactionId`:`a3a721f3-b6fa-4cb5-84ea-c7b5c39890a2` (string) - This is the unique directory server transaction ID required for Mastercard. Note: This exists only for 3DS version 2.
          length<=36
-    + `threeDSecureVersion`:`2.1.0` (string) - This is the 3D secure protocol version. Note: Paysafe strongly recommends including the correct 3D Secure version, exactly as it is returned from the 3D Secure API. If no version is specified in the request, the value defaults to 1.0.2. and is echoed in the response. 
+    + `threeDSecureVersion`:`2.1.0` (string) - This is the 3D secure protocol version. Note: Paysafe strongly recommends including the correct 3D Secure version, exactly as it is returned from the 3D Secure API. If no version is specified in the request, the value defaults to 1.0.2. and is echoed in the response.
          length<=8, length>=5
 
 ## Authentication Errors
@@ -5918,7 +5919,7 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
         + on_failed (string) - Will be returned to this URL if the payment fails.
     + `href` - The actual URL
     + `method` - The HTTP method
-+ Include Authentications Object    
++ Include Authentications Object
 + links (object) - This is an array of links related to the resource.
     _Read Only_
     + `rel`: `redirect_payment` (enum)
@@ -6270,11 +6271,11 @@ This is applicable only for STANDALONE_CREDIT.
     + rapidTranfer (object) - These are the details of the Rapid Transfer.
 
         + One of
-        
+
             + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
-    
+
                 + Properties
-    
+
                     + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
                 _Optional, length<=50_
                     + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
@@ -6287,9 +6288,9 @@ This is applicable only for STANDALONE_CREDIT.
                 _Read Only, length=2_
 
             + bacs (object) - These are the details of the [bacs](#bacsobject) used for the request.
-            
+
                 + Properties
-            
+
                     + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
                         _Optional, length<=50_
                     + accountHolderName: `XYZ Company` (string, required) - This is the name of the customer or company that owns the bank account.
@@ -6300,7 +6301,7 @@ This is applicable only for STANDALONE_CREDIT.
                         _length=6_
                     + lastDigits: `11` (string) - These are the last two digits of the account number.
                         _Read Only, length=2_
-            
+
 
     + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
 
@@ -6426,12 +6427,12 @@ This is applicable only for STANDALONE_CREDIT.
 
     + rapidTranfer (object) - These are the details of the Rapid Transfer.
 
-        + One of 
-        
+        + One of
+
             + sepa (object) - These are the details of the [sepa](#sepaobject) used for the request.
-    
+
                 + Properties
-    
+
                     + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
                 _Read Only, length<=50_
                     + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
@@ -6440,11 +6441,11 @@ This is applicable only for STANDALONE_CREDIT.
                 _Read Only, length=8-11_
                     + lastDigits:`11` (string) - These are the last two digits of the iban.
                 _Read Only, length=2_
-                
+
             + bacs (object) - These are the details of the [bacs](#bacsobject) used for the request.
-            
+
                 + Properties
-            
+
                     + nickName: `Sally's Barclays Account` (string) - This is an alias for this bank account.
                         _Read Only, _Optional, length<=50_
                     + accountHolderName: `XYZ Company` (string) - This is the name of the customer or company that owns the bank account.
@@ -6453,7 +6454,7 @@ This is applicable only for STANDALONE_CREDIT.
                         _Read Only, _length=6_
                     + lastDigits: `11` (string) - These are the last two digits of the account number.
                         _Read Only, length=2_
-                
+
 + Include Gateway Response
 + `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
 + Include Stored Credential
@@ -7541,18 +7542,17 @@ Account specific view of the slip.
 
 ### Properties
 
-+ `id` (string, required) - id of the change event
-+ `timestamp`: `2021-07-15T17:54:12Z` - ISO timestamp
-+ `operationType` (enum[string], required)
-    + `IBAN_ASSIGNED`
-+ `account` (TransactionPartWebhook, required)
-
-
-## AccountUpdateWebhookAccountPart
-
-### Properties
-+ `id` (string, required)
 + `customerId` (string, required)
+    _length<=20_
++ `externalId` (string, required)
+    _length<=40_
++ `accountId` (string, required)
+    _length<=20_
++ `type` (enum[string], required)
+    + `IBAN_ASSIGNED`
++ `value` (string, required)
+    _length<=300_
++ `timestamp`: `2021-07-15T17:54:12Z`  (string, required) - ISO timestamp
 
 ## Risk
 
