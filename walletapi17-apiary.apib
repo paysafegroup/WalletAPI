@@ -5181,13 +5181,12 @@ The webhook is sent when there's an update on the customer account. The `operati
     + Body
 
             {
-                "id": "00000003630052156492",
+                "customerId": "500014306996",
+                "externalId": "fb5557c7-a4d5-4eee-b3a5-829454b1488d",
+                "accountId": "5040057608",
                 "timestamp": "2021-07-15T17:54:12Z",
-                "operationType": "IBAN_ASSIGNED"
-                "account": {
-                    "id": "5040057608",
-                    "customerId": "500014306996"
-                }
+                "type": "IBAN_ASSIGNED",
+                "value": "LU894080000093642035"Updated the format of account assigned webhook
             }
 
 + Response 200
