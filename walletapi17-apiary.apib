@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 25 Jan 2022 | - Updates to corportate customers API
 | V1      | 20 Jan 2022 | - Updated documentation for account assigned webhook format
 | V1      | 18 Jan 2022 | - Updated RT examples for currency GBP
 | V1      | 17 Jan 2022 | - Updated Card & RT flows
@@ -3648,7 +3649,7 @@ If initial balance must be granted to the customer, the operation will be treate
 
 ### Create customer's wallet [POST]
 
-+ Request onboard a customer (application/json)
++ Request Onboard a customer - person (application/json)
 
         + Headers
                 Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
@@ -3662,70 +3663,71 @@ If initial balance must be granted to the customer, the operation will be treate
 
             {
                 "customer": {
+                    "type": "PERSON",
+                    "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                    "email": "john.doe@example.com",
+                    "phone": "+443452555151",
+                    "registrationIp": "115.148.82.143",
+                    "registrationDate": "2020-02-19"
                     "firstName": "John",
                     "lastName": "Doe",
                     "title": "Mr",
-                    "email": "john.doe@example.com",
-                    "phone": "+443452555151",
                     "address1": "23 Four Str",
                     "city": "London",
                     "zip": "E17 033",
                     "countryCode": "GB",
                     "birthDate": "1999-08-24",
-                    "registrationIp": "115.148.82.143",
                     "nationality": "GB",
-                    "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
                     "kyc": {
-                    "status": "COMPLETED",
-                    "idVerification": {
                         "status": "COMPLETED",
-                        "date": "2021-07-19T13:23:41Z",
-                        "documentUrls": [
-                            "https://documents-repository.com/images/doc1",
-                            "https://documents-repository.com/images/doc2"
-                        ]
-                    },
-                    "addressVerification": {
-                        "status": "COMPLETED",
-                        "date": "2021-07-19T13:25:41Z",
-                        "documentUrls": [
-                            "https://documents-repository.com/images/doc3",
-                            "https://documents-repository.com/images/doc4"
-                        ]
-                    },
-                    "faceMatch": {
-                        "status": "COMPLETED",
-                        "date": "2021-07-19T13:27:41Z",
-                        "documentUrls": [
-                            "https://documents-repository.com/images/doc5",
-                            "https://documents-repository.com/images/doc6"
-                        ]
-                    },
-                    "EDD": {
-                        "status": "COMPLETED",
-                        "date": "2021-07-19T13:35:41Z",
-                        "documentUrls": [
-                            "https://documents-repository.com/images/doc7"
-                        ]
-                    },
-                    "addressVerificationDocumentsReceived": [
-                        "BANK_STATEMENT",
-                        "CREDIT_CARD",
-                        "TAX_RETURN",
-                        "PENSION_DOCUMENT",
-                        "PHONE_BILL"
-                    ],
-                    "pep": {
-                        "status": "MATCH",
-                        "lastScreenDate": "2021-07-19T13:35:41Z",
-                        "reason": "Matched"
-                    },
-                    "sanctions": {
-                        "status": "NO_MATCH",
-                        "lastScreenDate": "2021-07-19T13:35:41Z",
+                        "idVerification": {
+                            "status": "COMPLETED",
+                            "date": "2021-07-19T13:23:41Z",
+                            "documentUrls": [
+                                "https://documents-repository.com/images/doc1",
+                                "https://documents-repository.com/images/doc2"
+                            ]
+                        },
+                        "addressVerification": {
+                            "status": "COMPLETED",
+                            "date": "2021-07-19T13:25:41Z",
+                            "documentUrls": [
+                                "https://documents-repository.com/images/doc3",
+                                "https://documents-repository.com/images/doc4"
+                            ]
+                        },
+                        "faceMatch": {
+                            "status": "COMPLETED",
+                            "date": "2021-07-19T13:27:41Z",
+                            "documentUrls": [
+                                "https://documents-repository.com/images/doc5",
+                                "https://documents-repository.com/images/doc6"
+                            ]
+                        },
+                        "EDD": {
+                            "status": "COMPLETED",
+                            "date": "2021-07-19T13:35:41Z",
+                            "documentUrls": [
+                                "https://documents-repository.com/images/doc7"
+                            ]
+                        },
+                        "addressVerificationDocumentsReceived": [
+                            "BANK_STATEMENT",
+                            "CREDIT_CARD",
+                            "TAX_RETURN",
+                            "PENSION_DOCUMENT",
+                            "PHONE_BILL"
+                        ],
+                        "pep": {
+                            "status": "MATCH",
+                            "lastScreenDate": "2021-07-19T13:35:41Z",
+                            "reason": "Matched"
+                        },
+                        "sanctions": {
+                            "status": "NO_MATCH",
+                            "lastScreenDate": "2021-07-19T13:35:41Z",
+                        }
                     }
-                    },
-                    "type": "PERSON"
                 },
                 "accounts": [
                     {
@@ -3845,31 +3847,214 @@ If initial balance must be granted to the customer, the operation will be treate
     + Attributes (Error Details)
 
 
-## Customer information  [/digitalwallets/v1/customers/{customerId}]
-### Get customer information [GET /digitalwallets/v1/customers/{customerId}]
-Get a customer by ID.
++ Request Onboard a customer - legal entity (application/json)
 
-+ Request
+    + Attributes (WalletCreateRequest)
+
+    + Body
+
+            {
+                "legalEntity": {
+                    "type": "LEGAL_ENTITY",
+                    "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                    "email": "office@example.com",
+                    "registrationIp": "82.92.102.112",
+                    "registrationDate": "2020-01-18T13:21:14Z",
+                    "companyName": "Example Corp",
+                    "companyIdentifier": "GB999 9999 73",
+                    "registrationAddress": {
+                        "countryCode": "GB",
+                        "stateProvince": null,
+                        "city": "London",
+                        "postalCode": "London",
+                        "streetAddress": "345 Oxford Str"
+                    },
+                    "operatingAddress": {
+                        "countryCode": "GB",
+                        "stateProvince": null,
+                        "city": "London",
+                        "postalCode": "London",
+                        "streetAddress": "345 Oxford Str"
+                    },
+                    "websiteUrl": "https://example.com",
+                    "representative": {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB"
+                    },
+                    "directors": [
+                        {
+                            "firstName": "John",
+                            "middleName": "Paul",
+                            "lastName": "Doe",
+                            "dateOfBirth": "1982-08-12",
+                            "countryCode": "GB",
+                            "identificationNumber": "AA 01 23 44 B",
+                            "identificationNumberIssuingCountryCode": "GB"
+                        }
+                    ],
+                    "ultimateBeneficialOwners": [
+                        {
+                            "firstName": "John",
+                            "middleName": "Paul",
+                            "lastName": "Doe",
+                            "dateOfBirth": "1982-08-12",
+                            "countryCode": "GB",
+                            "identificationNumber": "AA 01 23 44 B",
+                            "identificationNumberIssuingCountryCode": "GB",
+                            "ownershipPercentage": "51%"
+                        }
+                    ],
+                    "sourceOfFunding": "Short description of source of funding",
+                    "natureOfBusiness": "Short description of nature of business",
+                    "reasonToApply": "Short description"
+                },
+                "accounts": [
+                    {
+                        "currencyCode": "EUR",
+                        "hasIban": true
+                    }
+                ],
+                "termsAndConditionsAccepted": true,
+                "deviceInfo": {
+                    "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                    "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                    "appType": "WEB_APP"
+                },
+                "customerIp": "73.82.192.17",
+                "risk": {
+                    "customerRiskRating": 50
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "legalEntity": {
+                    "id": "11000000005236",
+                    "type": "LEGAL_ENTITY",
+                    "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                    "email": "office@example.com",
+                    "registrationIp": "82.92.102.112",
+                    "registrationDate": "2020-01-18T13:21:14Z",
+                    "companyName": "Example Corp",
+                    "companyIdentifier": "GB999 9999 73",
+                    "registrationAddress": {
+                        "countryCode": "GB",
+                        "stateProvince": null,
+                        "city": "London",
+                        "postalCode": "London",
+                        "streetAddress": "345 Oxford Str"
+                    },
+                    "operatingAddress": {
+                        "countryCode": "GB",
+                        "stateProvince": null,
+                        "city": "London",
+                        "postalCode": "London",
+                        "streetAddress": "345 Oxford Str"
+                    },
+                    "websiteUrl": "https://example.com",
+                    "representative": {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB"
+                    },
+                    "directors": [
+                        {
+                            "firstName": "John",
+                            "middleName": "Paul",
+                            "lastName": "Doe",
+                            "dateOfBirth": "1982-08-12",
+                            "countryCode": "GB",
+                            "identificationNumber": "AA 01 23 44 B",
+                            "identificationNumberIssuingCountryCode": "GB"
+                        }
+                    ],
+                    "ultimateBeneficialOwners": [
+                        {
+                            "firstName": "John",
+                            "middleName": "Paul",
+                            "lastName": "Doe",
+                            "dateOfBirth": "1982-08-12",
+                            "countryCode": "GB",
+                            "identificationNumber": "AA 01 23 44 B",
+                            "identificationNumberIssuingCountryCode": "GB",
+                            "ownershipPercentage": "51%"
+                        }
+                    ],
+                    "sourceOfFunding": "Short description of source of funding",
+                    "natureOfBusiness": "Short description of nature of business",
+                    "reasonToApply": "Short description"
+                },
+                "accounts": [
+                    {
+                        "id": "42342355",
+                        "customerId": "5435323362",
+                        "currencyCode": "GBP",
+                        "totalBalance": 0,
+                        "availableBalance": 0,
+                        "iban": "NL74ABNA1231242344",
+                        "hasIban": true,
+                        "bic": "ABNANL2A"
+                    }
+                ],
+                "termsAndConditionsAccepted": true
+            }
+
+
+
+## Customer information  [/digitalwallets/v1/customers/{customerId}]
+
+### Get customer - Generic [GET /digitalwallets/v1/customers/{customerId}]
+
+Get a customer by ID, regardless of type. The API will return a `customer` or a `legalEntity`, depending on the type of customer.
+
+These fields are common for both customer types:
+
+* id
+* externalId
+* type
+* email
+* mobile
+* restrictions
+* registrationIp
+* registrationDate
+
+
++ Parameters
+    + customerId (string, required)
+
+        Customer id
+
+
++ Request Person
 
     + Headers
 
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
 
-    + Parameters
-        + customerId (string, required)
-
-            Customer id
 
 + Response 200 (application/json)
 
-        OK
-
-    + Attributes (Customer)
+    + Attributes (CustomerPerson)
 
     + Body
 
             {
                 "id": "5435323362",
+                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "type": "PERSON",
                 "firstName": "John",
                 "lastName": "Doe",
                 "title": "Mr",
@@ -3883,7 +4068,6 @@ Get a customer by ID.
                 "registrationIp": "115.148.82.143",
                 "registrationDate": "2019-08-24T14:15:22Z",
                 "nationality": "GB",
-                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
                 "kyc": {
                     "status": "COMPLETED",
                     "idVerification": {
@@ -3920,7 +4104,6 @@ Get a customer by ID.
                         "reason": "Incorrect data"
                     }
                 },
-                "type": "PERSON",
                 "restrictions": [
                     {
                         "id": "b33cc1d1-1e87-486d-8aab-6d210c92a48e",
@@ -3933,12 +4116,177 @@ Get a customer by ID.
             }
 
 
+
+
++ Request Legal Entity
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
++ Response 200 (application/json)
+
+    + Attributes (CustomerLegalEntity)
+
+    + Body
+
+            {
+                "id": "1100000023414",
+                "type": "LEGAL_ENTITY",
+                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "email": "office@example.com",
+                "registrationIp": "82.92.102.112",
+                "registrationDate": "2020-01-18T13:21:14Z",
+                "companyName": "Example Corp",
+                "companyIdentifier": "GB999 9999 73",
+                "registrationAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "operatingAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "websiteUrl": "https://example.com",
+                "representative": {
+                    "firstName": "John",
+                    "middleName": "Paul",
+                    "lastName": "Doe",
+                    "dateOfBirth": "1982-08-12",
+                    "countryCode": "GB",
+                    "identificationNumber": "AA 01 23 44 B",
+                    "identificationNumberIssuingCountryCode": "GB"
+                },
+                "directors": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB"
+                    }
+                ],
+                "ultimateBeneficialOwners": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB",
+                        "ownershipPercentage": "51%"
+                    }
+                ],
+                "sourceOfFunding": "Short description of source of funding",
+                "natureOfBusiness": "Short description of nature of business",
+                "reasonToApply": "Short description",
+                "restrictions": []
+            }
+
 + Response 404
 
-        Customer with the requested ID was not found.
+        Customer with the requested ID was not found - neither a person nor a legal entity.
 
-### Update customer information [PATCH /digitalwallets/v1/customers/{customerId}]
-Update customer information.
+
+### Get customer - Person [GET /digitalwallets/v1/customer-persons/{customerId}]
+
++ Parameters
+    + customerId (string, required)
+
+        Customer id
+
++ Request Person
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
++ Response 200 (application/json)
+
+    + Attributes (CustomerPerson)
+
+    + Body
+
+            {
+                "id": "5435323362",
+                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "type": "PERSON",
+                "firstName": "John",
+                "lastName": "Doe",
+                "title": "Mr",
+                "email": "john.doe@example.com",
+                "mobile": "+4434525551511",
+                "address1": "23 Four Str",
+                "city": "London",
+                "zip": "E17 033",
+                "countryCode": "GB",
+                "birthDate": "1999-08-24",
+                "registrationIp": "115.148.82.143",
+                "registrationDate": "2019-08-24T14:15:22Z",
+                "nationality": "GB",
+                "kyc": {
+                    "status": "COMPLETED",
+                    "idVerification": {
+                        "status": "COMPLETED",
+                        "date": "2021-07-19T13:23:41Z"
+                    },
+                    "addressVerification": {
+                        "status": "COMPLETED",
+                        "date": "2021-07-19T13:25:41Z"
+                    },
+                    "faceMatch": {
+                        "status": "COMPLETED",
+                        "date": "2021-07-19T13:27:41Z"
+                    },
+                    "EDD": {
+                        "status": "COMPLETED",
+                        "date": "2021-07-19T13:35:41Z"
+                    },
+                    "addressVerificationDocumentsReceived": [
+                        "BANK_STATEMENT",
+                        "CREDIT_CARD",
+                        "TAX_RETURN",
+                        "PENSION_DOCUMENT",
+                        "PHONE_BILL"
+                    ],
+                    "pep": {
+                        "status": "MATCH",
+                        "lastScreenDate": "2021-07-19T13:35:41Z",
+                        "reason": "Matched"
+                    },
+                    "sanctions": {
+                        "status": "NO_MATCH",
+                        "lastScreenDate": "2021-07-19T13:35:41Z",
+                        "reason": "Incorrect data"
+                    }
+                },
+                "restrictions": [
+                    {
+                        "id": "b33cc1d1-1e87-486d-8aab-6d210c92a48e",
+                        "name": "ALL_TRANSACTIONS",
+                        "reason": "REGULATORY_LOCK",
+                        "requiredActions": "MANUAL_REVIEW",
+                        "lastChangedDate": "2021-07-19T13:35:41Z"
+                    }
+                ]
+            }
+
++ Response 404
+
+        Customer Person with the requested ID was not found.
+
+
+### Update customer - Person [PATCH /digitalwallets/v1/customer-persons/{customerId}]
+
 
 + Request (application/json)
 
@@ -4105,6 +4453,238 @@ Update customer information.
 + Response 404
 
         Not Found
+
+
+### Get customer - Legal entity [GET /digitalwallets/v1/customer-legal-entitiess/{customerId}]
+
++ Parameters
+    + customerId (string, required)
+
+        Customer id
+
++ Request Legal Entity
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
++ Response 200 (application/json)
+
+    + Attributes (CustomerLegalEntity)
+
+    + Body
+
+            {
+                "id": "1100000023414",
+                "type": "LEGAL_ENTITY",
+                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "email": "office@example.com",
+                "registrationIp": "82.92.102.112",
+                "registrationDate": "2020-01-18T13:21:14Z",
+                "companyName": "Example Corp",
+                "companyIdentifier": "GB999 9999 73",
+                "registrationAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "operatingAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "websiteUrl": "https://example.com",
+                "representative": {
+                    "firstName": "John",
+                    "middleName": "Paul",
+                    "lastName": "Doe",
+                    "dateOfBirth": "1982-08-12",
+                    "countryCode": "GB",
+                    "identificationNumber": "AA 01 23 44 B",
+                    "identificationNumberIssuingCountryCode": "GB"
+                },
+                "directors": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB"
+                    }
+                ],
+                "ultimateBeneficialOwners": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB",
+                        "ownershipPercentage": "51%"
+                    }
+                ],
+                "sourceOfFunding": "Short description of source of funding",
+                "natureOfBusiness": "Short description of nature of business",
+                "reasonToApply": "Short description",
+                "restrictions": []
+            }
+
++ Response 404
+
+        Customer Legal Entity with the requested ID was not found.
+
+
+### Update customer - Legal entity [PATCH /digitalwallets/v1/customer-legal-entitiess/{customerId}]
+
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Signature: <<HMAC signature>>
+
+    + Parameters
+        + customerId (string, required)
+
+            Customer id
+
+    + Body
+
+            {
+                "email": "office@example.com",
+                "companyName": "Example Corp",
+                "companyIdentifier": "GB999 9999 73",
+                "registrationAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "operatingAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "websiteUrl": "https://example.com",
+                "representative": {
+                    "firstName": "John",
+                    "middleName": "Paul",
+                    "lastName": "Doe",
+                    "dateOfBirth": "1982-08-12",
+                    "countryCode": "GB",
+                    "identificationNumber": "AA 01 23 44 B",
+                    "identificationNumberIssuingCountryCode": "GB"
+                },
+                "directors": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB"
+                    }
+                ],
+                "ultimateBeneficialOwners": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB",
+                        "ownershipPercentage": "51%"
+                    }
+                ],
+                "sourceOfFunding": "Short description of source of funding",
+                "natureOfBusiness": "Short description of nature of business",
+                "reasonToApply": "Short description"
+            }
+
++ Response 200 (application/json)
+
+    + Attributes (CustomerLegalEntity)
+
+    + Body
+
+            {
+                "id": "1100000023414",
+                "type": "LEGAL_ENTITY",
+                "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "email": "office@example.com",
+                "registrationIp": "82.92.102.112",
+                "registrationDate": "2020-01-18T13:21:14Z",
+                "companyName": "Example Corp",
+                "companyIdentifier": "GB999 9999 73",
+                "registrationAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "operatingAddress": {
+                    "countryCode": "GB",
+                    "stateProvince": null,
+                    "city": "London",
+                    "postalCode": "London",
+                    "streetAddress": "345 Oxford Str"
+                },
+                "websiteUrl": "https://example.com",
+                "representative": {
+                    "firstName": "John",
+                    "middleName": "Paul",
+                    "lastName": "Doe",
+                    "dateOfBirth": "1982-08-12",
+                    "countryCode": "GB",
+                    "identificationNumber": "AA 01 23 44 B",
+                    "identificationNumberIssuingCountryCode": "GB"
+                },
+                "directors": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB"
+                    }
+                ],
+                "ultimateBeneficialOwners": [
+                    {
+                        "firstName": "John",
+                        "middleName": "Paul",
+                        "lastName": "Doe",
+                        "dateOfBirth": "1982-08-12",
+                        "countryCode": "GB",
+                        "identificationNumber": "AA 01 23 44 B",
+                        "identificationNumberIssuingCountryCode": "GB",
+                        "ownershipPercentage": "51%"
+                    }
+                ],
+                "sourceOfFunding": "Short description of source of funding",
+                "natureOfBusiness": "Short description of nature of business",
+                "reasonToApply": "Short description",
+                "restrictions": []
+            }
+
++ Response 404
+
+        Customer Legal Entity with the requested ID was not found.
 
 
 ### Get customer instruments [GET /digitalwallets/v1/instruments?{customerId}]
@@ -6763,7 +7343,9 @@ This is applicable only for STANDALONE_CREDIT.
 Wallet composite model
 
 ### Properties
-+ `customer` (Customer, required)
+
++ `customer` (CustomerPerson)
++ `legalEntity` (CustomerLegalEntity)
 + `accounts` (array[AccountRequest], required)
 + `termsAndConditionsAccepted` (boolean, required)
 + `deviceInfo` (deviceInfoRequest, required)
@@ -6772,19 +7354,32 @@ Wallet composite model
 
 ## Customer (object)
 
+### Properties
++ `id`: `115049850868` (string, optional)
++ `externalId`: `d6f475fe-57c9-4865-9316-0c3b8e8128d4` (string, required) - Any external id, e.g. UUID or a numeric id
+    _length==40_
++ `email` (string, optional) - Primary email address; At least one of **`email` or `mobile` is required** when creating a new wallet!
+    _length<=150_
++ `mobile` (string, optional) - Mobile phone number; At least one of **`email` or `mobile` is required** when creating a new wallet!
+    _length<=50_
++ `registrationIp` (string, required) - IPv4 address from which the customer has registered.
+    _IPv4_
++ `registrationDate` (string, optional) - Date of registration at the Merchant system
+    _ISO 8601 datetime_
++ `restrictions` (array[Restriction], optional)
+
+
+## CustomerPerson (Customer)
 
 ### Properties
-+ `id` (string, optional)
++ `type`: `PERSON` (enum[string], required) - Type of Customer
+    + `PERSON`
 + `firstName` (string, required)
     _length<=50_
 + `lastName` (string, required)
     _length<=50_
 + `title` (string, optional) - Personal title, Mr., Dr., etc.
     _length<=15_
-+ `email` (string, optional) - Primary email address; At least one of **`email` or `mobile` is required** when creating a new wallet!
-    _length<=150_
-+ `mobile` (string, optional) - Mobile phone number; At least one of **`email` or `mobile` is required** when creating a new wallet!
-    _length<=50_
 + `address1` (string, required)
     _length<=200_
 + `address2` (string, optional)
@@ -6799,20 +7394,34 @@ Wallet composite model
     _length==2_
 + `birthDate` (string, required)
     _ISO 8601 date_
-+ `registrationIp` (string, required) - IPv4 address from which the customer has registered.
-    _IPv4_
-+ `registrationDate` (string, optional) - Date of registration at the Merchant system
-    _ISO 8601 datetime_
 + `nationality`: `GB` (string, required) - ISO-3166 Alpha 2 country code
     _length==2_
-+ `externalId`: `d6f475fe-57c9-4865-9316-0c3b8e8128d4` (string, required) - Any external id, e.g. UUID or a numeric id
-    _length==40_
 + `kyc` (KYC, required)
-+ `restrictions` (array[Restriction], optional)
-+ `type` (enum[string], required) - Type of Customer
+
+
+
+## CustomerLegalEntity (Customer)
+
+### Properties
++ `type`: `LEGAL_ENTITY` (enum[string], required) - Type of Customer
     + `PERSON`
-    + `LEGAL_ENTITY`
-+ `legalEntityDetails` (LegalEntityDetails) - Only required when `type == 'LEGAL_ENTITY'`
++ `companyName`: `Example Corp` (string, required) - Name of the company
+    _length<=100_
++ `companyIdentifier`: `GB999 9999 73` (string, required) - official company id according to local business registration agency in the country of registration; e.g. VAT Reg No in UK, Umsatzsteuer-Identifikationsnummer in Germany
+    _length<=100_
++ `registrationAddress` (CoarseAddress, required)
++ `operatingAddress` (CoarseAddress, required)
++ `websiteUrl`: `https://example.com` (string, required)
+    _length<=500_
++ `representative` (LegalEntityPerson, required)
++ `directors` (array[LegalEntityPerson], required)
++ `ultimateBeneficialOwners` (array[LegalEntityOwner], required)
++ `sourceOfFunding` (string, required)
+    _length<=100_
++ `natureOfBusiness` (string, required)
+    _length<=100_
++ `reasonToApply` (string)
+    _length<=200_
 
 ## Restriction (object)
 
@@ -7561,35 +8170,6 @@ Account specific view of the slip.
 + isCustomerIPTrusted (boolean, optional)
 + isBeneficiaryTrusted (boolean, optional)
 
-## LegalEntityDetails
-
-### Properties
-+ `customerRole` (enum[string], required) - role of the customer in the legal entity
-    + OWNER
-    + INVESTOR
-    + MANAGER
-+ `companyName`: `Example Corp` (string, required) - Name of the company
-    _length<=100_
-+ `companyId`: `GB999 9999 73` (string, required) - official company id according to local business registration agency in the country of registration; e.g. VAT Reg No in UK, Umsatzsteuer-Identifikationsnummer in Germany
-    _length<=100_
-+ `sourceOfFunding` (string, required)
-    _length<=100_
-+ `natureOfBusiness` (string, required)
-    _length<=100_
-+ `reasonToApply` (string)
-    _length<=200_
-+ `registrationAddress` (CoarseAddress, required)
-+ `operatingAddress` (CoarseAddress, required)
-+ `phone`: `+445432432` (string, required)
-    _length<=50_
-+ `websiteUrl`: `https://example.com` (string, required)
-    _length<=500_
-+ `directors` (array[LegalEntityPerson], required)
-+ `ultimateBeneficialOwners` (array[LegalEntityPersonUbo], required):
-+ `authorizedDealer` (LegalEntityPerson, required)
-    + `email`: `dealer@example.com` (string, required)
-
-
 ## LegalEntityPerson
 
 ### Properties
@@ -7609,7 +8189,7 @@ Account specific view of the slip.
     _length<=2_
 
 
-## LegalEntityPersonUbo (LegalEntityPerson)
+## LegalEntityOwner (LegalEntityPerson)
 
 ### Properties
 
@@ -7622,7 +8202,11 @@ Account specific view of the slip.
 
 + `countryCode`: `GB` (string, required)
     _length<=2_
++ `stateProvince`: `null` (string)
+    _length<=2_
 + `city`: `London` (string, required)
     _length<=50_
++ `postalCode`: `London` (string, required)
+    _length<=15_
 + `streetAddress`: `345 Oxford Str` (string, required)
     _length<=400_
