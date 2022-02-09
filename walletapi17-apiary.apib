@@ -7,12 +7,13 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
-| V1      | 9 Feb 2022  | - Update on corporate customer address fields
-| V1      | 25 Jan 2022 | - Updates to corportate customers API
-| V1      | 20 Jan 2022 | - Updated documentation for account assigned webhook format
-| V1      | 18 Jan 2022 | - Updated RT examples for currency GBP
-| V1      | 17 Jan 2022 | - Updated Card & RT flows
-|         |             | - Added Payment Handle webhooks
+| V1      | 9 Feb 2022  | - Added fields in KYC section for specifying the verifications vendor                                       |
+| V1      | 9 Feb 2022  | - Update on corporate customer address fields                                                               |
+| V1      | 25 Jan 2022 | - Updates to corportate customers API                                                                       |
+| V1      | 20 Jan 2022 | - Updated documentation for account assigned webhook format                                                 |
+| V1      | 18 Jan 2022 | - Updated RT examples for currency GBP                                                                      |
+| V1      | 17 Jan 2022 | - Updated Card & RT flows                                                                                   |
+|         |             | - Added Payment Handle webhooks                                                                             |
 | V1      | 12 Jan 2022 | - Added support for corporate customers                                                                     |
 | V1      | 27 Dec 2021 | - Added new restrictions synchronization APIs                                                               |
 | V1      | 21 Dec 2021 | - Updated error documentation                                                                               |
@@ -3687,7 +3688,9 @@ If initial balance must be granted to the customer, the operation will be treate
                             "documentUrls": [
                                 "https://documents-repository.com/images/doc1",
                                 "https://documents-repository.com/images/doc2"
-                            ]
+                            ],
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "addressVerification": {
                             "status": "COMPLETED",
@@ -3695,7 +3698,9 @@ If initial balance must be granted to the customer, the operation will be treate
                             "documentUrls": [
                                 "https://documents-repository.com/images/doc3",
                                 "https://documents-repository.com/images/doc4"
-                            ]
+                            ],
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "faceMatch": {
                             "status": "COMPLETED",
@@ -3703,14 +3708,18 @@ If initial balance must be granted to the customer, the operation will be treate
                             "documentUrls": [
                                 "https://documents-repository.com/images/doc5",
                                 "https://documents-repository.com/images/doc6"
-                            ]
+                            ],
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "EDD": {
                             "status": "COMPLETED",
                             "date": "2021-07-19T13:35:41Z",
                             "documentUrls": [
                                 "https://documents-repository.com/images/doc7"
-                            ]
+                            ],
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "addressVerificationDocumentsReceived": [
                             "BANK_STATEMENT",
@@ -3775,19 +3784,27 @@ If initial balance must be granted to the customer, the operation will be treate
                         "status": "COMPLETED",
                         "idVerification": {
                             "status": "COMPLETED",
-                            "date": "2021-07-19T13:23:41Z"
+                            "date": "2021-07-19T13:23:41Z",
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "addressVerification": {
                             "status": "COMPLETED",
-                            "date": "2021-07-19T13:25:41Z"
+                            "date": "2021-07-19T13:25:41Z",
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "faceMatch": {
                             "status": "COMPLETED",
-                            "date": "2021-07-19T13:27:41Z"
+                            "date": "2021-07-19T13:27:41Z",
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "EDD": {
                             "status": "COMPLETED",
-                            "date": "2021-07-19T13:35:41Z"
+                            "date": "2021-07-19T13:35:41Z",
+                            "electronicallyVerified": true,
+                            "vendor": "JUMIO"
                         },
                         "addressVerificationDocumentsReceived": [
                             "BANK_STATEMENT",
@@ -4077,19 +4094,27 @@ These fields are common for both customer types:
                     "status": "COMPLETED",
                     "idVerification": {
                         "status": "COMPLETED",
-                        "date": "2021-07-19T13:23:41Z"
+                        "date": "2021-07-19T13:23:41Z",
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "addressVerification": {
                         "status": "COMPLETED",
-                        "date": "2021-07-19T13:25:41Z"
+                        "date": "2021-07-19T13:25:41Z",
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "faceMatch": {
                         "status": "COMPLETED",
-                        "date": "2021-07-19T13:27:41Z"
+                        "date": "2021-07-19T13:27:41Z",
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "EDD": {
                         "status": "COMPLETED",
-                        "date": "2021-07-19T13:35:41Z"
+                        "date": "2021-07-19T13:35:41Z",
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "addressVerificationDocumentsReceived": [
                         "BANK_STATEMENT",
@@ -4331,7 +4356,9 @@ These fields are common for both customer types:
                         "documentUrls": [
                             "https://documents-repository.com/images/doc1",
                             "https://documents-repository.com/images/doc2"
-                        ]
+                        ],
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "addressVerification": {
                         "status": "COMPLETED",
@@ -4339,7 +4366,9 @@ These fields are common for both customer types:
                         "documentUrls": [
                             "https://documents-repository.com/images/doc3",
                             "https://documents-repository.com/images/doc4"
-                        ]
+                        ],
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "faceMatch": {
                         "status": "COMPLETED",
@@ -4347,14 +4376,18 @@ These fields are common for both customer types:
                         "documentUrls": [
                             "https://documents-repository.com/images/doc5",
                             "https://documents-repository.com/images/doc6"
-                        ]
+                        ],
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "EDD": {
                         "status": "COMPLETED",
                         "date": "2021-07-19T13:35:41Z",
                         "documentUrls": [
                             "https://documents-repository.com/images/doc7"
-                        ]
+                        ],
+                        "electronicallyVerified": true,
+                        "vendor": "JUMIO"
                     },
                     "addressVerificationDocumentsReceived": [
                         "BANK_STATEMENT",
@@ -4446,7 +4479,7 @@ These fields are common for both customer types:
                         "lastChangedDate": "2021-07-19T13:35:41Z"
                     }
                 ]
-            }
+vend            }
 
 
 + Response 400 (application/json)
@@ -8019,6 +8052,9 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
     + `NOT_COMPLETED`
 + `date`: `2021-07-19T13:23:41Z` (string, optional)
 + `documentUrls` (array[string], optional)
++ `electronicallyVerified`: true (boolean)
++ `vendor`: `JUMIO` (string)
+
 
 ## KycScreenItem (object)
 
