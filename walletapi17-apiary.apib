@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 15 Feb 2022 | - Fixed requiredActions for restrictions                                                                    |
 | V1      | 9 Feb 2022  | - Added fields in KYC section for specifying the verifications vendor                                       |
 | V1      | 9 Feb 2022  | - Update on corporate customer address fields                                                               |
 | V1      | 25 Jan 2022 | - Updates to corportate customers API                                                                       |
@@ -3829,7 +3830,7 @@ If initial balance must be granted to the customer, the operation will be treate
                             "id": "b33cc1d1-1e87-486d-8aab-6d210c92a48e",
                             "name": "ALL_TRANSACTIONS",
                             "reason": "REGULATORY_LOCK",
-                            "requiredActions": "MANUAL_REVIEW",
+                            "requiredActions": ["MANUAL_REVIEW"],
                             "lastChangedDate": "2021-07-19T13:35:41Z"
                         }
                     ]
@@ -4139,7 +4140,7 @@ These fields are common for both customer types:
                         "id": "b33cc1d1-1e87-486d-8aab-6d210c92a48e",
                         "name": "ALL_TRANSACTIONS",
                         "reason": "REGULATORY_LOCK",
-                        "requiredActions": "MANUAL_REVIEW",
+                        "requiredActions": ["MANUAL_REVIEW"],
                         "lastChangedDate": "2021-07-19T13:35:41Z"
                     }
                 ]
@@ -4306,7 +4307,7 @@ These fields are common for both customer types:
                         "id": "b33cc1d1-1e87-486d-8aab-6d210c92a48e",
                         "name": "ALL_TRANSACTIONS",
                         "reason": "REGULATORY_LOCK",
-                        "requiredActions": "MANUAL_REVIEW",
+                        "requiredActions": ["MANUAL_REVIEW"],
                         "lastChangedDate": "2021-07-19T13:35:41Z"
                     }
                 ]
@@ -4475,7 +4476,7 @@ These fields are common for both customer types:
                         "id": "b33cc1d1-1e87-486d-8aab-6d210c92a48e",
                         "name": "ALL_TRANSACTIONS",
                         "reason": "REGULATORY_LOCK",
-                        "requiredActions": "MANUAL_REVIEW",
+                        "requiredActions": ["MANUAL_REVIEW"],
                         "lastChangedDate": "2021-07-19T13:35:41Z"
                     }
                 ]
@@ -7525,37 +7526,38 @@ Wallet composite model
     + UNDER_INVESTIGATION
     + WALLET_RECOVERY_PROCEDURE
     + OTHER
-+ `requiredActions` (enum[string], required)
-    + ADDRESS_REVERIFICATION
-    + CONTACT_INVESTIGATIONS_TEAM
-    + EXPLANATION_OF_ACTIVITY
-    + KYC_DOCS_ONLY
-    + KYC_VERIFICATION
-    + MANUAL_REVIEW
-    + PEP_DECLARATION
-    + PEP_DECLARATION_OCCUPATION_SPOUSE
-    + PEP_SANCTIONS_ALL_QUESTIONS
-    + PEP_SANCTIONS_OCCUPATION_SPOUSE
-    + SUBMIT_AD
-    + SUBMIT_AD_BANK_STATEMENT
-    + SUBMIT_AD_COUNCIL_BILL
-    + SUBMIT_AD_COURT_DOCUMENT
-    + SUBMIT_AD_CREDIT_CARD_STATEMENT
-    + SUBMIT_AD_LEASE_TENANT_CONTRACT
-    + SUBMIT_AD_OTHER
-    + SUBMIT_AD_PENSION_DOCUMENT
-    + SUBMIT_AD_SCHOOL_ENROLLMENT_LETTER
-    + SUBMIT_AD_TAX_RETURN_FORM
-    + SUBMIT_AD_UTILITY_BILL
-    + SUBMIT_HOLDING_ID
-    + SUBMIT_ID
-    + SUBMIT_ID_DRIVER_LICENSE
-    + SUBMIT_ID_FACE_VERIFICATION
-    + SUBMIT_ID_IDENTITY_CARD
-    + SUBMIT_ID_PASSPORT
-    + SUBMIT_ID_RESIDENCE_PERMIT
-    + WAITING_FOR_DOCUMENTS
-    + OTHER
++ `requiredActions` (array[enum], required)
+    + Members
+        + ADDRESS_REVERIFICATION
+        + CONTACT_INVESTIGATIONS_TEAM
+        + EXPLANATION_OF_ACTIVITY
+        + KYC_DOCS_ONLY
+        + KYC_VERIFICATION
+        + MANUAL_REVIEW
+        + PEP_DECLARATION
+        + PEP_DECLARATION_OCCUPATION_SPOUSE
+        + PEP_SANCTIONS_ALL_QUESTIONS
+        + PEP_SANCTIONS_OCCUPATION_SPOUSE
+        + SUBMIT_AD
+        + SUBMIT_AD_BANK_STATEMENT
+        + SUBMIT_AD_COUNCIL_BILL
+        + SUBMIT_AD_COURT_DOCUMENT
+        + SUBMIT_AD_CREDIT_CARD_STATEMENT
+        + SUBMIT_AD_LEASE_TENANT_CONTRACT
+        + SUBMIT_AD_OTHER
+        + SUBMIT_AD_PENSION_DOCUMENT
+        + SUBMIT_AD_SCHOOL_ENROLLMENT_LETTER
+        + SUBMIT_AD_TAX_RETURN_FORM
+        + SUBMIT_AD_UTILITY_BILL
+        + SUBMIT_HOLDING_ID
+        + SUBMIT_ID
+        + SUBMIT_ID_DRIVER_LICENSE
+        + SUBMIT_ID_FACE_VERIFICATION
+        + SUBMIT_ID_IDENTITY_CARD
+        + SUBMIT_ID_PASSPORT
+        + SUBMIT_ID_RESIDENCE_PERMIT
+        + WAITING_FOR_DOCUMENTS
+        + OTHER
 + `lastChangeDate`: `2021-09-12T17:18:31Z` (string, required)
 
 ## RestrictionRequest (object)
