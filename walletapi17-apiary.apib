@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 18 Feb 2022 | - Add NotificationResendTask API to request resend of webhooks                                              |
 | V1      | 15 Feb 2022 | - Fixed requiredActions for restrictions                                                                    |
 | V1      | 9 Feb 2022  | - Added fields in KYC section for specifying the verifications vendor                                       |
 | V1      | 9 Feb 2022  | - Update on corporate customer address fields                                                               |
@@ -5619,6 +5620,49 @@ After the transfer is processed, a several webhooks will be sent back to signify
                 "merchantRefNum": "5040452805",
                 "customerIp": "115.148.82.143"
             }
+            
+# Group Notifications
+
+Notifications API enables the Merchant to get information about sent notification events 
+via different transport mechanisms, such as REST HTTP calls (webhooks) or message queues. 
+It also enables the Merchant to request re-sending of events that have already been sent and 
+delivered successfully to the Merchant. 
+
+## Notification Resend Tasks [/digitalwallets/v1/notification-resend-tasks]            
+
+### Create notificaton resend task [POST]
+
+Request re-sending of notifications (webhooks) that match certain criteria by creating a new notification resend task. After the task is created, all events that match the requested criteria will be enqueued for re-sending. 
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
+    + Attributes (NotificationResendTask)
+
+    + Body
+
+           {
+              "eventType": "TRANSACTION",
+              "startDate": "2022-02-18T09:54:50Z",
+              "endDate": "2022-02-18T10:54:50Z"
+            }
+
++ Response 201 (application/json)
+
+        Created
+
+    + Body
+
+            {
+              "id": "1234567890",
+              "eventType": "TRANSACTION",
+              "startDate": "2022-02-18T10:54:50Z",
+              "endDate": "2022-02-18T10:54:50Z"
+            }
+
 
 # Group Webhooks
 
@@ -7774,6 +7818,20 @@ List of accounts.
 ### Properties
 + `authorizationHolds` (array[AuthorizationHold], optional)
 + `meta` (PagingResultMeta, optional)
+
+## NotificationResendTask (object)
+
+### Properties
++ `id`: `115049850868` (string, optional) - Server generated ID of the task.
++ `eventType` (enum) - Type of webhook events that will be re-sent.
+    + Members
+        + TRANSACTION - Events related to a transaction.
+        + CUSTOMER_RESTRICTION - Event related to restrictions on a customer.
+        + ACCOUNT - Events related to a wallet account
++ `startDate` (string, optional) - Re-send notifications created during period specified by startDate and endDate properties. Further restrictions of the maximum period length may be enforced by the server.
+    _ISO 8601 datetime_
++ `endDate` (string, optional) - Re-send notifications created during period specified by startDate and endDate properties. Further restrictions of the maximum period length may be enforced by the server.
+    _ISO 8601 datetime_    
 
 
 ## Link (object)
