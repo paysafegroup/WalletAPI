@@ -7,6 +7,16 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 14 Apr 2022 | - Add screeningId to Transfers                                                                              |
+| V1      | 12 Apr 2022 | - Add customerIds (array), accountIds(array) and merchantRefNums(array) to NotificationResendTask           |
+| V1      | 07 Apr 2022 | - Updates on the transaction screening API                                                                  |
+| V1      | 01 Apr 2022 | - Add example request and response for create customer wallet for a legal entity                            |
+| V1      | 01 Apr 2022 | - added endpoint for tranasaction screening                                                                 |
+| V1      | 28 Mar 2022 | - added notifications API specific error codes.                                                             |
+| V1      | 10 Mar 2022 | - ownershipPercentage set to optional. Add representatives array to legal entity customer.                  |
+| V1      | 28 Feb 2022 | - Added transfer reason                                                                                     |
+| V1      | 23 Feb 2022 | - Remove LegalEntityOwner                                                                                   |
+| V1      | 23 Feb 2022 | - Add model KybDocument. Add kybDocuments to CustomerLegalEntity,kybDocuments and kyc to  LegalEntityPerson.|
 | V1      | 18 Feb 2022 | - Add NotificationResendTask API to request resend of webhooks                                              |
 | V1      | 15 Feb 2022 | - Fixed requiredActions for restrictions                                                                    |
 | V1      | 9 Feb 2022  | - Added fields in KYC section for specifying the verifications vendor                                       |
@@ -1749,6 +1759,14 @@ This is a read-only raw response returned by an acquirer.
 |              403 | DW-PERMISSION-TO-WITHDRAW | You do not have permission to withdraw.        |
 |              400 | DW-BANK-VALIDATION-FAILED | Bank validation failed.                        |
 |              400 | DW-BANK-DECLINE           | Declined by the processing bank.               |
+
+#### Notification API Errors
+
+| HTTP Status Code |                      Error Code                         |                    Message                                                                         |
+|------------------|---------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+|              400 | DW-NOTIFICATION-RESEND-TASK-BAD-REQUEST                 | Bad request for notification resend task operation.                                                |
+|              400 | DW_NOTIFICATION_RESEND_TASK_MISSING_REQUIRED_PARAMETERS | The request for notification resend request is missing required parameters.                        |
+|              400 | DW_NOTIFICATION_RESEND_TASK_INVALID_REQUEST_TIMEFRAME   | The defined timeframe for notification resend request is invalid. It is too long or in the future. |
 
 
 ### Transfer webhook errors
@@ -3759,6 +3777,7 @@ If initial balance must be granted to the customer, the operation will be treate
                 }
             }
 
+
 + Response 201 (application/json)
 
         Created.
@@ -3851,6 +3870,243 @@ If initial balance must be granted to the customer, the operation will be treate
                 "termsAndConditionsAccepted": true
             }
 
++ Request Onboard a customer - legal entity (application/json)
+
+        + Headers
+                Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+                Signature: <<HMAC signature>>
+
+
+    + Body
+
+            {
+                "legalEntity":
+                {
+                    "externalId": "66327539214",
+                    "email": "info@company.com",
+                    "websiteUrl": "www.company.com",
+                    "directors":
+                    [
+                        {
+                            "firstName": "John",
+                            "lastName": "Smith",
+                            "dateOfBirth": "1970-01-01",
+                            "identificationNumber": "1234567890",
+                            "countryCode": "DE",
+                            "identificationNumberIssuingCountryCode": "DE"
+                        }
+                    ],
+                    "sourceOfFunding": "Describe source of funding",
+                    "companyName": "Company Ltd.",
+                    "operatingAddress":
+                    {
+                        "countryCode": "DE",
+                        "city": "Berlin",
+                        "address1": "12 Street str.",
+                        "address2": "floor 3, flat 123",
+                        "postalCode": "W2 123"
+                    },
+                    "natureOfBusiness": "Trading, logistics",
+                    "registrationAddress":
+                    {
+                        "countryCode": "DE",
+                        "city": "Berlin",
+                        "address1": "123 Linden str.",
+                        "address2": null,
+                        "postalCode": "W1 123"
+                    },
+                    "ultimateBeneficialOwners":
+                    [
+                        {
+                            "firstName": "Frank",
+                            "lastName": "Smith",
+                            "dateOfBirth": "1976-09-11",
+                            "identificationNumber": "AA 01 23 44 B",
+                            "ownershipPercentage": "2",
+                            "countryCode": "DE",
+                            "identificationNumberIssuingCountryCode": "DE"
+                        }
+                    ],
+                    "companyIdentifier": "9876543210",
+                    "representative":
+                    {
+                        "firstName": "Clive",
+                        "lastName": "Bean",
+                        "dateOfBirth": "1981-09-11",
+                        "countryCode": "DE",
+                        "identificationNumber": "123123123",
+                        "identificationNumberIssuingCountryCode": "DE"
+                    },
+                    "representatives":
+                    [
+                        {
+                            "firstName": "Edward",
+                            "lastName": "Bone",
+                            "dateOfBirth": "1987-09-11",
+                            "identificationNumber": "43290234234",
+                            "countryCode": "DE",
+                            "identificationNumberIssuingCountryCode": "DE"
+                        }
+                    ],
+                    "title": "Mr",
+                    "city": "Berlin",
+                    "zip": "SM3 9AR",
+                    "countryCode": "DE",
+                    "birthDate": "1983-05-07",
+                    "registrationIp": "115.148.82.143",
+                    "nationality": "DE",
+                    "registrationDate": "2020-03-16T13:56:51Z"
+                },
+                "deviceInfo":
+                {
+                    "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                    "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+                    "appType": "WEB_APP"
+                },
+                "customerIp": "115.148.82.143",
+                "accounts":
+                [
+                    {
+                        "currencyCode": "EUR",
+                        "totalBalance": 0,
+                        "hasIban": true
+                    }
+                ],
+                "termsAndConditionsAccepted": true,
+                "risk":
+                {
+                    "customerRiskRating": 5565,
+                    "isScaPerformed": true,
+                    "isCustomerIPTrusted": true,
+                    "isBeneficiaryTrusted": true
+                }
+            }
+
++ Response 201 (application/json)
+
+        Created.
+
+    + Body
+
+            {
+                "customer": null,
+                "legalEntity": {
+                    "id": "1100000000408856",
+                    "externalId": "66327539214",
+                    "type": "LEGAL_ENTITY",
+                    "email": "info@company.com",
+                    "mobile": null,
+                    "registrationIp": "115.148.82.143",
+                    "registrationDate": "2022-04-07T09:22:14.956Z",
+                    "restrictions": [],
+                    "companyName": "Company Ltd.",
+                    "companyIdentifier": "9876543210",
+                    "registrationAddress": {
+                        "countryCode": "DE",
+                        "stateProvince": null,
+                        "city": "Berlin",
+                        "postalCode": "1234",
+                        "address1": "123 Linden str.",
+                        "address2": null
+                    },
+                    "operatingAddress": {
+                        "countryCode": "DE",
+                        "stateProvince": null,
+                        "city": "Berlin",
+                        "postalCode": "W1 123",
+                        "address1": "12 Street str.",
+                        "address2": "floor 3, flat 123"
+                    },
+                    "websiteUrl": "www.company.com",
+                    "representative": {
+                        "id": "3150",
+                        "firstName": "Clive",
+                        "middleName": null,
+                        "lastName": "Bean",
+                        "dateOfBirth": "1981-09-11",
+                        "countryCode": "DE",
+                        "identificationNumber": "123123123",
+                        "identificationNumberIssuingCountryCode": "DE",
+                        "customerLegalEntityId": "1100000000408856",
+                        "kyc": null,
+                        "kybDocuments": null
+                    },
+                    "directors": [
+                        {
+                            "id": "3152",
+                            "firstName": "John",
+                            "middleName": null,
+                            "lastName": "Smith",
+                            "dateOfBirth": "1970-01-01",
+                            "countryCode": "DE",
+                            "identificationNumber": "1234567890",
+                            "identificationNumberIssuingCountryCode": "DE",
+                            "customerLegalEntityId": "1100000000408856",
+                            "kyc": null,
+                            "kybDocuments": null
+                        }
+                    ],
+                    "ultimateBeneficialOwners": [
+                        {
+                            "id": "3153",
+                            "firstName": "Frank",
+                            "middleName": null,
+                            "lastName": "Smith",
+                            "dateOfBirth": "1976-09-11",
+                            "countryCode": "DE",
+                            "identificationNumber": "AA 01 23 44 B",
+                            "identificationNumberIssuingCountryCode": "DE",
+                            "customerLegalEntityId": "1100000000408856",
+                            "kyc": null,
+                            "kybDocuments": null,
+                            "ownershipPercentage": "2"
+                        }
+                    ],
+                    "representatives": [
+                        {
+                            "id": "3151",
+                            "firstName": "Edward",
+                            "middleName": null,
+                            "lastName": "Bone",
+                            "dateOfBirth": "1987-09-11",
+                            "countryCode": "DE",
+                            "identificationNumber": "43290234234",
+                            "identificationNumberIssuingCountryCode": "DE",
+                            "customerLegalEntityId": "1100000000408856",
+                            "kyc": null,
+                            "kybDocuments": null
+                        }
+                    ],
+                    "sourceOfFunding": "Describe source of funding",
+                    "natureOfBusiness": "Trading, logistics",
+                    "reasonToApply": null,
+                    "kybDocuments": null
+                },
+                "accounts": [
+                    {
+                        "id": "1100000000408695",
+                        "customerId": "1100000000408856",
+                        "externalId": null,
+                        "currencyCode": "EUR",
+                        "totalBalance": 0,
+                        "availableBalance": 0,
+                        "iban": "LU2550771499998",
+                        "bic": "BCIRLULL",
+                        "creationTime": null,
+                        "hasIban": true
+                    }
+                ],
+                "termsAndConditionsAccepted": true,
+                "deviceInfo": null,
+                "customerIp": "115.148.82.143",
+                "risk": {
+                    "customerRiskRating": 5565,
+                    "isScaPerformed": true,
+                    "isCustomerIPTrusted": true,
+                    "isBeneficiaryTrusted": true
+                }
+            }
+
 
 + Response 400 (application/json)
 
@@ -3908,6 +4164,17 @@ If initial balance must be granted to the customer, the operation will be treate
                         "identificationNumber": "AA 01 23 44 B",
                         "identificationNumberIssuingCountryCode": "GB"
                     },
+                     "representatives": [
+                        {
+                            "firstName": "John",
+                            "middleName": "Paul",
+                            "lastName": "Doe",
+                            "dateOfBirth": "1982-08-12",
+                            "countryCode": "GB",
+                            "identificationNumber": "AA 01 23 44 B",
+                            "identificationNumberIssuingCountryCode": "GB"
+                        }
+                    ],
                     "directors": [
                         {
                             "firstName": "John",
@@ -4334,6 +4601,8 @@ These fields are common for both customer types:
 
             Customer id
 
+    + Attributes (CustomerPerson)
+
     + Body
 
             {
@@ -4481,12 +4750,10 @@ These fields are common for both customer types:
                         "lastChangedDate": "2021-07-19T13:35:41Z"
                     }
                 ]
-vend            }
+            }
 
 
 + Response 400 (application/json)
-
-        Bad Request
 
     + Attributes (Error Details)
 
@@ -4585,7 +4852,7 @@ vend            }
         Customer Legal Entity with the requested ID was not found.
 
 
-### Update customer - Legal entity [PATCH /digitalwallets/v1/customer-legal-entitiess/{customerId}]
+### Update customer - Legal entity [PATCH /digitalwallets/v1/customer-legal-entities/{customerId}]
 
 
 + Request (application/json)
@@ -4599,6 +4866,8 @@ vend            }
         + customerId (string, required)
 
             Customer id
+
+    + Attributes (CustomerLegalEntity)
 
     + Body
 
@@ -5462,6 +5731,17 @@ If this is the case:
 * Until the webhook is received, Merchant can query the transfer using the Transactions endpoint, using merchantRefNum. While the transfer is still in queue, an empty response will be returned.
 
 
+&nbsp;
+
+**screening id**
+
+Deposits and withdrawals from the Paysafe wallet via 3rd party payment providers must be screened via Paysafe to ensure 
+that the funds do not violate the regulatory requirements Paysafe must adhere to.
+
+For every transaction screening, the screening endpoint returns a unique identifier - `screeningId`, that must 
+be provided to the transfers API in the `screeningId` field for transfers with reason of `DEPOSIT` or `WITHDRAWAL`.
+
+
 ### Perform transfer [POST]
 
 Transfers are asynchronous, and as such when submitted, the transfer requests are enqueued for later processing.
@@ -5505,7 +5785,10 @@ After the transfer is processed, a several webhooks will be sent back to signify
                     "isScaPerformed": true,
                     "isCustomerIPTrusted": true,
                     "isBeneficiaryTrusted": true
-                }
+                },
+                "reason": "CRYPTO_BUY",
+                "reasonDescription": "Trade on 2022-02-28, BTC",
+                "screeningId": "33e45eb0-b86b-4b37-8d94-05367a478537"
             }
 
 + Response 202 (application/json)
@@ -5553,7 +5836,10 @@ After the transfer is processed, a several webhooks will be sent back to signify
                     "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
                     "appType": "WEB_APP"
                 },
-                "customerIp": "115.148.82.143"
+                "customerIp": "115.148.82.143",
+                "reason": "CRYPTO_SELL",
+                "reasonDescription": "Trade on 2022-02-28, BTC",
+                "screeningId": "33e45eb0-b86b-4b37-8d94-05367a478537"
             }
 
 + Response 202 (application/json)
@@ -5598,7 +5884,10 @@ After the transfer is processed, a several webhooks will be sent back to signify
                     "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
                     "appType": "WEB_APP"
                 },
-                "customerIp": "115.148.82.143"
+                "customerIp": "115.148.82.143",
+                "reason": "TRADING_PAIR",
+                "reasonDescription": "Trade on 2022-02-28, BTC",
+                "screeningId": "33e45eb0-b86b-4b37-8d94-05367a478537"
             }
 
 + Response 202 (application/json)
@@ -5620,19 +5909,19 @@ After the transfer is processed, a several webhooks will be sent back to signify
                 "merchantRefNum": "5040452805",
                 "customerIp": "115.148.82.143"
             }
-            
+
 # Group Notifications
 
-Notifications API enables the Merchant to get information about sent notification events 
-via different transport mechanisms, such as REST HTTP calls (webhooks) or message queues. 
-It also enables the Merchant to request re-sending of events that have already been sent and 
-delivered successfully to the Merchant. 
+Notifications API enables the Merchant to get information about sent notification events
+via different transport mechanisms, such as REST HTTP calls (webhooks) or message queues.
+It also enables the Merchant to request re-sending of events that have already been sent and
+delivered successfully to the Merchant.
 
-## Notification Resend Tasks [/digitalwallets/v1/notification-resend-tasks]            
+## Notification Resend Tasks [/digitalwallets/v1/notification-resend-tasks]
 
 ### Create notificaton resend task [POST]
 
-Request re-sending of notifications (webhooks) that match certain criteria by creating a new notification resend task. After the task is created, all events that match the requested criteria will be enqueued for re-sending. 
+Request re-sending of notifications (webhooks) that match certain criteria by creating a new notification resend task. After the task is created, all events that match the requested criteria will be enqueued for re-sending.
 
 + Request (application/json)
 
@@ -5644,7 +5933,7 @@ Request re-sending of notifications (webhooks) that match certain criteria by cr
 
     + Body
 
-           {
+            {
               "eventType": "TRANSACTION",
               "startDate": "2022-02-18T09:54:50Z",
               "endDate": "2022-02-18T10:54:50Z"
@@ -5938,6 +6227,101 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
 + Response 200
 
 
+# Group Screening
+
+
+## Transaction [/screening]
+
+For deposits done via a third-party processor, the Partner should pre-screen the deposit with Paysafe’s Digital Wallet.
+
+When the deposit is pre-screened, Paysafe’s risk & compliance controls are applied before the transaction is sent to the processor, and this will avoid returning of funds if the deposit is not acceptable by Paysafe.
+
+### Screen a transaction [POST]
+
++ Attributes (TrnScreenRequest)
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "customer": {
+                    "externalId": "8bc12a72-6910-4df8-96a3-432995181569",
+                    "id": "111204874873"
+                },
+                "transaction": {
+                    "reason": "DEPOSIT",
+                    "amount": 150024,
+                    "currencyCode": "EUR",
+                    "instrument": {
+                        "type": "CARD",
+                        "card": {
+                            "externalId": "851b680b-f50e-4c5f-b765-a76d4fb3777c",
+                            "addedDate": "2019-08-24T14:15:22Z",
+                            "holderName": "John Smith",
+                            "currencyCode": "GBP",
+                            "cardExpiry": {
+                                "year": 2026,
+                                "month": 1
+                            },
+                            "firstDigits": "45367598",
+                            "lastDigits": "8023"
+                        }
+                    },
+                    "processorName": "SOME-PROCESSOR"
+                },
+                "customerIp": "82.34.53.23",
+                "merchantRefNum": "8e8ab1e9-fd33-418b-b54e-a0073d5698f1",
+                "risk": {
+                    "customerRiskRating": 0,
+                    "isScaPerformed": true,
+                    "isCustomerIPTrusted": true,
+                    "isBeneficiaryTrusted": true
+                },
+                "deviceInfo": {
+                    "appType": "WEB_APP",
+                    "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                    "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+                }
+            }
+
++ Response 200 (application/json)
+
+    APPROVE recommendation
+
+    + Attributes (TrnScreenResponse)
+
+    + Body
+
+            {
+                "screeningId": "a7f91029-b0f9-4554-9fa0-404aa625ad60",
+                "recommendation": "APPROVE",
+                "customer": {
+                    "externalId": "8bc12a72-6910-4df8-96a3-432995181569",
+                    "id": "111204874873"
+                },
+                "merchantRefNum": "8e8ab1e9-fd33-418b-b54e-a0073d5698f1"
+            }
+
+
++ Response 200 (application/json)
+
+    DECLINE recommendation
+
+    + Body
+
+            {
+                "screeningId": "a7f91029-b0f9-4554-9fa0-404aa625ad60",
+                "recommendation": "DECLINE",
+                "recommendationDescription": "AML",
+                "customer": {
+                    "externalId": "8bc12a72-6910-4df8-96a3-432995181569",
+                    "id": "111204874873"
+                },
+                "merchantRefNum": "8e8ab1e9-fd33-418b-b54e-a0073d5698f1"
+            }
+
+
 # Data Structures
 
 ## accordD
@@ -5954,61 +6338,6 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
         + `term`:`12` (number) - This is the number of payments, in months, for equal payment transactions.
             _max=99_
 
-## Address
-+ `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of request, returned in the response.
-    _Read Only, length<=36_
-+ nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
-    _Optional, length<=50_
-+ street:`100 Queen` (string, required) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
-    length<=50_
-+ street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
-    __Optional, length<=50_
-+ city:`Toronto` (string, required) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
-    length<=40_
-+ zip:`M5H 2N2` (string, required) - This is the zip, postal, or post code of the customer's address.
-     length<=10_
-+ country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
-    length=2_
-
-+ state:`ON` (string) - This is the state/province/region in which the customer lives.
-    _Optional, length<=2_
-+ phone:`647-788-3901` (string) - This is the customer's phone number.
-    _Optional, length<=40_
-+ defaultShippingAddressIndicator:`true` (boolean) - Flag to mark this address as the default shipping address.
-    _Conditional_
-+ status: `ACTIVE`(enum) - This is the status of the address.
-    _Read Only_
-    + Members
-        + ACTIVE
-        + INITIAL
-
-## Addresses
-+ addresses (array)
-    + (object)
-        + Properties
-            + `id`:`5d4db3bc-34c9-417f-a051-0d992ad9284e` (string) - This is the ID of request, returned in the response.
-                _Read Only, length<=36_
-            + nickName:`Home` (string) - This is an alias defined by the customer for this address (for example, "home address").
-                _Optional, length<=50_
-            + street:`100 Queen` (string, required) - This is the first line of the customer's street address. **Note:** This is required only when the address is to be used in association with a bank account.
-
-
-                 length<=50_
-            + street2:`Unit 201` (string) - This is the second line of the customer's street address, if required.
-                _Optional, length<=50_
-            + city:`Toronto` (string, required) - This is the city where the address is located. **Note:** This is required only when the address is to be used in association with a bank account.
-                 length<=40_
-            + zip:`M5H 2N2` (string, required) - This is the zip, postal, or post code of the customer's address.
-                length<=10_
-            + country:`CA` (string, required) - This is the country where the address is located. See [Country Codes](#countrycodes).
-                length=2_
-
-            + state:`ON` (string) - This is the state/province/region in which the customer lives.
-                _Optional, length<=40_
-            + phone:`647-788-3901` (string) - This is the customer's phone number.
-                _Optional, length<=40_
-            + defaultShippingAddressIndicator:`true` (boolean) - Flag to mark this address as the default shipping address.
-                _Conditional_
 
 ## Authentications Object
 + authentication (object) - These are the 3D Secure authentication details.
@@ -7500,19 +7829,21 @@ Wallet composite model
     _length<=100_
 + `companyIdentifier`: `GB999 9999 73` (string, required) - official company id according to local business registration agency in the country of registration; e.g. VAT Reg No in UK, Umsatzsteuer-Identifikationsnummer in Germany
     _length<=100_
-+ `registrationAddress` (CoarseAddress, required)
-+ `operatingAddress` (CoarseAddress, required)
++ `registrationAddress` (Address, required)
++ `operatingAddress` (Address, required)
 + `websiteUrl`: `https://example.com` (string, required)
     _length<=500_
 + `representative` (LegalEntityPerson, required)
 + `directors` (array[LegalEntityPerson], required)
-+ `ultimateBeneficialOwners` (array[LegalEntityOwner], required)
++ `ultimateBeneficialOwners` (array[LegalEntityPerson], required)
++ `representatives` (array[LegalEntityPerson])
 + `sourceOfFunding` (string, required)
     _length<=100_
 + `natureOfBusiness` (string, required)
     _length<=100_
 + `reasonToApply` (string)
     _length<=200_
++ `kybDocuments` (array[KybDocument], optional)
 
 ## Restriction (object)
 
@@ -7823,7 +8154,7 @@ List of accounts.
 
 ### Properties
 + `id`: `115049850868` (string, optional) - Server generated ID of the task.
-+ `eventType` (enum) - Type of webhook events that will be re-sent.
++ `eventType` (enum, required) - Type of webhook events that will be re-sent.
     + Members
         + TRANSACTION - Events related to a transaction.
         + CUSTOMER_RESTRICTION - Event related to restrictions on a customer.
@@ -7831,8 +8162,12 @@ List of accounts.
 + `startDate` (string, optional) - Re-send notifications created during period specified by startDate and endDate properties. Further restrictions of the maximum period length may be enforced by the server.
     _ISO 8601 datetime_
 + `endDate` (string, optional) - Re-send notifications created during period specified by startDate and endDate properties. Further restrictions of the maximum period length may be enforced by the server.
-    _ISO 8601 datetime_    
-
+    _ISO 8601 datetime_
++ `merchantRefNum`: `abcd1234` (string, optional) - Re-send notifications associated to a merchant reference number.
+    _length<=50_
++ `merchantRefNums` (array[string], optional) - List of merchantRefNum.    
++ `accountIds` (array[string], optional) - Re-send notifications associated to a list of accounts.
++ `customerIds` (array[string], optional) - Re-send notifications associated to a list of customers.
 
 ## Link (object)
 
@@ -7885,7 +8220,7 @@ Model for facilitation of internal Wallet transfer of funds.
 + `sender` (AccountSlip, required) - Account specific view of the slip.
 + `recipient` (AccountSlip, required) - Account specific view of the slip.
 + `merchant` (AccountSlip, optional) - Account specific view of the slip.
-+ `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
++ `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated with the transaction.
 + `status` (enum[string], optional)
     + `PENDING`
     + `PROCESSING`
@@ -7895,6 +8230,21 @@ Model for facilitation of internal Wallet transfer of funds.
 + `deviceInfo` (deviceInfoRequest, required) - Provides information about the device that the end-customer uses to access the service.
 + `customerIp` (string, required)
 + `risk` (Risk, required)
++ `reason` (enum[string], optional)
+    + `INITIAL_BALANCE_MIGRATION` - after customer onboarding, migrations of existing balances
+    + `CRYPTO_BUY` - the customer is buying crypto or other assets on Binance's system
+    + `CRYPTO_SELL` - the customer is selling crypto or other assets on Binance's system
+    + `TRADING_PAIR` - the transfer represents a trading pair transaction between customers with wallets
+    + `DEPOSIT` - crediting the customer's wallet via non-Paysafe deposit options
+    + `WITHDRAWAL` - debiting the customer's wallet via non-Paysafe withdrawal options
+    + `MERCHANT_FEE` - charging a merchant fee
+    + `REFUND` - refunding the customer on a previous transaction
+    + `CANCELATION` - cancelation of a previous transaction
+    + `BONUS` - customer is granted a bonus from the Binance system
++ `reasonDescription` (string)
+    _length<=200_
++ `screeningId`: `87165594-a4d2-418e-9ca6-b96979d901bf` (string, optional) - id of the transaction screening performed for deposits and withdrawals via 3rd party payment providers
+    _length<=64_
 
 
 ## PaymentInstrument (object)
@@ -8130,6 +8480,28 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
 + `lastScreenDate`: `2021-07-19T13:23:41Z` (string, optional)
 + `reason` (string, optional)
 
+## KybDocument (object)
+
+### Properties
+
++ `type` (enum[string], required)
+    + `CORPORATE_ONBOARDING_CHECKLIST`
+    + `SANCTIONS_OFAC_QUESTIONNARIE`
+    + `ARTICLES_OF_ASSOCIATION`
+    + `CERTIFICATE_OF_INCORPORATION`
+    + `DIRECTORS_REGISTER`
+    + `SHAREHOLDERS_REGISTER`
+    + `LETTER_OF_AUTHORIZATION`
+    + `OWNERSHIP_STRUCTURE`
+    + `COMPANY_BANK_STATEMENT`
+    + `CORPORATE_PROOF_OF_ADDRESS`
+    + `STATEMENT_OF_WORK`
+    + `STATEMENT_OF_FINANCING`
+    + `CERTIFICATE_OF_INTELLECTUAL_PROPERTY`
+    + `SUB_INVESTMENT_MANAGEMENT_AGREEMENT`
+    + `CASE_SCREENING`
++ `documentUrls` (array[string], optional)
+
 ## AccountSlip (object)
 Account specific view of the slip.
 
@@ -8283,6 +8655,8 @@ Account specific view of the slip.
 
 ### Properties
 
++ `id` (string)
+    _length<=20_
 + `firstName`: `John` (string, required)
     _length<=50_
 + `middleName`: `Paul` (string)
@@ -8296,16 +8670,13 @@ Account specific view of the slip.
     _length<=40_
 + `identificationNumberIssuingCountryCode`: `GB` (string)
     _length<=2_
++ `ownershipPercentage`: `51%` (string) - Could be specified as a percentage (51%), a fraction (1/17) or other formats
++ `kyc` (KYC)
++ `kybDocuments` (array[KybDocument], optional)
 
 
-## LegalEntityOwner (LegalEntityPerson)
 
-### Properties
-
-+ `ownershipPercentage`: `51%` (string, required) - Could be specified as a percentage (51%), a fraction (1/17) or other formats
-
-
-## CoarseAddress
+## Address
 
 ### Properties
 
@@ -8321,3 +8692,98 @@ Account specific view of the slip.
     _length<=200_
 + `address2`: `office 1` (string)
     _length<=200_
+
+
+## TrnScreenRequest
+
+### Properties
+
++ `customer` (TrnScreenRequestCustomerDetails, required)
++ `transaction` (ScreenTransactionDetails, required)
++ `customerIp`:`82.34.53.23` (string, required)
+    _length<=39_
++ `merchantRefNum`: `fdce948a-d340-4976-bd00-40c7c97a8127` (string, required)
+    _length<=50_
++ `deviceInfo` (deviceInfoRequest, required)
++ `risk` (Risk, required)
+
+
+## TrnScreenRequestCustomerDetails
+
+### Properties
+
++ `id` (string, required)
+    _length<=20_
++ `externalId` (string, required)
+    _length<=40_
+
+
+## ScreenTransactionDetails
+
+### Properties
+
++ `reason`: `DEPOSIT` (enum[string], required)
+    + Members
+        + DEPOSIT
+        + CRYPTO_BUY
+        + CRYPTO_SELL
+        + WITHDRAWAL
++ `amount`: `78909` (number, required) - The amount is in minor units of the currency of the transaction.
++ `currencyCode`: `GBP` (string, required) - ISO
+    _length=2_
++ `instrument` (ScreenTransactionInstrument, required)
++ `processorName`: `SOME-PROCESOR` (string, required)
+    _length<=60_
+
+
+## ScreenTransactionInstrument
+
+### Properties
++ `type`: `CARD` (enum[string], required)
+    + Members
+        + CARD
++ `card` (ScreenTransactionInstrumentCard, required)
+
+
+## ScreenTransactionInstrumentCard
+
+### Properties
++ `externalId`: `c9943033-2a5c-43b5-874a-5723d6c0e7e0` (string, required) - Id or a token of the card stored in the Partner system
++ `addedDate`: `2022-02-17T12:13:14Z` (string, required) - The first time this card is added to the customer's profile, ISO0-8601
++ `holderName`: `John Smith` (string, required)
+    _length>=3,length<=100_
++ `currencyCode`: `GBP` (string, required)
+    _length=3_
++ `cardExpiry` (ScreenTransactionInstrumentCardExpiry, required)
+          $ref: '#/components/schemas/CardExpiration'
++ `firstDigits`: `45678892` (string, required) - The first 8 digits of the card PAN
+    _length=8_
++ `lastDigits`: `9876` (string, required)
+    _length=4_
+
+
+## ScreenTransactionInstrumentCardExpiry
+
+### Properties
+
++ `year`: `2025` (number, required)
++ `month`: `11` (number, required)
+
+
+## TrnScreenResponse
+
+### Properties
+
++ `screeningId`: `f35e2acf-3a87-4ad7-9f87-93e38d38fbbe` (string, required)
+    _length>=2,length<=50_
++ `recommendation`: `APPROVE` (enum[string], required)
+    + Members
+        + APPROVE
+        + DECLINE
++ `recommendationSource`: `RISK` (enum[string], required)
+    + Members
+        + RISK
+        + COMPLIANCE
++ `customer` (TrnScreenRequestCustomerDetails, required)
++ `merchantRefNum`: `fdce948a-d340-4976-bd00-40c7c97a8127` (string, required)
+    _length<=50_
