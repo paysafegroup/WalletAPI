@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 17 May 2022 | - Clarifications on the 'Get customer - Generic' endpoint                                                   |
 | V1      | 14 Apr 2022 | - Add screeningId to Transfers                                                                              |
 | V1      | 12 Apr 2022 | - Add customerIds (array), accountIds(array) and merchantRefNums(array) to NotificationResendTask           |
 | V1      | 07 Apr 2022 | - Updates on the transaction screening API                                                                  |
@@ -4309,18 +4310,11 @@ If initial balance must be granted to the customer, the operation will be treate
 
 ### Get customer - Generic [GET /digitalwallets/v1/customers/{customerId}]
 
-Get a customer by ID, regardless of type. The API will return a `customer` or a `legalEntity`, depending on the type of customer.
+Get a person-customer by ID. 
 
-These fields are common for both customer types:
+> ! NOTE: This API will only work for person customers, and will return an error if a legal entity customer is requested.
 
-* id
-* externalId
-* type
-* email
-* mobile
-* restrictions
-* registrationIp
-* registrationDate
+> This API is kept for backwards compatibility with existing integrations.
 
 
 + Parameters
@@ -4764,7 +4758,7 @@ These fields are common for both customer types:
         Not Found
 
 
-### Get customer - Legal entity [GET /digitalwallets/v1/customer-legal-entitiess/{customerId}]
+### Get customer - Legal entity [GET /digitalwallets/v1/customer-legal-entities/{customerId}]
 
 + Parameters
     + customerId (string, required)
