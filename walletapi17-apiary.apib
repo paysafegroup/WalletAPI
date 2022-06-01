@@ -7,6 +7,8 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      |  1 Jun 2022 | - Added new error code for conflict during onboarding.
+| V1      |  1 Jun 2022 | - Clarifications on the ownershipPercentage property. Fixed bug in documentation.
 | V1      | 26 May 2020 | - Update Transaction sreening endpoint
 | V1      | 17 May 2022 | - Clarifications on the 'Get customer - Generic' endpoint                                                   |
 | V1      | 14 Apr 2022 | - Add screeningId to Transfers                                                                              |
@@ -1704,6 +1706,7 @@ This is a read-only raw response returned by an acquirer.
 |              400 | DW-INVALID-MOBILE-NUMBER                           | Mobile number is invalid.                                                   |
 |              409 | DW-MOBILE-NUMBER-ALREADY-EXISTS                    | Mobile number is already added.                                             |
 |              400 | DW-CUSTOMER-EMAIL-AND-MOBILE-MISSING               | Both email and mobile are missing. At least one of them should be provided. |
+|              409 | DW_CUSTOMER_REGISTRATION_TYPE_MISMATCH             | Trying to create a customer, which is already onboarded with the same externalId and a different registration type. |
 
 #### Restrictions Errors
 
@@ -4197,7 +4200,7 @@ If initial balance must be granted to the customer, the operation will be treate
                             "countryCode": "GB",
                             "identificationNumber": "AA 01 23 44 B",
                             "identificationNumberIssuingCountryCode": "GB",
-                            "ownershipPercentage": "51%"
+                            "ownershipPercentage": "51"
                         }
                     ],
                     "sourceOfFunding": "Short description of source of funding",
@@ -4283,7 +4286,7 @@ If initial balance must be granted to the customer, the operation will be treate
                             "countryCode": "GB",
                             "identificationNumber": "AA 01 23 44 B",
                             "identificationNumberIssuingCountryCode": "GB",
-                            "ownershipPercentage": "51%"
+                            "ownershipPercentage": "51"
                         }
                     ],
                     "sourceOfFunding": "Short description of source of funding",
@@ -4479,7 +4482,7 @@ Get a person-customer by ID.
                         "countryCode": "GB",
                         "identificationNumber": "AA 01 23 44 B",
                         "identificationNumberIssuingCountryCode": "GB",
-                        "ownershipPercentage": "51%"
+                        "ownershipPercentage": "51"
                     }
                 ],
                 "sourceOfFunding": "Short description of source of funding",
@@ -4833,7 +4836,7 @@ Get a person-customer by ID.
                         "countryCode": "GB",
                         "identificationNumber": "AA 01 23 44 B",
                         "identificationNumberIssuingCountryCode": "GB",
-                        "ownershipPercentage": "51%"
+                        "ownershipPercentage": "51"
                     }
                 ],
                 "sourceOfFunding": "Short description of source of funding",
@@ -4916,7 +4919,7 @@ Get a person-customer by ID.
                         "countryCode": "GB",
                         "identificationNumber": "AA 01 23 44 B",
                         "identificationNumberIssuingCountryCode": "GB",
-                        "ownershipPercentage": "51%"
+                        "ownershipPercentage": "51"
                     }
                 ],
                 "sourceOfFunding": "Short description of source of funding",
@@ -4985,7 +4988,7 @@ Get a person-customer by ID.
                         "countryCode": "GB",
                         "identificationNumber": "AA 01 23 44 B",
                         "identificationNumberIssuingCountryCode": "GB",
-                        "ownershipPercentage": "51%"
+                        "ownershipPercentage": "51"
                     }
                 ],
                 "sourceOfFunding": "Short description of source of funding",
@@ -8669,7 +8672,7 @@ Account specific view of the slip.
     _length<=40_
 + `identificationNumberIssuingCountryCode`: `GB` (string)
     _length<=2_
-+ `ownershipPercentage`: `51%` (string) - Could be specified as a percentage (51%), a fraction (1/17) or other formats
++ `ownershipPercentage`: `51.0` (string) - Ownership percentage. Decimal number. Must be greater than 0 and lower or equal to 100. Supports up to 10 digit precision.
 + `kyc` (KYC)
 + `kybDocuments` (array[KybDocument], optional)
 
