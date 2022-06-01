@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 26 May 2020 | - Update Transaction sreening endpoint
 | V1      | 17 May 2022 | - Clarifications on the 'Get customer - Generic' endpoint                                                   |
 | V1      | 14 Apr 2022 | - Add screeningId to Transfers                                                                              |
 | V1      | 12 Apr 2022 | - Add customerIds (array), accountIds(array) and merchantRefNums(array) to NotificationResendTask           |
@@ -6224,7 +6225,7 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
 # Group Screening
 
 
-## Transaction [/screening]
+## Transaction [/digitalwallets/v1/screening/transaction]
 
 For deposits done via a third-party processor, the Partner should pre-screen the deposit with Paysafe’s Digital Wallet.
 
@@ -6235,6 +6236,10 @@ When the deposit is pre-screened, Paysafe’s risk & compliance controls are app
 + Attributes (TrnScreenRequest)
 
 + Request (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
 
     + Body
 
@@ -8724,7 +8729,7 @@ Account specific view of the slip.
         + WITHDRAWAL
 + `amount`: `78909` (number, required) - The amount is in minor units of the currency of the transaction.
 + `currencyCode`: `GBP` (string, required) - ISO
-    _length=2_
+    _length=3_
 + `instrument` (ScreenTransactionInstrument, required)
 + `processorName`: `SOME-PROCESOR` (string, required)
     _length<=60_
@@ -8750,8 +8755,8 @@ Account specific view of the slip.
     _length=3_
 + `cardExpiry` (ScreenTransactionInstrumentCardExpiry, required)
           $ref: '#/components/schemas/CardExpiration'
-+ `firstDigits`: `45678892` (string, required) - The first 8 digits of the card PAN
-    _length=8_
++ `firstDigits`: `45678892` (string, required) - The first 6 or 8 digits of the card PAN
+    _length>=6,length<=8_
 + `lastDigits`: `9876` (string, required)
     _length=4_
 
@@ -8774,7 +8779,7 @@ Account specific view of the slip.
     + Members
         + APPROVE
         + DECLINE
-+ `recommendationSource`: `RISK` (enum[string], required)
++ `recommendationDescription`: `RISK` (enum[string], required)
     + Members
         + RISK
         + COMPLIANCE
