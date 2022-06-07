@@ -7,9 +7,10 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
-| V1      |  1 Jun 2022 | - Added new error code for conflict during onboarding.
-| V1      |  1 Jun 2022 | - Clarifications on the ownershipPercentage property. Fixed bug in documentation.
-| V1      | 26 May 2020 | - Update Transaction screening endpoint
+| V1      |  2 Jun 2022 | - Added new KYC document types for legal entity customers                                                   |
+| V1      |  1 Jun 2022 | - Added new error code for conflict during onboarding                                                       |
+| V1      |  1 Jun 2022 | - Clarifications on the ownershipPercentage property. Fixed bug in documentation.                           | 
+| V1      | 26 May 2020 | - Update Transaction screening endpoint                                                                     | 
 | V1      | 17 May 2022 | - Clarifications on the 'Get customer - Generic' endpoint                                                   |
 | V1      | 14 Apr 2022 | - Add screeningId to Transfers                                                                              |
 | V1      | 12 Apr 2022 | - Add customerIds (array), accountIds(array) and merchantRefNums(array) to NotificationResendTask           |
@@ -8487,21 +8488,57 @@ Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
 ### Properties
 
 + `type` (enum[string], required)
-    + `CORPORATE_ONBOARDING_CHECKLIST`
-    + `SANCTIONS_OFAC_QUESTIONNARIE`
     + `ARTICLES_OF_ASSOCIATION`
-    + `CERTIFICATE_OF_INCORPORATION`
-    + `DIRECTORS_REGISTER`
-    + `SHAREHOLDERS_REGISTER`
-    + `LETTER_OF_AUTHORIZATION`
-    + `OWNERSHIP_STRUCTURE`
-    + `COMPANY_BANK_STATEMENT`
-    + `CORPORATE_PROOF_OF_ADDRESS`
-    + `STATEMENT_OF_WORK`
-    + `STATEMENT_OF_FINANCING`
-    + `CERTIFICATE_OF_INTELLECTUAL_PROPERTY`
-    + `SUB_INVESTMENT_MANAGEMENT_AGREEMENT`
+    + `ASIC_EXTRACT`
+    + `ASIC_OR_CNPJ_FILE`
     + `CASE_SCREENING`
+    + `CERTIFICATE_OF_INCORPORATION`
+    + `CERTIFICATE_OF_INTELLECTUAL_PROPERTY`
+    + `COMPANY_ADDRESS_PROOF`
+    + `COMPANY_AML_QUESTIONNAIRE`
+    + `COMPANY_ARTICLES`
+    + `COMPANY_BANK_STATEMENT`
+    + `COMPANY_GOOD_STANDING`
+    + `COMPANY_GOVEARNMENT_DETAIL`
+    + `COMPANY_MEMBER_LETTER`
+    + `COMPANY_MEMORANDUM`
+    + `COMPANY_OPERATING_LICENSE`
+    + `COMPANY_ORGANISATION_STRUCTURE`
+    + `COMPANY_ORIGINAL_CERTIFICATE`
+    + `COMPANY_PARTNERSHIP`
+    + `COMPANY_REGISTER_DIRECTOR`
+    + `COMPANY_REGISTER_MANAGER`
+    + `COMPANY_REGISTER_MEMBER`
+    + `COMPANY_RELATED_CREDENTIALS`
+    + `COMPANY_RELATED_SELFIES`
+    + `COMPANY_REPORT`
+    + `COMPANY_SANCTIONS_QUESTION`
+    + `COMPANY_SUPPLEMENT_INFO`
+    + `COMPANY_TRUST_DECLARA`
+    + `COMPANY_TRUST_DEED`
+    + `COMPANY_WEB_SITE`
+    + `CORPORATE_ONBOARDING_CHECKLIST`
+    + `CORPORATE_PROOF_OF_ADDRESS`
+    + `CURRENT_OPERATION_STATUS`
+    + `DIRECTORS_REGISTER`
+    + `FUND_MARKETING_MATERIAL`
+    + `FUND_PARTNERSHIP_AGREEMENT`
+    + `FUND_WARRANTIES_LETTER`
+    + `INTERMEDIARIES`
+    + `LETTER_OF_AUTHORIZATION`
+    + `ON_BEHALF_TRADING`
+    + `OUTSOURCING_SERVICE_AGREEMENT`
+    + `OWNERSHIP_STRUCTURE`
+    + `REGISTER_BENEFICIARY`
+    + `RELATED_ADDRESS_PROOF`
+    + `SANCTIONS_OFAC_QUESTIONNARIE`
+    + `SHAREHOLDERS_REGISTER`
+    + `STATEMENT_OF_FINANCING`
+    + `STATEMENT_OF_WORK`
+    + `SUB_INVESTMENT_MANAGEMENT_AGREEMENT`
+    + `TRUST_REGISTRATION_DOCUMENT`
+    + `UBO_ADDRESS_PROOF`
+    + `OTHER`
 + `documentUrls` (array[string], optional)
 
 ## AccountSlip (object)
