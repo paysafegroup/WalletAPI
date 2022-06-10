@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      |  7 Jun 2022 | - Error messages added                                                                                      |
 | V1      |  2 Jun 2022 | - Added new KYC document types for legal entity customers                                                   |
 | V1      |  1 Jun 2022 | - Added new error code for conflict during onboarding                                                       |
 | V1      |  1 Jun 2022 | - Clarifications on the ownershipPercentage property. Fixed bug in documentation.                           | 
@@ -1708,6 +1709,16 @@ This is a read-only raw response returned by an acquirer.
 |              409 | DW-MOBILE-NUMBER-ALREADY-EXISTS                    | Mobile number is already added.                                             |
 |              400 | DW-CUSTOMER-EMAIL-AND-MOBILE-MISSING               | Both email and mobile are missing. At least one of them should be provided. |
 |              409 | DW_CUSTOMER_REGISTRATION_TYPE_MISMATCH             | Trying to create a customer, which is already onboarded with the same externalId and a different registration type. |
+|              409 | DW-ACCOUNTS-BALANCES-NOT-EMPTY                     | There are accounts with non-empty balances. |
+|              400 | DW-AMBIGUOUS-CUSTOMER-TYPE | Both customer and legalEntity properties are provided while only one of them is expected to determine the correct type of the customer. |
+|              409 | DW-CUSTOMER-EMAIL-ALREADY-EXISTS | Email address already exists. |
+|              400 | DW-CUSTOMER-ID-SHOULD-BE-VALID | CustomerId is not supported. |
+|              403 | DW-CUSTOMER-IP-COUNTRY-SANCTIONED | Customer's IP country falls into the list of sanctioned countries. |
+|              403 | DW-CUSTOMER-IP-COUNTRY-NON-SERVICED | Customer's IP country falls into the list of non-serviced countries. |
+|              422 | DW-DUPLICATE-ACCOUNT-CURRENCIES | More than one account in same currency is not allowed. |
+|              400 | DW-MISSING-CUSTOMER-DATA | Both customer and legalEntity properties are not provided and exactly one of them is expected. |
+|              400 | DW-SCA-VERIFICATION-FAILED | The transaction was declined because the SCA requirement is not completed. |
+
 
 #### Restrictions Errors
 
@@ -1715,6 +1726,7 @@ This is a read-only raw response returned by an acquirer.
 |------------------|---------------------------------|----------------------------------|
 |              409 | DW-CUSTOMER-ALREADY-ACTIVATED   | Customer is already activated.   |
 |              409 | DW-CUSTOMER-ALREADY-DEACTIVATED | Customer is already deactivated. |
+|              400 | DW-WALLET-ID-NOT-FOUND          | Wallet with the requested ID was not found. |
 
 #### Transfer Errors
 
@@ -1755,6 +1767,9 @@ This is a read-only raw response returned by an acquirer.
 |              404 | DW-CUSTOMER-DELETED-OR-HAS-NO-ACTIVE-EWALLET-ACCOUNT | Customer is deleted or has no active e-wallet account. |
 |              400 | DW-INVALID-TRANSACTION-STATUS                        | The transaction status is invalid.                     |
 |              500 | DW-DEPOSIT-RESPONSE-NOT-CREATED                      | Error while creating deposit response.                 |
+|              404 | DW-CUSTOMER-BRAND-MISMATCH | No such customer in provided brand. |
+|              400 | DW-NEGATIVE-FEE | Invalid fee value. Negative fee is not accepted. |
+|              400 | DW-INVALID-FEE-RANGE | Invalid fee value. Fee must be less or equal to transaction amount. |
 
 
 #### Withdrawal Errors
@@ -1765,14 +1780,16 @@ This is a read-only raw response returned by an acquirer.
 |              403 | DW-PERMISSION-TO-WITHDRAW | You do not have permission to withdraw.        |
 |              400 | DW-BANK-VALIDATION-FAILED | Bank validation failed.                        |
 |              400 | DW-BANK-DECLINE           | Declined by the processing bank.               |
+|              400 | DW-BANK-PROCESSING-FAILED | The system is unable to send this request to the processing bank. |
 
 #### Notification API Errors
 
 | HTTP Status Code |                      Error Code                         |                    Message                                                                         |
 |------------------|---------------------------------------------------------|----------------------------------------------------------------------------------------------------|
 |              400 | DW-NOTIFICATION-RESEND-TASK-BAD-REQUEST                 | Bad request for notification resend task operation.                                                |
-|              400 | DW_NOTIFICATION_RESEND_TASK_MISSING_REQUIRED_PARAMETERS | The request for notification resend request is missing required parameters.                        |
-|              400 | DW_NOTIFICATION_RESEND_TASK_INVALID_REQUEST_TIMEFRAME   | The defined timeframe for notification resend request is invalid. It is too long or in the future. |
+|              400 | DW-NOTIFICATION-RESEND-TASK-MISSING-REQUIRED-PARAMETERS | The request for notification resend request is missing required parameters.                        |
+|              400 | DW-NOTIFICATION-RESEND-TASK-INVALID-REQUEST-TIMEFRAME   | The defined timeframe for notification resend request is invalid. It is too long or in the future. |
+|              400 | DW-NOTIFICATION-RESEND-TASK-TOO-MANY-FILTERS-APPLIED    | There are too many filters specified. Only one should be applied.                                  |
 
 
 ### Transfer webhook errors
