@@ -7,6 +7,7 @@ HOST: https://api2.test.paysafe.com/
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      |  3 Jun 2022 | - Clarifications on updating customer's country of registration                                             |
 | V1      |  7 Jun 2022 | - Error messages added                                                                                      |
 | V1      |  2 Jun 2022 | - Added new KYC document types for legal entity customers                                                   |
 | V1      |  1 Jun 2022 | - Added new error code for conflict during onboarding                                                       |
@@ -319,7 +320,7 @@ based on regulatory and risk checks.
 
 Customer's details could be updated on the Merchant's app/portal, and these updates must be reflected on the Paysafe side, for regulatory purposes.
 
-Customer profile information can be updated by calling [Update Customer](#reference/customers/get-customer/update-customer).
+Customer profile information can be updated by calling the respective APIs for updating customer's information - persons and legal entities.
 
 The following fields cannot be updated, and an attempt to do so will result in an error:
 
@@ -4604,6 +4605,13 @@ Get a person-customer by ID.
 
 ### Update customer - Person [PATCH /digitalwallets/v1/customer-persons/{customerId}]
 
+> NOTE: When changing the customer's country of registration, the following fields must be provided:
+>
+> * accounts
+> * address1
+> * city
+> * zip
+
 
 + Request (application/json)
 
@@ -4635,6 +4643,12 @@ Get a person-customer by ID.
                 "registrationIp": "115.148.82.143",
                 "nationality": "GB",
                 "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+                "accounts": [
+                    {
+                        "hasIban": true,
+                        "currencyCode": "GBP"
+                    }
+                ],
                 "kyc": {
                     "status": "COMPLETED",
                     "idVerification": {
@@ -4870,6 +4884,13 @@ Get a person-customer by ID.
 
 ### Update customer - Legal entity [PATCH /digitalwallets/v1/customer-legal-entities/{customerId}]
 
+> NOTE: When changing the customer's country of registration, the following fields must be provided:
+>
+> * accounts
+> * registrationAddress.address1
+> * registrationAddress.city
+> * registrationAddress.postalCode
+
 
 + Request (application/json)
 
@@ -4942,7 +4963,13 @@ Get a person-customer by ID.
                 ],
                 "sourceOfFunding": "Short description of source of funding",
                 "natureOfBusiness": "Short description of nature of business",
-                "reasonToApply": "Short description"
+                "reasonToApply": "Short description",
+                "accounts": [
+                    {
+                        "hasIban": true,
+                        "currencyCode": "GBP"
+                    }
+                ]
             }
 
 + Response 200 (application/json)
@@ -7807,6 +7834,7 @@ Wallet composite model
 + `registrationDate` (string, optional) - Date of registration at the Merchant system
     _ISO 8601 datetime_
 + `restrictions` (array[Restriction], optional)
++ `accounts` (array[AccountRequest])
 
 
 ## CustomerPerson (Customer)
