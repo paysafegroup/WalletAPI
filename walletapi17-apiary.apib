@@ -3,84 +3,27 @@ HOST: https://api2.test.paysafe.com/
 
 # Paysafe Payments & Wallets API
 
-## Release Notes
-
-| Version | Date        | Details                                                                                                     |
-|---------|-------------|-------------------------------------------------------------------------------------------------------------|
-| V1      |  3 Jun 2022 | - Clarifications on updating customer's country of registration                                             |
-| V1      |  7 Jun 2022 | - Error messages added                                                                                      |
-| V1      |  2 Jun 2022 | - Added new KYC document types for legal entity customers                                                   |
-| V1      |  1 Jun 2022 | - Added new error code for conflict during onboarding                                                       |
-| V1      |  1 Jun 2022 | - Clarifications on the ownershipPercentage property. Fixed bug in documentation.                           | 
-| V1      | 26 May 2020 | - Update Transaction screening endpoint                                                                     | 
-| V1      | 17 May 2022 | - Clarifications on the 'Get customer - Generic' endpoint                                                   |
-| V1      | 14 Apr 2022 | - Add screeningId to Transfers                                                                              |
-| V1      | 12 Apr 2022 | - Add customerIds (array), accountIds(array) and merchantRefNums(array) to NotificationResendTask           |
-| V1      | 07 Apr 2022 | - Updates on the transaction screening API                                                                  |
-| V1      | 01 Apr 2022 | - Add example request and response for create customer wallet for a legal entity                            |
-| V1      | 01 Apr 2022 | - added endpoint for tranasaction screening                                                                 |
-| V1      | 28 Mar 2022 | - added notifications API specific error codes.                                                             |
-| V1      | 10 Mar 2022 | - ownershipPercentage set to optional. Add representatives array to legal entity customer.                  |
-| V1      | 28 Feb 2022 | - Added transfer reason                                                                                     |
-| V1      | 23 Feb 2022 | - Remove LegalEntityOwner                                                                                   |
-| V1      | 23 Feb 2022 | - Add model KybDocument. Add kybDocuments to CustomerLegalEntity,kybDocuments and kyc to  LegalEntityPerson.|
-| V1      | 18 Feb 2022 | - Add NotificationResendTask API to request resend of webhooks                                              |
-| V1      | 15 Feb 2022 | - Fixed requiredActions for restrictions                                                                    |
-| V1      | 9 Feb 2022  | - Added fields in KYC section for specifying the verifications vendor                                       |
-| V1      | 9 Feb 2022  | - Update on corporate customer address fields                                                               |
-| V1      | 25 Jan 2022 | - Updates to corportate customers API                                                                       |
-| V1      | 20 Jan 2022 | - Updated documentation for account assigned webhook format                                                 |
-| V1      | 18 Jan 2022 | - Updated RT examples for currency GBP                                                                      |
-| V1      | 17 Jan 2022 | - Updated Card & RT flows                                                                                   |
-|         |             | - Added Payment Handle webhooks                                                                             |
-| V1      | 12 Jan 2022 | - Added support for corporate customers                                                                     |
-| V1      | 27 Dec 2021 | - Added new restrictions synchronization APIs                                                               |
-| V1      | 21 Dec 2021 | - Updated error documentation                                                                               |
-| V1      | 2 Dec 2021  | - Added customer's externalId to the response of the Get accounts endpoints                                 |
-| V1      | 1 Dec 2021  | - Marking required and optional fields; fixed error response format; documentation added                    |
-| V1      | 25 Nov 2021 | - Added risk fields for wallet creation and transaction                                                     |
-| V1      | 25 Nov 2021 | - Examples & documentation updated; added appType in deviceInfo                                             |
-|         |             | - Updated Payment Handle samples with <i>deviceInfo</i>                                                     |
-| V1      | 22 Nov 2021 | - Added bank account detail - BIC                                                                           |
-|         |             | - Updated examples                                                                                          |
-|         |             | - Removed initial balance when creating a wallet - a separate transfer transaction must be used             |
-| V1      | 17 Nov 2021 | - Removed pagination from get customer accounts; the API returns a list of accounts                         |
-|         |             | - URL for GET instruments changed; customerId converted to required query parameter                         |
-|         |             | - Added wallet transaction statusReason                                                                     |
-| V1      | 17 Nov 2021 | - Added get customer's payment instruments endpoint                                                         |
-|         |             | - Added KYC parameters, following Risk & Compliance workshops                                               |
-|         |             | - Added clarifications on virtual IBAN assignment; webhook for virtual IBAN assigned                        |
-|         |             | - Added deviceInfo; customerIp updated to mandatory for all payment APIs                                    |
-|         |             | - Added information about onboarding idempotency; removed "phone" field; one of email or mobile is required |
-| V1      | 10 Nov 2021 | - Added the parameter <i>verifiedInstrument</i> to Payment handle                                           |
-| V1      | 08 Nov 2021 | - Added Payment Workflows                                                                                   |
-|         |             | - Labeled Mandatory Fields as <i>required</i>                                                               |
-| V1      | 10 Aug 2020 | - Document Release                                                                                          |
-
 # Overview
 
-Paysafe's digital wallet offering caters to merchants that need to implement **embedded finance services** into their products, such as marketplaces, e-commerce, electronic goods and more.
+Paysafe's digital wallet offering caters to merchants that need to implement **embedded finance services** into their products, such as marketplaces, e-commerce, electronic goods, and more.
 
-By leveraging Paysafe's capabilities - ledger, multiple currencies within the same wallet, multiple region coverage, risk and AML monitoring and a multitude of payment options, a product can be easily enhanced with an out-of-the-box, compliant e-money wallet.
+By leveraging Paysafe's capabilities - ledger, multiple currencies within the same wallet, multiple region coverage, risk, and AML monitoring, and a multitude of payment options, a product can be easily enhanced with an out-of-the-box, compliant e-money wallet.
 
-Built on top of Paysafe's solid payment processing API infrastructure, digital wallet requires minimal enhancement in terms of integration, authentication and monitoring.
+Built on top of Paysafe's solid payment processing API infrastructure, a digital wallet requires minimal enhancement in terms of integration, authentication, and monitoring.
 
 The service can easily and securely process payments & wallet requests from your customers using one single API – The **Payments & Wallets API**.
 
 Paysafe's all-in-one [Business Portal](https://merchant.paysafe.com/portal) allows the merchant to access transaction analytics and manage the merchant account.
 
-
-<a name="paymentsoverview" title="Payments & Wallets API Overview"></a>
-
 ## Concepts in Paysafe's digital wallet
 
-The digital wallet is a stored value financial service, and as such must adhere to certain regulations and data availability requirements.
+The digital wallet is a stored-value financial service, and as such must adhere to certain regulations and data availability requirements.
 
-**Customer** is the physical person, associated with a wallet, and is the legal owner of the e-money stored in the accounts' ledger. Regulations require Paysafe to collect and assess KYC information, PEP checks, and in some instances - carry out EDD verifications on the customer. A customer has a wallet associated with it.
+* **Customer** is the physical person, associated with a wallet, and is the legal owner of the e-money stored in the accounts' ledger. Regulations require Paysafe to collect and assess KYC information, PEP checks, and in some instances - carry out EDD verifications on the customer. A customer has a wallet associated with it.
 
-A **Wallet Account** is a ledger for a single currency. The multicurrency capability requires multiple accounts to be associated with the wallet.
+* A **Wallet Account** is a ledger for a single currency. The multicurrency capability requires multiple accounts to be associated with the wallet.
 
-**Merchant** is a legal entity that provides services or goods to its customers. The merchant also has a wallet associated with it within the Paysafe Digital Wallet platform, and just as customers, KYB information must be collected and assessed.
+* **Merchant** is a legal entity that provides services or goods to its customers. The merchant also has a wallet associated with it within the Paysafe Digital Wallet platform, and just like customers, KYB information must be collected and assessed.
 
 
 ## Digital Wallet as a service
@@ -94,15 +37,14 @@ Merchant's responsibilities:
   * Implement UI for all customer journeys
   * Integrate into the Paysafe's Payments and Digital Wallets API
 
-Paysafe Digital Walet responsibilities:
+Paysafe Digital Wallet responsibilities:
 
   * Maintain e-money ledger
   * Maintain customer details for regulatory purposes
   * Monitor for Risk & AML
   * Integrate additional payment methods
   * Provide reporting capabilities
-
-
+  
 ### Customer wallet
 
 Each customer is assigned a CW, and it accounts for all transactions for that customer - deposits, withdrawals, pay-in m pay-out, exchange, etc. As mentioned above, a wallet can contain multiple accounts in different currencies.
@@ -1827,6 +1769,60 @@ When you are ready to test your example, you can choose between the Production a
 - Mock server – This environment simply returns the dummy values in the example response irrespective of the parameters you supply. You do not need to use your account ID or Test API key for this request.
 
 To call the API resource, click **Call Resource**. The response is displayed in the Console window.
+
+# Change Log
+
+| Version | Date        | Details                                                                                                     |
+|---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      |  3 Jun 2022 | - Clarifications on updating customer's country of registration                                             |
+| V1      |  7 Jun 2022 | - Error messages added                                                                                      |
+| V1      |  2 Jun 2022 | - Added new KYC document types for legal entity customers                                                   |
+| V1      |  1 Jun 2022 | - Added new error code for conflict during onboarding                                                       |
+| V1      |  1 Jun 2022 | - Clarifications on the ownershipPercentage property. Fixed bug in documentation.                           | 
+| V1      | 26 May 2020 | - Update Transaction screening endpoint                                                                     | 
+| V1      | 17 May 2022 | - Clarifications on the 'Get customer - Generic' endpoint                                                   |
+| V1      | 14 Apr 2022 | - Add screeningId to Transfers                                                                              |
+| V1      | 12 Apr 2022 | - Add customerIds (array), accountIds(array) and merchantRefNums(array) to NotificationResendTask           |
+| V1      | 07 Apr 2022 | - Updates on the transaction screening API                                                                  |
+| V1      | 01 Apr 2022 | - Add example request and response for create customer wallet for a legal entity                            |
+| V1      | 01 Apr 2022 | - added endpoint for tranasaction screening                                                                 |
+| V1      | 28 Mar 2022 | - added notifications API specific error codes.                                                             |
+| V1      | 10 Mar 2022 | - ownershipPercentage set to optional. Add representatives array to legal entity customer.                  |
+| V1      | 28 Feb 2022 | - Added transfer reason                                                                                     |
+| V1      | 23 Feb 2022 | - Remove LegalEntityOwner                                                                                   |
+| V1      | 23 Feb 2022 | - Add model KybDocument. Add kybDocuments to CustomerLegalEntity,kybDocuments and kyc to  LegalEntityPerson.|
+| V1      | 18 Feb 2022 | - Add NotificationResendTask API to request resend of webhooks                                              |
+| V1      | 15 Feb 2022 | - Fixed requiredActions for restrictions                                                                    |
+| V1      | 9 Feb 2022  | - Added fields in KYC section for specifying the verifications vendor                                       |
+| V1      | 9 Feb 2022  | - Update on corporate customer address fields                                                               |
+| V1      | 25 Jan 2022 | - Updates to corportate customers API                                                                       |
+| V1      | 20 Jan 2022 | - Updated documentation for account assigned webhook format                                                 |
+| V1      | 18 Jan 2022 | - Updated RT examples for currency GBP                                                                      |
+| V1      | 17 Jan 2022 | - Updated Card & RT flows                                                                                   |
+|         |             | - Added Payment Handle webhooks                                                                             |
+| V1      | 12 Jan 2022 | - Added support for corporate customers                                                                     |
+| V1      | 27 Dec 2021 | - Added new restrictions synchronization APIs                                                               |
+| V1      | 21 Dec 2021 | - Updated error documentation                                                                               |
+| V1      | 2 Dec 2021  | - Added customer's externalId to the response of the Get accounts endpoints                                 |
+| V1      | 1 Dec 2021  | - Marking required and optional fields; fixed error response format; documentation added                    |
+| V1      | 25 Nov 2021 | - Added risk fields for wallet creation and transaction                                                     |
+| V1      | 25 Nov 2021 | - Examples & documentation updated; added appType in deviceInfo                                             |
+|         |             | - Updated Payment Handle samples with <i>deviceInfo</i>                                                     |
+| V1      | 22 Nov 2021 | - Added bank account detail - BIC                                                                           |
+|         |             | - Updated examples                                                                                          |
+|         |             | - Removed initial balance when creating a wallet - a separate transfer transaction must be used             |
+| V1      | 17 Nov 2021 | - Removed pagination from get customer accounts; the API returns a list of accounts                         |
+|         |             | - URL for GET instruments changed; customerId converted to required query parameter                         |
+|         |             | - Added wallet transaction statusReason                                                                     |
+| V1      | 17 Nov 2021 | - Added get customer's payment instruments endpoint                                                         |
+|         |             | - Added KYC parameters, following Risk & Compliance workshops                                               |
+|         |             | - Added clarifications on virtual IBAN assignment; webhook for virtual IBAN assigned                        |
+|         |             | - Added deviceInfo; customerIp updated to mandatory for all payment APIs                                    |
+|         |             | - Added information about onboarding idempotency; removed "phone" field; one of email or mobile is required |
+| V1      | 10 Nov 2021 | - Added the parameter <i>verifiedInstrument</i> to Payment handle                                           |
+| V1      | 08 Nov 2021 | - Added Payment Workflows                                                                                   |
+|         |             | - Labeled Mandatory Fields as <i>required</i>                                                               |
+| V1      | 10 Aug 2020 | - Document Release                                                                                          |
 
 # Legal and Community
 <ul>
