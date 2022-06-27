@@ -44,33 +44,30 @@ Paysafe Digital Wallet responsibilities:
   * Monitor for Risk & AML
   * Integrate additional payment methods
   * Provide reporting capabilities
-  
+
 ### Customer wallet
 
-Each customer is assigned a CW, and it accounts for all transactions for that customer - deposits, withdrawals, pay-in m pay-out, exchange, etc. As mentioned above, a wallet can contain multiple accounts in different currencies.
+Each customer is assigned a Customer Waller, and it accounts for all transactions for that customer - deposits, withdrawals, pay-in m pay-out, exchange, etc. As mentioned above, a wallet can contain multiple accounts in different currencies.
 
-When the Merchant deems necessary, a new Customer wallet is created. Usually, a customer wallet is created when the customer registers in the Merchant's system and passess the KYC verifications, as agreed between the Merchant and Paysafe.
+When the Merchant deems it necessary, a new Customer wallet is created. Usually, a customer wallet is created when the customer registers in the Merchant's system and passes the KYC verifications, as agreed between the Merchant and Paysafe.
 
 > As the Merchant is managing all its users, Paysafe **only holds the customer personal details necessary for risk & compliance purposes** - Paysafe does not access or manage customer credentials, nor does it manage authentication and authorization. These details are associated with every wallet.
 
-
 ### Merchant wallet
 
-The Merchant wallet, just as CW, provides ledger, transactional and multi-currency capabilities.
+The Merchant wallet, just like the Customer Wallet, provides ledger, transactional and multi-currency capabilities.
 
 The Merchant can access the Merchant Wallet via the Paysafe Merchant Portal. Access to this portal is provided during the merchant onboarding process.
 
-
 ### Merchant Fees
 
-All Merchant fees that the Merchant needs to charge its customers, are **accumulated in the MW at time of customer transaction**. Paysafe's fees can either be deducted directly from the MW balance, or can be settled on a monthly/quarterly basis by invoicing the Merchant.
+All Merchant fees that the Merchant needs to charge its customers are **accumulated in the Merchant Wallet at the time of customer transaction**. Paysafe's fees can either be deducted directly from the MW balance or can be settled on a monthly/quarterly basis by invoicing the Merchant.
 
-To allow for the ultimate flexibility, all merchant fees **must be provided by the Merchant on a per-transaction basis**. This approach allows the Merchant to execute different pricing schemes based on regions, currency, customer loyalty levels, dynamic fee structures and other information that is only available to the Merchant.
-
+To allow for the ultimate flexibility, all merchant fees **must be provided by the Merchant on a per-transaction basis**. This approach allows the Merchant to execute different pricing schemes based on regions, currency, customer loyalty levels, dynamic fee structures, and other information that is only available to the Merchant.
 
 ## Device information
 
-Customer device information plays a critital role in all risk and compliance assessments in the digital wallet offering. Paysafe uses ThreatMetrix as the preferred device intelligence solution.
+Customer device information plays a critical role in all risk and compliance assessments in the digital wallet offering. Paysafe uses ThreatMetrix as the preferred device intelligence solution.
 
 The Merchant is required to pass in the data as received by ThreatMetrix, to avoid double billing in the case where Paysafe fetches the device information separately from Merchant.
 
@@ -85,7 +82,7 @@ The Payments API currently supports the following payment methods:
 
 > **Note:** Rapid Transfer is only supported for Payments.
 
-> **Note:** Bank transfers is only supported for Standalone Credits. For EUR, it should be through SEPA and for GBP it should be through Faster Payments.
+> **Note:** Bank transfers is only supported for Standalone Credits. For EUR, it should be through SEPA, and for GBP it should be through Faster Payments.
 
 
 ## Transaction Types Supported
@@ -101,7 +98,7 @@ Payments API supports the following transaction types:
 One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
 
 Only supports settleWithAuth=true
-For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate success or failure of the transaction request without having to do a separate lookup on the specific settlement.
+For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate the success or failure of the transaction request without having to do a separate lookup on the specific settlement.
 
 **Payment Flow**
 ![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Payment_Flow.png)
