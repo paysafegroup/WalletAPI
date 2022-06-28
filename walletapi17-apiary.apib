@@ -1773,6 +1773,7 @@ To call the API resource, click **Call Resource**. The response is displayed in 
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 27 Jun 2022 | - Update Screening API                                                                                      |
 | V1      |  3 Jun 2022 | - Clarifications on updating customer's country of registration                                             |
 | V1      |  7 Jun 2022 | - Error messages added                                                                                      |
 | V1      |  2 Jun 2022 | - Added new KYC document types for legal entity customers                                                   |
@@ -6355,7 +6356,7 @@ When the deposit is pre-screened, Paysafe’s risk & compliance controls are app
             {
                 "screeningId": "a7f91029-b0f9-4554-9fa0-404aa625ad60",
                 "recommendation": "DECLINE",
-                "recommendationDescription": "AML",
+                "recommendationSource": "COMPLIANCE",
                 "customer": {
                     "externalId": "8bc12a72-6910-4df8-96a3-432995181569",
                     "id": "111204874873"
@@ -8859,7 +8860,7 @@ Account specific view of the slip.
     + Members
         + APPROVE
         + DECLINE
-+ `recommendationDescription`: `RISK` (enum[string], required)
++ `recommendationSource`: `RISK` (enum[string], required)
     + Members
         + RISK
         + COMPLIANCE
