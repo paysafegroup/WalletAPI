@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://api2.test.paysafe.com/
 
-# Paysae Wallet as a Service APIs
+# Paysafe Wallet as a Service APIs
 
 # Overview
 
@@ -251,12 +251,6 @@ using this email address, the creation of a new wallet will fail.
 After creating the wallet, the customer could be restricted on Paysafe side
 based on regulatory and risk checks.
 
-&nbsp;
-
-&nbsp;
-
-&nbsp;
-
 ## Update customer details
 
 Customer's details could be updated on the Merchant's app/portal, and these updates must be reflected on the Paysafe side, for regulatory purposes.
@@ -268,24 +262,11 @@ The following fields cannot be updated, and an attempt to do so will result in a
 * id
 * registrationIp
 
-&nbsp;
-
-&nbsp;
-
-&nbsp;
-
 ## Deactivate a customer
 
 When a customer closes their account with the Merchant, the digital wallet on the Paysafe side must be deactivated.
 
 The API [Deactivate Customer](#reference/customers/get-customer/deactivate-customer) must be used to achieve that.
-
-&nbsp;
-
-&nbsp;
-
-&nbsp;
-
 
 ## Accounts
 
@@ -295,12 +276,6 @@ Account information can be retrieved with the following APIs:
 * Get details and current balance for an account - [Get Account](#reference/wallets/get-account/get-account)
 
 Direct update and delete acounts is not supported via API.
-
-&nbsp;
-
-&nbsp;
-
-&nbsp;
 
 ## Deposit with a card
 
@@ -316,48 +291,407 @@ Direct update and delete acounts is not supported via API.
 
 * Paysafe will debit customer’s wallet with the fees and credit customer fee to Merchant merchant wallet.
 
-&nbsp;
-
 ![Diagram: Deposit with a card](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/card_merchant_3ds.png)
 
-&nbsp;
+## Deposit with Rapid Transfer
 
-&nbsp;
+Paysafe offers deposits, with instant bank transfer solution [Rapid Transfer](https://www.skrill.com/en/business/rapid-transfer/).
 
-&nbsp;
+The real-time bank transfer solution is suitable for the smaller basket size transfers. Rapid Transfer payments are normally instant however a small percentage of high risk transactions may have delayed processing (up to 3 business days). 
 
+* Transaction limits for Rapid Transfer
 
-## Deposit with instant bank transfer - RapidTransfer
+    | Daily     | Weekly    | Monthly    |
+    |-----------|-----------|------------|
+    | 5,000 EUR | 7,500 EUR | 25,000 EUR |
 
-As a service complementary to the Bank Transfer solution above, Paysafe can offer to the Merchant a Real-time bank transfer solution for the smaller basket size transfers. Rapid Transfer payments are normally instant however a small percentage of high risk transactions may have delayed processing (up to 3 business days). Pilot countries UK, Estonia, Latvia, Portugal.
-
-Transaction limits for Rapid Transfer
-| Daily     | Weekly    | Monthly    |
-|-----------|-----------|------------|
-| 5,000 EUR | 7,500 EUR | 25,000 EUR |
-
-* Merchant will show the Rapid Transfer payment method to their customers alongside the other deposit options.
-
-* Merchant will collect customer’s bank account details (IBAN and SWIFT code for euro payments and sort code and account number for payments in GBP).
-
-* Merchant will send a payment request to Paysafe and will redirect the customer to the Rapid Transfer redirect url returned by Paysafe.
-
-* Rapid Transfer payment flow will assist the customer to authenticate with their bank, validate payment account and confirm a bank transfer to Paysafe.
-
-* After payment is successfully initiated, Paysafe will increase customer’s wallet balance with the payment amount.
-
-* Paysafe will debit any customer fee from customer’s wallet and credit them to Merchant  wallet.
-
-&nbsp;
+### Rapid Transfer Deposit Steps
 
 ![Diagram: Deposit with RapidTransfer](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/deposit_rapid_transfer_version3.png)
 
-&nbsp;
+1. Customer selects 'Rapid Transfer' as the payment type from the Merchant's website 
 
-&nbsp;
+2. (Optional) Merchant calls Paysafe to retrieve a list of available banks and displays to Customer
 
-&nbsp;
+    &nbsp;
+    
+    ---
+    **GET** `https://api2.paysafe.com/digitalwallet/v1/rapidtransferbanks?country=GB`
+    
+        {
+            "rapidTransferBanks": [
+              {
+                "id": "1000203",
+                "name": "Natwest UK",
+                "isAccountRequiredBeforeInitialization": true,
+                "country": "GB"
+              }
+            ]
+        }
+    ---
+    
+3. Merchant must collect customer’s bank account details (IBAN and SWIFT code for euro payments and sort code and account number for payments in GBP).
+ 
+4. Merchant calls Paysafe to create a Payment Handle and Paysafe responds with a Redirect URL
 
+    &nbsp;
+    
+    ---
+    **POST** `https://api2.paysafe.com/paymenthub/v1/paymenthandles`
+
+        {
+            "merchantRefNum": "merchantRefNum-124",
+            "transactionType": "PAYMENT",
+            "rapidTransfer" : {
+                "sepa": {
+                    "accountHolderName": "John Doe",
+                    "bic": "ABNANL2APIP",
+                    "iban": "DE89370400440532013000"
+                }
+            },
+            "paymentType": "RAPID_TRANSFER",
+            "amount": 3000,
+            "currencyCode": "EUR",
+            "customerIp": "73.82.192.17",
+            "billingDetails": {
+                "street": "71 Cherry Court ",
+                "city": "Southhampton",
+                "zip": "SO53 5PD",
+                "country": "GB"
+            },
+            "wallet":{
+               "customerId" : "GGG",
+            },
+            "returnLinks": [{
+                    "rel": "on_completed",
+                    "href": "https://US_commerce_site/payment/return/success",
+                    "method": "GET"
+                },
+                {
+                    "rel": "on_failed",
+                    "href": "https://US_commerce_site/payment/return/failed",
+                    "method": "GET"
+                }
+            ]
+        }
+
+    **Response**
+
+        {
+            "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+            "amount": 3000,
+            "merchantRefNum": "merchantRefNum-124",
+            "action": "REDIRECT",
+            "currencyCode": "EUR",
+            "usage": "SINGLE_USE",
+            "status": "INITIATED",
+            "paymentType": "RAPID_TRANSFER",
+            "executionMode": "SYNCHRONOUS",
+            "customerIp": "73.82.192.17",
+            "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+            "billingDetails": {
+                "street": "71 Cherry Court ",
+                "city": "Southhampton",
+                "zip": "SO53 5PD",
+                "country": "GB"
+            },
+            "rapidTransfer" : {
+                "sepa": {
+                    "accountHolderName": "John Doe",
+                    "bic": "ABNANL2APIP",
+                    "lastDigits": "00"
+                }
+            },
+            "wallet":{
+               "customerId" : "GGG",
+               "slipId" : "100753"
+            },
+            "returnLinks": [{
+                    "rel": "on_completed",
+                    "href": "https://US_commerce_site/payment/return/success",
+                    "method": "GET"
+                },
+                {
+                    "rel": "on_failed",
+                    "href": "https://US_commerce_site/payment/return/failed",
+                    "method": "GET"
+                }
+            ],
+            "links": [{
+                "rel": "redirect_payment",
+                "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+                "method": "GET"
+            }],
+            "timeToLiveSeconds": 899,
+            "transactionType": "PAYMENT"
+        }
+
+    ---
+    
+5. Merchant redirects the Customer
+
+6. Customer authenticates banking details and confirms the deposit operation
+
+7. Customer is redirected back to the Merchant or **Merchant recieves a PaymentHandle webhook that is PAYABLE**
+
+    &nbsp;
+    
+    ---
+    **POST** `https://<merchant callback URL>`
+    
+        {
+          "resourceId": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+          "eventDate": "2021-07-15T17:54:12Z",
+          "eventType": "PAYMENT_HANDLE_PAYABLE",
+          "payload": {
+            "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+            "amount": 3000,
+            "merchantRefNum": "merchantRefNum-124",
+            "action": "NONE",
+            "currencyCode": "EUR",
+            "usage": "SINGLE_USE",
+            "status": "PAYABLE",
+            "paymentType": "RAPID_TRANSFER",
+            "executionMode": "SYNCHRONOUS",
+            "customerIp": "73.82.192.17",
+            "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+            "billingDetails": {
+                "street": "71 Cherry Court ",
+                "city": "Southhampton",
+                "zip": "SO53 5PD",
+                "country": "GB"
+            },
+            "rapidTransfer": {
+                "sepa": {
+                    "accountHolderName": "John Doe",
+                    "bic": "ABNANL2APIP",
+                    "lastDigits": "00"
+                }
+            },
+            "wallet": {
+              "customerId": "GGG",
+              "slipId": "100753"
+            },
+            "returnLinks": [
+              {
+                "rel": "on_completed",
+                "href": "https://US_commerce_site/payment/return/success",
+                "method": "GET"
+              },
+              {
+                "rel": "on_failed",
+                "href": "https://US_commerce_site/payment/return/failed",
+                "method": "GET"
+              }
+            ],
+            "links": [
+              {
+                "rel": "redirect_payment",
+                "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+                "method": "GET"
+              }
+            ],
+            "timeToLiveSeconds": 899,
+            "transactionType": "PAYMENT"
+          }
+        }
+    ---
+
+    > **NOTE**  A redirect may not always occur as it is depenant on the Customer, browser and connection. The webhook shold be used as a failsafe to complete the payment to avoid reconcilliation issues.
+    
+8. Merchant looks up the status of the payment handle 
+
+    &nbsp;
+
+    > **NOTE**  Only required if webhook not recieved
+    
+    &nbsp;
+    
+    ---
+    **GET** `https://api2.paysafe.com/paymenthub/v1/paymenthandles/{paymenthandleid}`
+    
+    **Response**
+    
+        {
+            "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+            "amount": 3000,
+            "merchantRefNum": "merchantRefNum-124",
+            "action": "NONE",
+            "currencyCode": "EUR",
+            "usage": "SINGLE_USE",
+            "status": "PAYABLE",
+            "paymentType": "RAPID_TRANSFER",
+            "executionMode": "SYNCHRONOUS",
+            "customerIp": "73.82.192.17",
+            "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+            "billingDetails": {
+                "street": "71 Cherry Court ",
+                "city": "Southhampton",
+                "zip": "SO53 5PD",
+                "country": "GB"
+            },
+            "rapidTransfer" : {
+                "sepa": {
+                    "accountHolderName": "John Doe",
+                    "bic": "ABNANL2APIP",
+                    "lastDigits": "00"
+                }
+            },
+            "wallet":{
+               "customerId" : "GGG",
+               "slipId" : "100753"
+            },
+            "returnLinks": [{
+                    "rel": "on_completed",
+                    "href": "https://US_commerce_site/payment/return/success",
+                    "method": "GET"
+                },
+                {
+                    "rel": "on_failed",
+                    "href": "https://US_commerce_site/payment/return/failed",
+                    "method": "GET"
+                }
+            ],
+            "links": [{
+                "rel": "redirect_payment",
+                "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+                "method": "GET"
+            }],
+            "timeToLiveSeconds": 899,
+            "transactionType": "PAYMENT"
+        }
+    
+    ---
+
+9. Merchant finalizes the payment by POST-ing a payment
+
+    > **NOTE** After the **Customer** is redirected to Rapid Transfer and Payment Handle becomes PAYABLE, the **Customer** might authorize the payment, regardless of whether the Payment is posted by the **Merchant**. That is why POST-ing Payment for PAYABLE handle is important, so the Deposit status can be tracked.
+
+    &nbsp;
+    
+    ---
+    
+    **POST** `https://api2.paysafe.com/paymenthub/v1/payments`
+    
+        {
+          "merchantRefNum": "merchantRefNum-123",
+          "amount": 3000,
+          "currencyCode": "EUR",
+          "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+          "description": "Consumer Purchase",
+          "customerIp": "73.82.192.17"
+        }
+
+    **Response**
+
+        {
+          "id": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+          "merchantRefNum": "merchantRefNum-123",
+          "amount": 1000,
+          "currencyCode": "EUR",
+          "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+          "paymentType": "RAPID_TRANSFER",
+          "rapidTranfer": {
+            "sepa": {
+                "accountHolderName": "John Doe",
+                "bic": "ABNANL2APIP",
+                "lastDigits": "00"
+            }
+          },
+          "description": "Consumer Purchase",
+          "customerIp": "73.82.192.17",
+          "availableToSettle": 0,
+          "status": "COMPLETED",
+          "wallet": {
+            "customerId": "abc",
+            "slipId": "100753",
+            "customerAccount": {
+              "id": "10021",
+              "transactions": [
+                {
+                  "id": "12321",
+                  "type": "DEPOSIT",
+                  "amount": 3000,
+                  "currencyCode": "EUR",
+                  "creationTime": "2021-07-15T17:54:12Z",
+                  "direction": "CREDIT",
+                  "paymentType": "RAPID_TRANSFER",
+                  "status": "COMPLETED",
+                  "merchantRefNum": "merchantRefNum-123"
+                },
+                {
+                  "id": "12322",
+                  "type": "TRANSFER_OUT",
+                  "amount": 3000,
+                  "currencyCode": "EUR",
+                  "creationTime": "2021-07-15T17:54:12Z",
+                  "direction": "DEBIT",
+                  "paymentType": "RAPID_TRANSFER",
+                  "status": "COMPLETED",
+                  "merchantRefNum": "merchantRefNum-123"
+                }
+              ]
+            },
+            "merchantAccount": {
+              "id": "10022",
+              "transactions": [
+                {
+                  "id": "12323",
+                  "type": "TRANSFER_IN",
+                  "amount": 3000,
+                  "currencyCode": "EUR",
+                  "creationTime": "2021-07-15T17:54:12Z",
+                  "direction": "CREEDIT",
+                  "paymentType": "RAPID_TRANSFER",
+                  "status": "COMPLETED",
+                  "merchantRefNum": "merchantRefNum-123"
+                }
+              ]
+            }
+          },
+          "txnTime": "2018-12-11T16:33:49Z"
+        }
+
+    ---
+
+10. Merchant recieves a *TransactionUpdateWebhok* when funds are deposited in the wallet
+   
+    > **NOTE**  This can occur anytime after the redirect, There shall be both *customer* and *merchant* account update webhooks, merchant should filter on the merchant account ID.
+    
+    ---
+    **POST** `https://<merchant callback URL>`
+
+        {
+          "id": "",
+          "timestamp": "2021-07-15T17:54:12Z",
+          "transaction": {
+            "id": "544232",
+            "merchantRefNum": "merchantRefNum-123",
+            "customerId": "abc",
+            "accountId": "10022",
+            "type": "TRANSFER_IN",
+            "slipId": "100753",
+            "amount": 3000,
+            "currencyCode": "EUR",
+            "creationTime": "2018-12-11T16:33:49Z",
+            "direction": "CREEDIT",
+            "paymentType": "RAPID_TRANSFER",
+            "description": "Transaction description.",
+            "status": "COMPLETED",
+          }
+        }
+    ---
+
+11. Handling of **Delayed confirmation** deposits.
+   
+    &nbsp;
+    
+    Usually after authorizing the payment, the deposit is confirmed within 15 minutes. For specific deposit amount, country or bank - Rapid Transfer might release the funds only after they are received in Paysafe bank account. In that case the Payment will be in **PROCESSING** state until the final state is set.
+    
+    &nbsp;
+
+    > **NOTE** When Rapid Transfer deposit gets delayed, a final state of the Payment might take up to several days (3-4 days average). Use PROCESSING Payment state as indicator to detect delayed confirmation and notify end users.
+    
 ## Deposit with a bank transfer
 
 Paysafe will support Merchant's customers with digital wallets to transfer money from their own bank accounts to their vIBANs in Paysafe partner bank. Once offline customer deposit reaches Paysafe partner bank, customer's wallet will be funded. Customers can only be charged a pre-defined fixed fee for bank transfer deposits.
