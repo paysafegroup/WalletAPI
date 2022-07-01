@@ -71,7 +71,7 @@ Customer device information plays a critical role in all risk and compliance ass
 
 The Merchant is required to pass in the data as received by ThreatMetrix, to avoid double billing in the case where Paysafe fetches the device information separately from Merchant.
 
-## Payment Methods
+## Payment methods
 
 Payment Methods represent your customer's payment instruments. They are used to collect payments or store instrument details for future payments.
 The Payments API currently supports the following payment methods:
@@ -85,7 +85,7 @@ The Payments API currently supports the following payment methods:
 > **Note:** Bank transfers is only supported for Standalone Credits. For EUR, it should be through SEPA, and for GBP it should be through Faster Payments.
 
 
-## Transaction Types Supported
+## Transaction types supported
 Payments API supports the following transaction types:
 
   * [Payment Handles](#paymenthandlerequest)
@@ -93,7 +93,7 @@ Payments API supports the following transaction types:
   * [Standalone Credits](#standalonecreditrequest)
 
 
-## Payment Flows
+## Payment flows
 
 One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
 
@@ -106,7 +106,7 @@ For these integrations, corresponding Payment and Settlement resources are creat
 **Auto Settlement Payment**
 ![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Auto_Settlement_Payment_Flow.png)
 
-# Getting Started
+# Getting started
 
 ## Authentication
 
@@ -132,7 +132,7 @@ For additional details, please refer to http://en.wikipedia.org/wiki/Basic_acces
 
 Note: Your Production API key will be different from your Test API key. Contact your account manager for details. You must keep your API keys safe and ensure that it is used appropriately for your needs.
 
-## Get your Secret API Key
+## Get your secret API key
 
 The API uses a distinct API key:
 
@@ -182,7 +182,7 @@ For example:
 
 `https://api2.test.paysafe.com/paymenthub/v1/payments/{payment_id}`
 
-## Going Live
+## Going live
 
 Once you are satisfied with your integration to the Test environment, you must repeat the configuration changes made to your Test account on your Production account.
 
@@ -205,7 +205,7 @@ For example:
 * `https://api2.paysafe.com/paymenthub/v1/payments/{payment_id}`
 * `https://api2.paysafe.com/digitalwallets/v1/customers`
 
-# Wallet Operations
+# Wallet operations
 
 ## Onboard a customer
 
@@ -268,7 +268,7 @@ When a customer closes their account with the Merchant, the digital wallet on th
 
 The API [Deactivate Customer](#reference/customers/get-customer/deactivate-customer) must be used to achieve that.
 
-## Accounts
+## Customer accounts
 
 Account information can be retrieved with the following APIs:
 
@@ -281,7 +281,7 @@ Direct update and delete acounts is not supported via API.
 
 * Merchant customers will be able to deposit with Visa and Mastercard credit and debit cards in EUR and GBP. Merchant will manage the user experience and can use either Paysafe integrated 3DS solution or with any other 3DS provider directly. Once card payment is processed successfully, the customers wallet balance will be increased with the deposit amount. Merchant will be able to apply a fee to the customer’s card deposits.
 
-* Merchant customers will choose the deposit amount and will provide their card details at Bianance’s website or mobile app.
+* Merchant customers will choose the deposit amount and will provide their card details at merchants website or mobile app.
 
 * Merchant will send a payment request to Paysafe including deposit amount, currency, card details, customer ID and customer fee.
 
@@ -297,7 +297,7 @@ Direct update and delete acounts is not supported via API.
 
 Paysafe offers deposits, with instant bank transfer solution [Rapid Transfer](https://www.skrill.com/en/business/rapid-transfer/).
 
-The real-time bank transfer solution is suitable for the smaller basket size transfers. Rapid Transfer payments are normally instant however a small percentage of high risk transactions may have delayed processing (up to 3 business days). 
+The real-time bank transfer solution is suitable for the smaller basket size transfers. Rapid Transfer payments are normally instant however a small percentage of high risk transactions may have delayed processing for several business days. 
 
 * Transaction limits for Rapid Transfer
 
@@ -654,7 +654,7 @@ The real-time bank transfer solution is suitable for the smaller basket size tra
 
     ---
 
-10. Merchant recieves a *TransactionUpdateWebhok* when funds are deposited in the wallet
+10. Merchant recieves a *TransactionUpdateWebhоok* when funds are deposited in the wallet
    
     > **NOTE**  This can occur anytime after the redirect, There shall be both *customer* and *merchant* account update webhooks, merchant should filter on the merchant account ID.
     
