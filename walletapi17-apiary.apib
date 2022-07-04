@@ -317,17 +317,18 @@ The real-time bank transfer solution is suitable for the smaller basket size tra
     
     ---
     **GET** `https://api2.paysafe.com/digitalwallet/v1/rapidtransferbanks?country=GB`
-    
-        {
-            "rapidTransferBanks": [
-              {
-                "id": "1000203",
-                "name": "Natwest UK",
-                "isAccountRequiredBeforeInitialization": true,
-                "country": "GB"
-              }
-            ]
-        }
+    ```json
+    {
+        "rapidTransferBanks": [
+          {
+            "id": "1000203",
+            "name": "Natwest UK",
+            "isAccountRequiredBeforeInitialization": true,
+            "country": "GB"
+          }
+        ]
+    }
+    ```
     ---
     
 3. Merchant must collect customer’s bank account details (IBAN and SWIFT code for euro payments and sort code and account number for payments in GBP).
@@ -338,94 +339,94 @@ The real-time bank transfer solution is suitable for the smaller basket size tra
     
     ---
     **POST** `https://api2.paysafe.com/paymenthub/v1/paymenthandles`
-
-        {
-            "merchantRefNum": "merchantRefNum-124",
-            "transactionType": "PAYMENT",
-            "rapidTransfer" : {
-                "sepa": {
-                    "accountHolderName": "John Doe",
-                    "bic": "ABNANL2APIP",
-                    "iban": "DE89370400440532013000"
-                }
-            },
-            "paymentType": "RAPID_TRANSFER",
-            "amount": 3000,
-            "currencyCode": "EUR",
-            "customerIp": "73.82.192.17",
-            "billingDetails": {
-                "street": "71 Cherry Court ",
-                "city": "Southhampton",
-                "zip": "SO53 5PD",
-                "country": "GB"
-            },
-            "wallet":{
-               "customerId" : "GGG",
-            },
-            "returnLinks": [{
-                    "rel": "on_completed",
-                    "href": "https://US_commerce_site/payment/return/success",
-                    "method": "GET"
-                },
-                {
-                    "rel": "on_failed",
-                    "href": "https://US_commerce_site/payment/return/failed",
-                    "method": "GET"
-                }
-            ]
-        }
-
-    **Response**
-
-        {
-            "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
-            "amount": 3000,
-            "merchantRefNum": "merchantRefNum-124",
-            "action": "REDIRECT",
-            "currencyCode": "EUR",
-            "usage": "SINGLE_USE",
-            "status": "INITIATED",
-            "paymentType": "RAPID_TRANSFER",
-            "executionMode": "SYNCHRONOUS",
-            "customerIp": "73.82.192.17",
-            "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
-            "billingDetails": {
-                "street": "71 Cherry Court ",
-                "city": "Southhampton",
-                "zip": "SO53 5PD",
-                "country": "GB"
-            },
-            "rapidTransfer" : {
-                "sepa": {
-                    "accountHolderName": "John Doe",
-                    "bic": "ABNANL2APIP",
-                    "lastDigits": "00"
-                }
-            },
-            "wallet":{
-               "customerId" : "GGG",
-               "slipId" : "100753"
-            },
-            "returnLinks": [{
-                    "rel": "on_completed",
-                    "href": "https://US_commerce_site/payment/return/success",
-                    "method": "GET"
-                },
-                {
-                    "rel": "on_failed",
-                    "href": "https://US_commerce_site/payment/return/failed",
-                    "method": "GET"
-                }
-            ],
-            "links": [{
-                "rel": "redirect_payment",
-                "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+    ```json
+    {
+        "merchantRefNum": "merchantRefNum-124",
+        "transactionType": "PAYMENT",
+        "rapidTransfer" : {
+            "sepa": {
+                "accountHolderName": "John Doe",
+                "bic": "ABNANL2APIP",
+                "iban": "DE89370400440532013000"
+            }
+        },
+        "paymentType": "RAPID_TRANSFER",
+        "amount": 3000,
+        "currencyCode": "EUR",
+        "customerIp": "73.82.192.17",
+        "billingDetails": {
+            "street": "71 Cherry Court ",
+            "city": "Southhampton",
+            "zip": "SO53 5PD",
+            "country": "GB"
+        },
+        "wallet":{
+            "customerId" : "GGG",
+        },
+        "returnLinks": [{
+                "rel": "on_completed",
+                "href": "https://US_commerce_site/payment/return/success",
                 "method": "GET"
-            }],
-            "timeToLiveSeconds": 899,
-            "transactionType": "PAYMENT"
-        }
-
+            },
+            {
+                "rel": "on_failed",
+                "href": "https://US_commerce_site/payment/return/failed",
+                "method": "GET"
+            }
+        ]
+    }
+    ```
+    **Response**
+    ```json
+    {
+        "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+        "amount": 3000,
+        "merchantRefNum": "merchantRefNum-124",
+        "action": "REDIRECT",
+        "currencyCode": "EUR",
+        "usage": "SINGLE_USE",
+        "status": "INITIATED",
+        "paymentType": "RAPID_TRANSFER",
+        "executionMode": "SYNCHRONOUS",
+        "customerIp": "73.82.192.17",
+        "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+        "billingDetails": {
+            "street": "71 Cherry Court ",
+            "city": "Southhampton",
+            "zip": "SO53 5PD",
+            "country": "GB"
+        },
+        "rapidTransfer" : {
+            "sepa": {
+                "accountHolderName": "John Doe",
+                "bic": "ABNANL2APIP",
+                "lastDigits": "00"
+            }
+        },
+        "wallet":{
+            "customerId" : "GGG",
+            "slipId" : "100753"
+        },
+        "returnLinks": [{
+                "rel": "on_completed",
+                "href": "https://US_commerce_site/payment/return/success",
+                "method": "GET"
+            },
+            {
+                "rel": "on_failed",
+                "href": "https://US_commerce_site/payment/return/failed",
+                "method": "GET"
+            }
+        ],
+        "links": [{
+            "rel": "redirect_payment",
+            "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+            "method": "GET"
+        }],
+        "timeToLiveSeconds": 899,
+        "transactionType": "PAYMENT"
+    }
+    ```
     ---
     
 5. Merchant redirects the Customer
@@ -438,63 +439,64 @@ The real-time bank transfer solution is suitable for the smaller basket size tra
     
     ---
     **POST** `https://<merchant callback URL>`
-    
-        {
-          "resourceId": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
-          "eventDate": "2021-07-15T17:54:12Z",
-          "eventType": "PAYMENT_HANDLE_PAYABLE",
-          "payload": {
-            "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
-            "amount": 3000,
-            "merchantRefNum": "merchantRefNum-124",
-            "action": "NONE",
-            "currencyCode": "EUR",
-            "usage": "SINGLE_USE",
-            "status": "PAYABLE",
-            "paymentType": "RAPID_TRANSFER",
-            "executionMode": "SYNCHRONOUS",
-            "customerIp": "73.82.192.17",
-            "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
-            "billingDetails": {
-                "street": "71 Cherry Court ",
-                "city": "Southhampton",
-                "zip": "SO53 5PD",
-                "country": "GB"
-            },
-            "rapidTransfer": {
-                "sepa": {
-                    "accountHolderName": "John Doe",
-                    "bic": "ABNANL2APIP",
-                    "lastDigits": "00"
-                }
-            },
-            "wallet": {
-              "customerId": "GGG",
-              "slipId": "100753"
-            },
-            "returnLinks": [
-              {
-                "rel": "on_completed",
-                "href": "https://US_commerce_site/payment/return/success",
-                "method": "GET"
-              },
-              {
-                "rel": "on_failed",
-                "href": "https://US_commerce_site/payment/return/failed",
-                "method": "GET"
-              }
-            ],
-            "links": [
-              {
-                "rel": "redirect_payment",
-                "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
-                "method": "GET"
-              }
-            ],
-            "timeToLiveSeconds": 899,
-            "transactionType": "PAYMENT"
+    ```json
+    {
+      "resourceId": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+      "eventDate": "2021-07-15T17:54:12Z",
+      "eventType": "PAYMENT_HANDLE_PAYABLE",
+      "payload": {
+        "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+        "amount": 3000,
+        "merchantRefNum": "merchantRefNum-124",
+        "action": "NONE",
+        "currencyCode": "EUR",
+        "usage": "SINGLE_USE",
+        "status": "PAYABLE",
+        "paymentType": "RAPID_TRANSFER",
+        "executionMode": "SYNCHRONOUS",
+        "customerIp": "73.82.192.17",
+        "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+        "billingDetails": {
+            "street": "71 Cherry Court ",
+            "city": "Southhampton",
+            "zip": "SO53 5PD",
+            "country": "GB"
+        },
+        "rapidTransfer": {
+            "sepa": {
+                "accountHolderName": "John Doe",
+                "bic": "ABNANL2APIP",
+                "lastDigits": "00"
+            }
+        },
+        "wallet": {
+          "customerId": "GGG",
+          "slipId": "100753"
+        },
+        "returnLinks": [
+          {
+            "rel": "on_completed",
+            "href": "https://US_commerce_site/payment/return/success",
+            "method": "GET"
+          },
+          {
+            "rel": "on_failed",
+            "href": "https://US_commerce_site/payment/return/failed",
+            "method": "GET"
           }
-        }
+        ],
+        "links": [
+          {
+            "rel": "redirect_payment",
+            "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+            "method": "GET"
+          }
+        ],
+        "timeToLiveSeconds": 899,
+        "transactionType": "PAYMENT"
+      }
+    }
+    ```        
     ---
 
     > **NOTE**  A redirect may not always occur as it is depenant on the Customer, browser and connection. The webhook shold be used as a failsafe to complete the payment to avoid reconcilliation issues.
@@ -508,59 +510,57 @@ The real-time bank transfer solution is suitable for the smaller basket size tra
     &nbsp;
     
     ---
-    **GET** `https://api2.paysafe.com/paymenthub/v1/paymenthandles/{paymenthandleid}`
-    
-    **Response**
-    
-        {
-            "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
-            "amount": 3000,
-            "merchantRefNum": "merchantRefNum-124",
-            "action": "NONE",
-            "currencyCode": "EUR",
-            "usage": "SINGLE_USE",
-            "status": "PAYABLE",
-            "paymentType": "RAPID_TRANSFER",
-            "executionMode": "SYNCHRONOUS",
-            "customerIp": "73.82.192.17",
-            "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
-            "billingDetails": {
-                "street": "71 Cherry Court ",
-                "city": "Southhampton",
-                "zip": "SO53 5PD",
-                "country": "GB"
-            },
-            "rapidTransfer" : {
-                "sepa": {
-                    "accountHolderName": "John Doe",
-                    "bic": "ABNANL2APIP",
-                    "lastDigits": "00"
-                }
-            },
-            "wallet":{
-               "customerId" : "GGG",
-               "slipId" : "100753"
-            },
-            "returnLinks": [{
-                    "rel": "on_completed",
-                    "href": "https://US_commerce_site/payment/return/success",
-                    "method": "GET"
-                },
-                {
-                    "rel": "on_failed",
-                    "href": "https://US_commerce_site/payment/return/failed",
-                    "method": "GET"
-                }
-            ],
-            "links": [{
-                "rel": "redirect_payment",
-                "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+    **GET** `https://api2.paysafe.com/paymenthub/v1/paymenthandles/{paymenthandleid}`    
+    ```json
+    {
+        "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+        "amount": 3000,
+        "merchantRefNum": "merchantRefNum-124",
+        "action": "NONE",
+        "currencyCode": "EUR",
+        "usage": "SINGLE_USE",
+        "status": "PAYABLE",
+        "paymentType": "RAPID_TRANSFER",
+        "executionMode": "SYNCHRONOUS",
+        "customerIp": "73.82.192.17",
+        "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+        "billingDetails": {
+            "street": "71 Cherry Court ",
+            "city": "Southhampton",
+            "zip": "SO53 5PD",
+            "country": "GB"
+        },
+        "rapidTransfer" : {
+            "sepa": {
+                "accountHolderName": "John Doe",
+                "bic": "ABNANL2APIP",
+                "lastDigits": "00"
+            }
+        },
+        "wallet":{
+            "customerId" : "GGG",
+            "slipId" : "100753"
+        },
+        "returnLinks": [{
+                "rel": "on_completed",
+                "href": "https://US_commerce_site/payment/return/success",
                 "method": "GET"
-            }],
-            "timeToLiveSeconds": 899,
-            "transactionType": "PAYMENT"
-        }
-    
+            },
+            {
+                "rel": "on_failed",
+                "href": "https://US_commerce_site/payment/return/failed",
+                "method": "GET"
+            }
+        ],
+        "links": [{
+            "rel": "redirect_payment",
+            "href": "http://api.paysafe.com/rapidtransfer/redirect/372b5ee7-6360-4403-b444-164f8f1d2709",
+            "method": "GET"
+        }],
+        "timeToLiveSeconds": 899,
+        "transactionType": "PAYMENT"
+    }
+    ```
     ---
 
 9. Merchant finalizes the payment by POST-ing a payment
@@ -572,86 +572,86 @@ The real-time bank transfer solution is suitable for the smaller basket size tra
     ---
     
     **POST** `https://api2.paysafe.com/paymenthub/v1/payments`
-    
-        {
-          "merchantRefNum": "merchantRefNum-123",
-          "amount": 3000,
-          "currencyCode": "EUR",
-          "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
-          "description": "Consumer Purchase",
-          "customerIp": "73.82.192.17"
-        }
-
+    ```json
+    {
+      "merchantRefNum": "merchantRefNum-123",
+      "amount": 3000,
+      "currencyCode": "EUR",
+      "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+      "description": "Consumer Purchase",
+      "customerIp": "73.82.192.17"
+    }
+    ```
     **Response**
-
-        {
-          "id": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
-          "merchantRefNum": "merchantRefNum-123",
-          "amount": 1000,
-          "currencyCode": "EUR",
-          "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
-          "paymentType": "RAPID_TRANSFER",
-          "rapidTranfer": {
-            "sepa": {
-                "accountHolderName": "John Doe",
-                "bic": "ABNANL2APIP",
-                "lastDigits": "00"
-            }
-          },
-          "description": "Consumer Purchase",
-          "customerIp": "73.82.192.17",
-          "availableToSettle": 0,
-          "status": "COMPLETED",
-          "wallet": {
-            "customerId": "abc",
-            "slipId": "100753",
-            "customerAccount": {
-              "id": "10021",
-              "transactions": [
-                {
-                  "id": "12321",
-                  "type": "DEPOSIT",
-                  "amount": 3000,
-                  "currencyCode": "EUR",
-                  "creationTime": "2021-07-15T17:54:12Z",
-                  "direction": "CREDIT",
-                  "paymentType": "RAPID_TRANSFER",
-                  "status": "COMPLETED",
-                  "merchantRefNum": "merchantRefNum-123"
-                },
-                {
-                  "id": "12322",
-                  "type": "TRANSFER_OUT",
-                  "amount": 3000,
-                  "currencyCode": "EUR",
-                  "creationTime": "2021-07-15T17:54:12Z",
-                  "direction": "DEBIT",
-                  "paymentType": "RAPID_TRANSFER",
-                  "status": "COMPLETED",
-                  "merchantRefNum": "merchantRefNum-123"
-                }
-              ]
-            },
-            "merchantAccount": {
-              "id": "10022",
-              "transactions": [
-                {
-                  "id": "12323",
-                  "type": "TRANSFER_IN",
-                  "amount": 3000,
-                  "currencyCode": "EUR",
-                  "creationTime": "2021-07-15T17:54:12Z",
-                  "direction": "CREEDIT",
-                  "paymentType": "RAPID_TRANSFER",
-                  "status": "COMPLETED",
-                  "merchantRefNum": "merchantRefNum-123"
-                }
-              ]
-            }
-          },
-          "txnTime": "2018-12-11T16:33:49Z"
+    ```json
+    {
+      "id": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+      "merchantRefNum": "merchantRefNum-123",
+      "amount": 1000,
+      "currencyCode": "EUR",
+      "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+      "paymentType": "RAPID_TRANSFER",
+      "rapidTranfer": {
+        "sepa": {
+            "accountHolderName": "John Doe",
+            "bic": "ABNANL2APIP",
+            "lastDigits": "00"
         }
-
+      },
+      "description": "Consumer Purchase",
+      "customerIp": "73.82.192.17",
+      "availableToSettle": 0,
+      "status": "COMPLETED",
+      "wallet": {
+        "customerId": "abc",
+        "slipId": "100753",
+        "customerAccount": {
+          "id": "10021",
+          "transactions": [
+            {
+              "id": "12321",
+              "type": "DEPOSIT",
+              "amount": 3000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "CREDIT",
+              "paymentType": "RAPID_TRANSFER",
+              "status": "COMPLETED",
+              "merchantRefNum": "merchantRefNum-123"
+            },
+            {
+              "id": "12322",
+              "type": "TRANSFER_OUT",
+              "amount": 3000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "DEBIT",
+              "paymentType": "RAPID_TRANSFER",
+              "status": "COMPLETED",
+              "merchantRefNum": "merchantRefNum-123"
+            }
+          ]
+        },
+        "merchantAccount": {
+          "id": "10022",
+          "transactions": [
+            {
+              "id": "12323",
+              "type": "TRANSFER_IN",
+              "amount": 3000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "CREEDIT",
+              "paymentType": "RAPID_TRANSFER",
+              "status": "COMPLETED",
+              "merchantRefNum": "merchantRefNum-123"
+            }
+          ]
+        }
+      },
+      "txnTime": "2018-12-11T16:33:49Z"
+    }
+    ```
     ---
 
 10. Merchant recieves a *TransactionUpdateWebhоok* when funds are deposited in the wallet
@@ -660,105 +660,285 @@ The real-time bank transfer solution is suitable for the smaller basket size tra
     
     ---
     **POST** `https://<merchant callback URL>`
-
-        {
-          "id": "",
-          "timestamp": "2021-07-15T17:54:12Z",
-          "transaction": {
-            "id": "544232",
-            "merchantRefNum": "merchantRefNum-123",
-            "customerId": "abc",
-            "accountId": "10022",
-            "type": "TRANSFER_IN",
-            "slipId": "100753",
-            "amount": 3000,
-            "currencyCode": "EUR",
-            "creationTime": "2018-12-11T16:33:49Z",
-            "direction": "CREEDIT",
-            "paymentType": "RAPID_TRANSFER",
-            "description": "Transaction description.",
-            "status": "COMPLETED",
-          }
-        }
+    ```json
+    {
+      "id": "",
+      "timestamp": "2021-07-15T17:54:12Z",
+      "transaction": {
+        "id": "544232",
+        "merchantRefNum": "merchantRefNum-123",
+        "customerId": "abc",
+        "accountId": "10022",
+        "type": "TRANSFER_IN",
+        "slipId": "100753",
+        "amount": 3000,
+        "currencyCode": "EUR",
+        "creationTime": "2018-12-11T16:33:49Z",
+        "direction": "CREEDIT",
+        "paymentType": "RAPID_TRANSFER",
+        "description": "Transaction description.",
+        "status": "COMPLETED",
+      }
+    }
+    ```
     ---
 
 11. Handling of **Delayed confirmation** deposits.
    
-    &nbsp;
-    
-    Usually after authorizing the payment, the deposit is confirmed within 15 minutes. For specific deposit amount, country or bank - Rapid Transfer might release the funds only after they are received in Paysafe bank account. In that case the Payment will be in **PROCESSING** state until the final state is set.
-    
-    &nbsp;
+    Usually after authorizing the payment, the deposit is confirmed within 15 minutes. For specific deposit amounts, country or bank - Rapid Transfer might release the funds only after they are received in Paysafe bank account. In that case the Payment will be in **PROCESSING** state until the final state is set.
 
     > **NOTE** When Rapid Transfer deposit gets delayed, a final state of the Payment might take up to several days (3-4 days average). Use PROCESSING Payment state as indicator to detect delayed confirmation and notify end users.
     
 ## Deposit with a bank transfer
 
-Paysafe will support Merchant's customers with digital wallets to transfer money from their own bank accounts to their vIBANs in Paysafe partner bank. Once offline customer deposit reaches Paysafe partner bank, customer's wallet will be funded. Customers can only be charged a pre-defined fixed fee for bank transfer deposits.
+Paysafe supports bank transfer deposits using customer assigned vIBANs in Paysafe partner bank. Once offline customer deposit reaches Paysafe partner bank, customer's wallet is funded with the corresponding amount. 
 
-* Merchant will show vIBAN and Paysafe entity as account holder upon bank transfer payment option on Merchant website
+Virtual IBAN is assigned to each customer during the onboarding process. You can obtain the vIBAN using **Accounts API** and passing the **customerId** as parameter.
 
-* Paysafe will perform vIBAN and names match when deposit received in Paysafe partner bank
+---
+**GET** `https://api2.paysafe.com/digitalwallet/v1/accounts?customerId=5435323362`
+```json
+[{
+      "id": "509876034",
+      "customerId": "5435323362",
+      "currencyCode": "GBP",
+      "totalBalance": 55000,
+      "availableBalance": 50000,
+      "iban": "NL74ABNA1231242344",
+      "creationTime": "2019-08-24T14:15:22Z",
+      "hasIban": true,
+      "bic": "ABNANL2A"
+}]
+```
+---
 
-* The transaction amount will be credited to the consumers Merchant fiat wallet
 
-* Where applicable, the customer fee amount will be debited from the consumers Merchant fiat wallet.
+### Bank transfer deposit steps
 
-&nbsp;
+![Diagram: Bank transfer deposit](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/2-Deposit-bank-transfer.svg)
 
-![Diagram: Deposit with RapidTransfer](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/2-Deposit-bank-transfer.svg)
+1. Merchant must show vIBAN details and Paysafe as account holder upon bank transfer payment option on Merchant website
 
-&nbsp;
+2. Customer initiates bank transfer from their bank to their vIBAN
 
-&nbsp;
+3. Paysafe performs vIBAN and name match when deposit is received in Paysafe partner bank
 
-&nbsp;
+4. The transaction amount will be credited to the customer wallet
 
-## Authorization holds on a balance
+5. Where applicable, the merchant deposit fee amount will be debited from the customer wallet
 
-Certain wallet payment flows, like Buying Crypto require requesting a hold on part of a customer balance.
+    > Customers can only be charged a pre-defined fixed fee for bank transfer deposits.
 
-Any held funds will not be available for any other transactions and will remain reserved until the Merchant executes the transaction or cancels the hold.
-
-&nbsp;
-
-![Diagram: Authorization holds](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/4-AuthorizationHold.svg)
-
-&nbsp;
-
-&nbsp;
-
-&nbsp;
+6. Merchant recieves a *TransactionUpdateWebhok* when funds are deposited in the wallet
+    
+    &nbsp;
+    
+    ---
+    **POST** `https://<merchant callback URL>`
+    ```json
+    {
+        "id": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+        "timestamp": "2021-07-15T17:54:12Z",
+        "transaction": {
+            "id": "544232",
+            "merchantRefNum": "abcd1234",
+            "customerId": "1234",
+            "accountId": "212345",
+            "type": "DEPOSIT",
+            "slipId": "121345",
+            "amount": 1000,
+            "currencyCode": "EUR",
+            "creationTime": "2021-07-15T17:54:12Z",
+            "direction": "CREDIT",
+            "paymentType": "BANK_TRANSFER",
+            "description": "Transaction description.",
+            "status": "COMPLETED"
+        }
+    }
+    ```
+    ---
 
 ## Withdrawal to bank account
 
-Customers can withdraw from fiat balance to their bank account. The withdrawal amount cannot exceed the fiat balance of the user. Withdrawals in EUR and GBP are supported.
+Customers can withdraw amount to their bank account. Withdrawals in EUR and GBP are supported.
 
-* Customer initiates fiat withdrawal to bank account on Merchant's platform.
-
-* The Merchant requests the withdrawal from Paysafe and includes customer’s bank account or card details in the request.
-
-* Paysafe validates there is available balance in customer’s wallet.
-
-* Paysafe debits withdrawal amount and fee, if applicable, from customer’s wallet.
-
-* Paysafe routes the withdrawal to our partner banks and payment providers.
-
-* Paysafe credits customer fee to the Merchant wallet.
-
-* Paysafe returns a payment details in the response to the Merchant.
-
-Paysafe will also make sure any returned withdrawals are processed by crediting the returned amount back to the customer’s wallet. The Merchant will receive a notification for such returned withdrawals.
-
-&nbsp;
+> * The withdrawal amount cannot exceed the balance of the user.
+> * Merchant fees are substracted from the withdrawal amount
 
 ![Diagram: Withdraw to a bank account](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/3-Withdraw-bank-account.svg)
 
-&nbsp;
+1. Customer initiates withdrawal to bank account on Merchant's platform.
 
-&nbsp;
+2. Merchant calls Paysafe to create a Payment Handle for a *standalone credit*
 
-&nbsp;
+    &nbsp;
+
+    ---
+    **POST** `https://api2.paysafe.com/paymenthub/v1/paymenthandles`
+    ```json
+    {
+        "merchantRefNum": "merchantRefNum-124",
+        "transactionType": "STANDALONE_CREDIT",
+        "sepa": {
+            "nickName": "Sally's Barclays Account",
+            "accountHolderName": "John Doe",
+            "bic": "ABNANL2APIP",
+            "iban": "DE89370400440532013000"
+        },
+        "paymentType": "BANK_TRANSFER",
+        "amount": 3000,
+        "currencyCode": "EUR",
+        "customerIp": "73.82.192.17",
+        "billingDetails": {
+            "nickName": "Home",
+            "street": "100 Queen",
+            "street2": "Unit 201",
+            "city": "Toronto",
+            "zip": "M5H 2N2",
+            "country": "CA"
+        },
+        "wallet":{
+           "customerId" : "GGG",
+           "verifiedInstrument" : false,
+           "customerAccount" : {
+               "id":"abc"
+            }                   
+        }
+    }
+    ```
+    **Response**
+    ```json
+    {
+        "id": "372b5ee7-6360-4403-b444-164f8f1d2709",
+        "amount": 3000,
+        "merchantRefNum": "merchantRefNum-124",
+        "action": "NONE",
+        "currencyCode": "EUR",
+        "usage": "SINGLE_USE",
+        "status": "PAYABLE",
+        "paymentType": "BANK_TRANSFER",
+        "executionMode": "SYNCHRONOUS",
+        "customerIp": "73.82.192.17",
+        "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+        "billingDetails": {
+            "nickName": "Home",
+            "street": "100 Queen",
+            "street2": "Unit 201",
+            "city": "Toronto",
+            "country": "CA",
+            "zip": "M5H 2N2"
+        },
+        "sepa": {
+            "nickName": "Sally's Barclays Account",
+            "accountHolderName": "John Doe",
+            "bic": "ABNANL2APIP",
+            "lastDigits": "00"
+        },
+        "wallet":{
+           "customerId" : "GGG",
+           "slipId" : "100753",
+           "verifiedInstrument" : false,
+           "customerAccount" : {
+               "id":"abc"
+           }
+        },
+        "timeToLiveSeconds": 899,
+        "transactionType": "STANDALONE_CREDIT"
+    }
+    ```
+    ---
+
+3. Merchant finalizes the standalone credit
+   
+    &nbsp;
+    
+    ---
+    **POST** `https://api2.paysafe.com/paymenthub/v1/standalonecredits`
+    ```json
+    {
+        "amount": 3000,
+        "merchantRefNum": "merchantRefNum-151",
+        "currencyCode": "EUR",
+        "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+        "customerIp": "73.82.192.17",
+        "description": "Pay surplus"
+    }
+    ```
+    **Response**
+    ```json
+    {
+        "id": "e075f2ae-dfc4-4f6d-8d89-61158367b6a6",
+        "amount": 3000,
+        "merchantRefNum": "merchantRefNum-151",
+        "paymentHandleToken": "SCyGZDlUuZ9zxjyd",
+        "customerIp": "73.82.192.17",
+        "currencyCode": "EUR",
+        "paymentType": "BANK_TRANSFER",
+        "status": "PROCESSING",
+        "description": "Pay surplus",
+        "sepa": {
+           "nickName": "Sally's Barclays Account",
+           "accountHolderName": "John Doe",
+           "bic": "ABNANL2APIP",
+           "lastDigits": "00"
+        },
+        "wallet":{
+         "customerId" : "abc",
+         "slipId" : "100753",
+         "verifiedInstrument" : true,
+         "customerAccount" : {
+            "id":"xyz",
+            "transactions": [{
+              "id": "12321",
+              "type": "TRANSFER_IN",
+              "amount": 3000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "CREDIT",
+              "paymentType": "BANK_TRANSFER",
+              "status": "COMPLETED",
+              "merchantRefNum": "merchantRefNum-151"
+             },
+             {
+              "id": "12322",
+              "type": "WITHDRAWAL",
+              "amount": 3000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "DEBIT",
+              "fee": 0,
+              "paymentType": "BANK_TRANSFER",
+              "status": "PROCESSING",
+              "merchantRefNum": "merchantRefNum-151"
+             }
+           ]
+           },
+          "merchantAccount" : {
+             "id": "def",
+            "transactions": [{
+              "id": "12323",
+              "type": "TRANSFER_OUT",
+              "amount": 3000,
+              "currencyCode": "EUR",
+              "creationTime": "2021-07-15T17:54:12Z",
+              "direction": "DEBIT",
+              "paymentType": "BANK_TRANSFER",
+              "status": "COMPLETED",
+              "merchantRefNum": "merchantRefNum-151"
+             }
+           ]
+          }
+        }
+    }
+    ```
+    ---
+    
+4. Paysafe debits withdrawal amount and fee, if applicable, from customer’s wallet.
+
+5. Paysafe credits customer fee to the Merchant wallet.
+
+> Paysafe will also make sure any returned withdrawals are processed by crediting the returned amount back to the customer’s wallet. 
+> The Merchant will receive a notification for such returned withdrawals.
 
 ## Withdrawal to a card
 
@@ -778,11 +958,17 @@ Customers can withdraw from fiat balance to their cards as well (Visa Direct - c
 
 * Paysafe returns a payment details response to the Merchant.
 
+![Diagram: Withdraw to a card](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/card_withdrawal.png)
+
+## Authorization holds on a balance
+
+Certain wallet payment flows, like Buying Crypto require requesting a hold on part of a customer balance.
+
+Any held funds will not be available for any other transactions and will remain reserved until the Merchant executes the transaction or cancels the hold.
 
 &nbsp;
 
-![Diagram: Withdraw to a card](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/card_withdrawal.png)
-
+![Diagram: Authorization holds](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/diagrams/4-AuthorizationHold.svg)
 
 &nbsp;
 
