@@ -108,6 +108,18 @@ For these integrations, corresponding Payment and Settlement resources are creat
 
 # Getting started
 
+## API Basics
+
+The API is constructed around REST and has following features:
+* Definite resource-oriented URLs
+* Receives JSON-encoded request bodies
+* Returns JSON-encoded responses
+* Communicates using standard HTTP response codes, authentication, and verbs.
+
+* **Message body**: This must contain valid Paysafe JSON objects as required for the type of request. Not all API calls require a message-body; for example, GET requests do not require a body.
+* **Resource ID**: Identifies the unique ID of a resource.
+![Structure of a Typical API Request](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/user_upload/authentication_example_payments.png)
+
 ## Authentication
 
 Paysafe's REST API uses API keys to authenticate your request in the following format:
@@ -204,6 +216,39 @@ For example:
 
 * `https://api2.paysafe.com/paymenthub/v1/payments/{payment_id}`
 * `https://api2.paysafe.com/digitalwallets/v1/customers`
+
+## Using the Example API Calls (Console Window)
+
+To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right-hand pane.
+Using the Console window you can update the headers, the request body, and parts of the API endpoint. For example, for many lookup requests you must update the endpoint to include your request ID (for example, payment_id), which you do by selecting **URI Parameters** and then updating the respective *id* value.
+
+![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/ApiaryConsole.png)
+
+You must also update the Header to include your API Key by selecting **Headers** and then updating the **Authorization** value using the Base64 version of your API key.
+To get your Base64 encoded API key, sign in to the Business Portal and go to **Integrate>API Keys**.
+![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/API_authorization.png)
+
+When you are ready to test your example, you can choose between the Production and Mock server environment:
+
+- Production server – This calls the resource on Paysafe's Test system.
+- Mock server – This environment simply returns the dummy values in the example response irrespective of the parameters you supply. You do not need to use your account ID or Test API key for this request.
+
+To call the API resource, click **Call Resource**. The response is displayed in the Console window.
+
+## Pagination
+
+In the case where an API GET request returns multiple results, Paysafe returns the first 10 records by default and uses HATEOAS links to provide page navigation. In addition to the default behavior, it is also possible to control the number of results and starting point by passing in query parameters  as described in this [section](https://developer.paysafe.com/en/resources-and-support/pagination/).
+
+## Global Invalid Characters
+
+You must not include any of the characters in this [table](https://developer.paysafe.com/en/resources-and-support/global-invalid-characters/) as values in any of your request parameters. Object. If you do, your request will result in an error.
+
+## ISO Standards
+
+ISO standards add value by providing the common business process data semantics to be used in the API based exchanges. This [section](https://developer.paysafe.com/en/resources-and-support/iso-standards/) presents you codes for four areas - Currency, Province, State, and Country.
+
+
+Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-payments-api/payments-api/miscellaneous/) for Global Invalid Characters, ISO Standards, Currency Codes, Province Codes, State Codes, Country Codes.
 
 # Wallet operations
 
@@ -1121,18 +1166,6 @@ Any held funds will not be available for any other transactions and will remain 
 
 &nbsp;
 
-<a name="api" title="API"></a>
-# API
-The API is constructed around REST and has following features:
-* Definite resource-oriented URLs
-* Receives form-encoded request bodies
-* Returns JSON-encoded responses
-* Communicates using standard HTTP response codes, authentication, and verbs.
-
-* **Message body**: This must contain valid Paysafe JSON objects as required for the type of request. Not all API calls require a message-body; for example, GET requests do not require a body.
-* **Resource ID**: Identifies the unique ID of a resource.
-![Structure of a Typical API Request](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/user_upload/authentication_example_payments.png)
-
 <a name="webhooks" title="Webhooks"></a>
 # Webhooks
 
@@ -1152,26 +1185,6 @@ You are responsible for ensuring its continued availability.
 + As Paysafe does not have a notification method to alert you when callbacks are not reaching your endpoint URL, you should make sure that there is continued availability of your endpoint.
 + All endpoint URLs should use HTTPS/SSL to ensure security. Please note that only the default **HTTPS port 443** is supported.
 + In case you have received the same notification multiple times for an already processed event, we request you to ignore the duplicate notification. It is recommended to make the notification URL endpoints idempotent.
-
-
-# Pagination
-
-In the case where an API GET request returns multiple results, Paysafe returns the first 10 records by default and uses HATEOAS links to provide page navigation. In addition to the default behavior, it is also possible to control the number of results and starting point by passing in query parameters  as described in this [section](https://developer.paysafe.com/en/resources-and-support/pagination/).
-
-<a name="globalinvalidcharacters" title="Global Invalid Characters"></a>
-# Global Invalid Characters
-
-You must not include any of the characters in this [table](https://developer.paysafe.com/en/resources-and-support/global-invalid-characters/) as values in any of your request parameters. Object. If you do, your request will result in an error.
-
-<a name="isostandards" title="ISO Standards"></a>
-# ISO Standards
-
-ISO standards add value by providing the common business process data semantics to be used in the API based exchanges. This [section](https://developer.paysafe.com/en/resources-and-support/iso-standards/) presents you codes for four areas - Currency, Province, State, and Country.
-
-
-Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-payments-api/payments-api/miscellaneous/) for Global Invalid Characters, ISO Standards, Currency Codes, Province Codes, State Codes, Country Codes.
-
-
 
 # Common Objects
 
@@ -2270,24 +2283,6 @@ This is a read-only raw response returned by an acquirer.
 | TRANSFER_GENERAL_ERROR               | Error during processing the transfer. Transaction was not created.                                      |
 | TRANSFER_DUPLICATE_MERCHANT_REF      | Duplicate merchant reference provided. Transfer was failed.                                             |
 
-
-# Using the Example API Calls (Console Window)
-
-To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right-hand pane.
-Using the Console window you can update the headers, the request body, and parts of the API endpoint. For example, for many lookup requests you must update the endpoint to include your request ID (for example, payment_id), which you do by selecting **URI Parameters** and then updating the respective *id* value.
-
-![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/ApiaryConsole.png)
-
-You must also update the Header to include your API Key by selecting **Headers** and then updating the **Authorization** value using the Base64 version of your API key.
-To get your Base64 encoded API key, sign in to the Business Portal and go to **Integrate>API Keys**.
-![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/API_authorization.png)
-
-When you are ready to test your example, you can choose between the Production and Mock server environment:
-
-- Production server – This calls the resource on Paysafe's Test system.
-- Mock server – This environment simply returns the dummy values in the example response irrespective of the parameters you supply. You do not need to use your account ID or Test API key for this request.
-
-To call the API resource, click **Call Resource**. The response is displayed in the Console window.
 
 # Change Log
 
