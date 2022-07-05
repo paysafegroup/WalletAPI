@@ -63,7 +63,7 @@
     autonumber
 
 	Customer -> Merchant : Initiates Deposit with Card by providing card details
-   
+
 	alt 3DS is required
         Merchant -> PSP: Call the 3DS provider and redirect the customer to 3DS Page
         Customer -> PSP: Customer authenticates the payment
@@ -71,7 +71,7 @@
     end alt
 
     Merchant -> PaysafeAPI: Create a customer payment handle\n**POST /paymenthub/v1/paymenthandles**\n\nmerchantRefNum\ntransactionType: **PAYMENT**\npaymentType: **CARD**\ncard: {cardNum, cardExpiry, cvv, holderName}\nbillingDetails: {street, country, zip}\namount\ncurrencyCode: EUR\nauthentication: {eci, cavv, threeDResult, threeDSecureVersion, directoryServerTransactionId}\nwallet: {customerId, fee}
-	
+
 	Merchant <- PaysafeAPI: Return Payment Handle\nid\naction: NONE\npaymentHandleToken: XXXXXXX\nstatus: PAYABLE\
 
     ...
@@ -192,25 +192,25 @@
     Merchant --> PSP: Redirect Customer to Rapid Transfer
     PSP --> PSP : Customer authenticates the payment
     PSP --> PaysafeAPI : Redirect Customer back to Paysafe
-    
-    par   
+
+    par
     alt rely on customer redirection
 	    PaysafeAPI --> Merchant : Redirect Customer back to Merchant's system
   	    Merchant -> PaysafeAPI: Get PaymentHandle status\n**GET /paymenthub/v1/paymenthandles/{paymenthandle_id}**
         Merchant <-- PaysafeAPI: Return Payment Handle (Action = REDIRECT)\nid\npaymentHandleToken: XXXXXXX\nstatus: **PAYABLE**\n. . .
 	    note left: Poll the status until the status is PAYABLE
     else rely on webhooks ( **recommended** )
-		PaysafeAPI -> Merchant : Payment Handle webhook\n id\n merchantRefNum\n status: **PAYABLE**\n paymentHandleToken: XXXX ....    	
+		PaysafeAPI -> Merchant : Payment Handle webhook\n id\n merchantRefNum\n status: **PAYABLE**\n paymentHandleToken: XXXX ....
     end
         |||
 
     Merchant -> PaysafeAPI: Process Payment\n**POST /paymenthub/v1/payments**\nmerchantRefNum\namount\ncurrencyCode\npaymentHandleToken\nsettleWithAuth: **true**
-    
+
     Merchant <-- PaysafeAPI: Return Payment\nid\nstatus: COMPLETED\nwallet:\n    customerAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee            \n    merchantAccount\n        transactions[]:\n            id\n            status\n            type\n            direction\n            amount\n            fee
 
 
 
-    else 
+    else
         PSP -> PaysafeAPI : Notification of successful transfer
         activate PaysafeAPI
 
@@ -605,4 +605,39 @@
 
  	PaysafeAPI -> Merchant: Reconciliation report\ntransport protocol to be discussed
     note right: Inlcudes transactions from\nMerchant merchant wallet \nand all customer wallet transactions
+@enduml
+
+@startuml Bank Account Verification
+
+!theme cerulean-outline
+
+skinparam dpi 72
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam Sequence {
+    ParticipantBorderColor #282828
+    ParticipantBackgroundColor #282828
+    ParticipantFontSize 17
+    ParticipantFontColor #FFFFFF
+    ArrowColor #282828
+    ArrowFontSize 17
+    LifeLineBorderColor #FBC9D6
+}
+
+title "Bank Account Verification"
+
+actor User
+participant "Merchant" as Merchant
+participant "Embedded Finance" as EmbeddedFinance
+
+User -> Merchant: Add new Bank Account
+Merchant -> EmbeddedFinance: Add new Payment Instrument (Bank Account)
+return New "UNVERIFIED" Payment Instrument
+User -> Merchant: Submit Bank Account Statement
+Merchant -> EmbeddedFinance: Submit Bank Account Statement
+EmbeddedFinance -> EmbeddedFinance: Paysafe team checks statements
+EmbeddedFinance -> EmbeddedFinance: Payment Instrument set to "VERIFIED"
+EmbeddedFinance --> Merchant: Payment Instrument Status Change Event "VERIFIED"
+User -> Merchant: Deposit using the new "VERIFIED" Payment Instrument
+
 @enduml

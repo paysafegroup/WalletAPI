@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="534.75px" preserveAspectRatio="none" style="width:906px;height:534px;background:#FFFFFF;" version="1.1" viewBox="0 0 906 534" width="906px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="35.3672" rx="3" ry="3" style="stroke:#BABDBF;stroke-width:0.75;" width="200.25" x="356.4375" y="15"/><text fill="#2FA4E7" font-family="&quot;Verdana&quot;" font-size="15" font-weight="bold" lengthAdjust="spacing" textLength="183.75" x="364.6875" y="38.8213">Bank Account Verification</text><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:5.0,5.0;" x1="27" x2="27" y1="123.1875" y2="464.0215"/><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:5.0,5.0;" x1="355.125" x2="355.125" y1="123.1875" y2="464.0215"/><line style="stroke:#FBC9D6;stroke-width:0.75;stroke-dasharray:5.0,5.0;" x1="676.875" x2="676.875" y1="123.1875" y2="464.0215"/><text fill="#2FA4E7" font-family="&quot;Verdana&quot;" font-size="9" lengthAdjust="spacing" textLength="20.25" x="15" y="117.46">User</text><ellipse cx="27.375" cy="65.3672" rx="6" ry="6" style="stroke:#2FA4E7;stroke-width:0.75;fill:none;"/><path d="M27.375,71.3672 L27.375,91.6172 M17.625,77.3672 L37.125,77.3672 M27.375,91.6172 L17.625,102.8672 M27.375,91.6172 L37.125,102.8672 " fill="none" style="stroke:#2FA4E7;stroke-width:0.75;"/><text fill="#2FA4E7" font-family="&quot;Verdana&quot;" font-size="9" lengthAdjust="spacing" textLength="20.25" x="15" y="476.3643">User</text><ellipse cx="27.375" cy="488.8418" rx="6" ry="6" style="stroke:#2FA4E7;stroke-width:0.75;fill:none;"/><path d="M27.375,494.8418 L27.375,515.0918 M17.625,500.8418 L37.125,500.8418 M27.375,515.0918 L17.625,526.3418 M27.375,515.0918 L37.125,526.3418 " fill="none" style="stroke:#2FA4E7;stroke-width:0.75;"/><rect fill="#282828" height="34.0371" rx="3" ry="3" style="stroke:#282828;stroke-width:0.75;" width="69" x="320.625" y="88.4004"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="51" x="329.625" y="110.636">Merchant</text><rect fill="#282828" height="34.0371" rx="3" ry="3" style="stroke:#282828;stroke-width:0.75;" width="69" x="320.625" y="463.2715"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="51" x="329.625" y="485.5071">Merchant</text><rect fill="#282828" height="34.0371" rx="3" ry="3" style="stroke:#282828;stroke-width:0.75;" width="124.5" x="614.625" y="88.4004"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="106.5" x="623.625" y="110.636">Embedded Finance</text><rect fill="#282828" height="34.0371" rx="3" ry="3" style="stroke:#282828;stroke-width:0.75;" width="124.5" x="614.625" y="463.2715"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="106.5" x="623.625" y="485.5071">Embedded Finance</text><polygon fill="#282828" points="346.125,155.7246,353.625,158.7246,346.125,161.7246,349.125,158.7246" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="27.375" x2="350.625" y1="158.7246" y2="158.7246"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="127.5" x="36.375" y="150.6731">Add new Bank Account</text><polygon fill="#282828" points="667.875,189.7617,675.375,192.7617,667.875,195.7617,670.875,192.7617" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="355.125" x2="672.375" y1="192.7617" y2="192.7617"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="249" x="364.125" y="184.7102">Add new Payment Instrument (Bank Account)</text><polygon fill="#282828" points="363.375,223.7988,355.875,226.7988,363.375,229.7988,360.375,226.7988" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="358.875" x2="676.125" y1="226.7988" y2="226.7988"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="222" x="371.625" y="218.7473">New "UNVERIFIED" Payment Instrument</text><polygon fill="#282828" points="346.125,257.8359,353.625,260.8359,346.125,263.8359,349.125,260.8359" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="27.375" x2="350.625" y1="260.8359" y2="260.8359"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="175.5" x="36.375" y="252.7844">Submit Bank Account Statement</text><polygon fill="#282828" points="667.875,291.873,675.375,294.873,667.875,297.873,670.875,294.873" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="355.125" x2="672.375" y1="294.873" y2="294.873"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="175.5" x="364.125" y="286.8215">Submit Bank Account Statement</text><line style="stroke:#282828;stroke-width:2.25;" x1="676.875" x2="708.375" y1="328.9102" y2="328.9102"/><line style="stroke:#282828;stroke-width:2.25;" x1="708.375" x2="708.375" y1="328.9102" y2="338.6602"/><line style="stroke:#282828;stroke-width:2.25;" x1="677.625" x2="708.375" y1="338.6602" y2="338.6602"/><polygon fill="#282828" points="685.125,335.6602,677.625,338.6602,685.125,341.6602,682.125,338.6602" style="stroke:#282828;stroke-width:0.75;"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="179.25" x="685.875" y="320.8586">Paysafe team checks statements</text><line style="stroke:#282828;stroke-width:2.25;" x1="676.875" x2="708.375" y1="372.6973" y2="372.6973"/><line style="stroke:#282828;stroke-width:2.25;" x1="708.375" x2="708.375" y1="372.6973" y2="382.4473"/><line style="stroke:#282828;stroke-width:2.25;" x1="677.625" x2="708.375" y1="382.4473" y2="382.4473"/><polygon fill="#282828" points="685.125,379.4473,677.625,382.4473,685.125,385.4473,682.125,382.4473" style="stroke:#282828;stroke-width:0.75;"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="211.5" x="685.875" y="364.6458">Payment Instrument set to "VERIFIED"</text><polygon fill="#282828" points="363.375,413.4844,355.875,416.4844,363.375,419.4844,360.375,416.4844" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;stroke-dasharray:2.0,2.0;" x1="358.875" x2="676.125" y1="416.4844" y2="416.4844"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="296.25" x="371.625" y="408.4329">Payment Instrument Status Change Event "VERIFIED"</text><polygon fill="#282828" points="346.125,447.5215,353.625,450.5215,346.125,453.5215,349.125,450.5215" style="stroke:#282828;stroke-width:0.75;"/><line style="stroke:#282828;stroke-width:2.25;" x1="27.375" x2="350.625" y1="450.5215" y2="450.5215"/><text fill="#343A40" font-family="&quot;Verdana&quot;" font-size="12.75" lengthAdjust="spacing" textLength="302.25" x="36.375" y="442.47">Deposit using the new "VERIFIED" Payment Instrument</text><!--MD5=[4f73bd7154b205a5908ae429f57ca54f]
+@startuml Bank Account Verification
+
+!theme cerulean-outline
+
+skinparam dpi 72
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam Sequence {
+    ParticipantBorderColor #282828
+    ParticipantBackgroundColor #282828
+    ParticipantFontSize 17
+    ParticipantFontColor #FFFFFF
+    ArrowColor #282828
+    ArrowFontSize 17
+    LifeLineBorderColor #FBC9D6
+}
+
+title "Bank Account Verification"
+
+actor User
+participant "Merchant" as Merchant
+participant "Embedded Finance" as EmbeddedFinance
+
+User -> Merchant: Add new Bank Account
+Merchant -> EmbeddedFinance: Add new Payment Instrument (Bank Account)
+return New "UNVERIFIED" Payment Instrument
+User -> Merchant: Submit Bank Account Statement
+Merchant -> EmbeddedFinance: Submit Bank Account Statement
+EmbeddedFinance -> EmbeddedFinance: Paysafe team checks statements
+EmbeddedFinance -> EmbeddedFinance: Payment Instrument set to "VERIFIED"
+EmbeddedFinance - -> Merchant: Payment Instrument Status Change Event "VERIFIED"
+User -> Merchant: Deposit using the new "VERIFIED" Payment Instrument
+
+@enduml
+
+@startuml Bank Account Verification
+
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor transparent
+    FontColor #2FA4E7
+    HyperLinkColor #FD7E14
+    LineColor #2683B9
+    LineThickness 1
+    Margin 10
+    Padding 6
+    Shadowing 0.0
+  }
+  node {
+   Padding 15
+   roundcorner 20
+   BackgroundColor transparent
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  groupHeader {
+    BackgroundColor #E9ECEF
+    FontColor #033C73
+    FontStyle bold
+  }
+  header {
+    LineThickness 0
+  }
+  referenceHeader {
+    BackgroundColor transparent
+    FontColor #343A40
+    FontStyle bold
+  }
+  separator {
+    BackgroundColor #343A40
+    FontColor transparent
+    FontStyle bold
+  }
+  title {
+	FontSize 20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor  transparent
+	FontColor #2FA4E7
+	BorderColor #E9ECEF
+  }
+  nwdiagDiagram {
+	network {
+			FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent    
+		LineColor #2FA4E7
+		LineThickness 1.0
+		FontColor #2683B9
+	}
+	server {
+			FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	}
+	arrow {
+		FontColor #2683B9
+		LineColor #2683B9
+	}
+	group {
+		BackGroundColor #F8F9FA
+		LineColor $LIGHT_DARK
+		LineThickness 2.0
+		Margin 5
+		Padding 5
+	}
+  }
+  ganttDiagram {
+	task {
+			FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+		LineColor #2FA4E7
+		Margin 10
+		Padding 6
+	}
+	note {
+		FontColor #033C73
+		LineColor $INFO_DARK
+		BackGroundColor transparent
+	}
+	separator {
+		LineColor #BABDBF
+		BackGroundColor transparent
+		FontColor #BABDBF
+	}
+	milestone {
+		FontColor #033C73
+		FontSize 16
+		FontStyle italic
+		BackGroundColor #E9ECEF
+		LineColor #BABDBF
+	}
+	timeline {
+		BackgroundColor #E9ECEF
+		FontColor #BABDBF
+	}
+	closed {
+		BackgroundColor $WARNING_DARK
+		FontColor #DD5600
+	}
+  }
+</style>
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             false
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               5
+skinparam ArrowColor            #868E96
+skinparam stereotype {
+    CBackgroundColor #EDF0F2
+    CBorderColor #BABDBF
+    ABackgroundColor #8FB961
+    ABorderColor $SUCCESS_DARK
+    IBackgroundColor #D2494E
+    IBorderColor $DANGER_DARK
+    EBackgroundColor #E47833
+    EBorderColor $WARNING_DARK
+    NBackgroundColor #35638F
+    NBorderColor $INFO_DARK
+}
+skinparam title {
+	FontColor	                 #2FA4E7
+	BorderColor	                 #BABDBF
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              transparent
+}
+
+skinparam legend {
+	BackgroundColor transparent
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam swimlane {
+	BorderColor #033C73
+	BorderThickness 2
+	TitleBackgroundColor  #EDF0F2-#E9ECEF
+	TitleFontColor #2FA4E7
+}
+
+
+skinparam activity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BarColor #73A839
+	StartColor #033C73
+	EndColor #033C73
+	DiamondBackgroundColor transparent
+  	DiamondBorderColor #BABDBF
+	DiamondFontColor #BABDBF
+}
+
+
+skinparam participant {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2FA4E7
+	FontColor #343A40
+}
+
+
+skinparam sequence {
+	BorderColor #2FA4E7
+	TitleFontColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #2FA4E7
+	EndColor #2FA4E7
+	BoxBackgroundColor transparent
+	BoxBorderColor #868E96
+	BoxFontColor #343A40
+	DelayFontColor #343A40
+	LifeLineBorderColor #BABDBF
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor transparent
+	GroupBorderColor #868E96
+	GroupFontColor #343A40
+	GroupHeaderFontColor #033C73
+	DividerBackgroundColor transparent
+    DividerBorderColor #868E96
+    DividerBorderThickness 2
+    DividerFontColor #343A40
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #868E96
+	ReferenceFontColor #343A40
+	ReferenceHeaderFontColor #033C73
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam partition {
+	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam control {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam entity {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam boundary {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam agent {
+	BackgroundColor transparent
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam artifact {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam component {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam interface {
+	BackgroundColor  transparent
+	BorderColor  #C71C22
+	FontColor #343A40
+}
+
+
+skinparam storage {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+}
+
+
+skinparam node {
+	BackgroundColor transparent
+	BorderColor #343A40
+	FontColor #343A40
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #343A40
+}
+
+
+skinparam database {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam class {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	FontColor #F8F9FA
+	HeaderBackgroundColor #2FA4E7-#2683B9
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam rectangle {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+
+skinparam package {
+	BackgroundColor transparent
+  	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor transparent
+  	BorderColor #DD5600
+	FontColor #DD5600
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor transparent
+  	BorderColor #033C73
+	FontColor #033C73
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #033C73
+	EndColor #033C73
+	AttributeFontColor #BABDBF
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+skinparam card {
+	BackgroundColor transparent
+	BorderColor #033C73
+	FontColor #033C73
+}
+
+
+skinparam file {
+	BackgroundColor transparent
+	BorderColor #868E96
+	FontColor #868E96
+}
+
+
+skinparam stack {
+		FontColor #2FA4E7
+	BorderColor #2FA4E7
+	BackgroundColor transparent
+}
+
+
+
+
+skinparam dpi 72
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam Sequence {
+    ParticipantBorderColor #282828
+    ParticipantBackgroundColor #282828
+    ParticipantFontSize 17
+    ParticipantFontColor #FFFFFF
+    ArrowColor #282828
+    ArrowFontSize 17
+    LifeLineBorderColor #FBC9D6
+}
+
+title "Bank Account Verification"
+
+actor User
+participant "Merchant" as Merchant
+participant "Embedded Finance" as EmbeddedFinance
+
+User -> Merchant: Add new Bank Account
+Merchant -> EmbeddedFinance: Add new Payment Instrument (Bank Account)
+return New "UNVERIFIED" Payment Instrument
+User -> Merchant: Submit Bank Account Statement
+Merchant -> EmbeddedFinance: Submit Bank Account Statement
+EmbeddedFinance -> EmbeddedFinance: Paysafe team checks statements
+EmbeddedFinance -> EmbeddedFinance: Payment Instrument set to "VERIFIED"
+EmbeddedFinance - -> Merchant: Payment Instrument Status Change Event "VERIFIED"
+User -> Merchant: Deposit using the new "VERIFIED" Payment Instrument
+
+@enduml
+
+PlantUML version 1.2022.5(Sat Apr 30 13:55:52 EEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg>
