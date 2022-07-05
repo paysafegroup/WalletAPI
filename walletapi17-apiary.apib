@@ -9,7 +9,7 @@ Paysafe's digital wallet offering caters to merchants that need to implement **e
 
 By leveraging Paysafe's capabilities - ledger, multiple currencies within the same wallet, multiple region coverage, risk, and AML monitoring, and a multitude of payment options, a product can be easily enhanced with an out-of-the-box, compliant e-money wallet.
 
-The service can easily and securely process payments & wallet requests from your customers using one single API – The **Payments & Wallets API**.
+The service can easily and securely process payments and wallet requests from your customers using one single API – The **Payments and Wallets API**.
 
 Paysafe's all-in-one [Business Portal](https://merchant.paysafe.com/portal) allows the merchant to access transaction analytics and manage the merchant account.
 
@@ -30,7 +30,7 @@ Paysafe Digital Wallet responsibilities:
 
   * Maintain e-money ledger
   * Maintain customer details for regulatory purposes
-  * Monitor for Risk & AML
+  * Monitor for Risk and AML
   * Integrate additional payment methods
   * Provide reporting capabilities
 
@@ -45,7 +45,7 @@ One wallet might have multiple accounts.
 
 * **Customer** is a physical person, associated with a wallet, and is the legal owner of the e-money stored in the accounts' ledger.
 
-* **Legal Entity Customer** is a customer which is a not a phisical person but a legal entity. Legal entities have extended compliance requirements and onboarding proccess.
+* **Corporate customer** is a customer which is a not a phisical person, but a legal entity. Legal entities have extended compliance requirements and onboarding proccess.
 
 * **Merchant** is a legal entity that provides services or goods to its customers and manages the Wallet as a Service solution. The merchant also has a wallet associated with it within the Paysafe Digital Wallet platform, and just like customers, KYB information must be collected and assessed.
 
@@ -53,27 +53,27 @@ One wallet might have multiple accounts.
 
 Regulations require Paysafe to collect and assess KYC information, PEP checks, and in some instances - carry out EDD verifications on the customer and legal entities.
 
-### Customer Wallet
+### Customer wallet
 
 Each customer is assigned a customer wallet, and it accounts for all transactions for that customer - deposits, withdrawals, pay-in m pay-out, exchange, etc. As mentioned above, a wallet can contain multiple accounts in different currencies.
 
 When the Merchant deems it necessary, a new Customer wallet is created. Usually, a customer wallet is created when the customer registers in the Merchant's system and passes the KYC verifications, as agreed between the Merchant and Paysafe.
 
-> As the Merchant is managing all its users, Paysafe **only holds the customer personal details necessary for risk & compliance purposes** - Paysafe does not access or manage customer credentials, nor does it manage authentication and authorization. These details are associated with every wallet.
+> As the Merchant is managing all its users, Paysafe **only holds the customer personal details necessary for risk and compliance purposes** - Paysafe does not access or manage customer credentials, nor does it manage authentication and authorization. These details are associated with every wallet.
 
-### Merchant Wallet
+### Merchant wallet
 
 The Merchant wallet, just like the Customer Wallet, provides ledger, transactional and multi-currency capabilities.
 
 The Merchant can access the Merchant Wallet via the Paysafe Merchant Portal. Access to this portal is provided during the merchant onboarding process.
 
-### Merchant Fees
+### Merchant fees
 
 All Merchant fees that the Merchant needs to charge its customers are **accumulated in the Merchant Wallet at the time of customer transaction**. Paysafe's fees can either be deducted directly from the MW balance or can be settled on a monthly/quarterly basis by invoicing the Merchant.
 
 To allow for the ultimate flexibility, all merchant fees **must be provided by the Merchant on a per-transaction basis**. This approach allows the Merchant to execute different pricing schemes based on regions, currency, customer loyalty levels, dynamic fee structures, and other information that is only available to the Merchant.
 
-## Device information
+### Device information
 
 Customer device information plays a critical role in all risk and compliance assessments in the digital wallet offering. Paysafe uses ThreatMetrix as the preferred device intelligence solution.
 
@@ -95,19 +95,6 @@ Deposits and withdraws are supported through the following transaction types:
   * [Payment Handles](#paymenthandlerequest)
   * [Payments](#paymentrequest)
   * [Standalone Credits](#standalonecreditrequest)
-
-## Payment flows
-
-One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
-
-Only supports settleWithAuth=true
-For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate the success or failure of the transaction request without having to do a separate lookup on the specific settlement.
-
-**Payment Flow**
-![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Payment_Flow.png)
-
-**Auto Settlement Payment**
-![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Auto_Settlement_Payment_Flow.png)
 
 # Getting started
 
@@ -1168,6 +1155,22 @@ Any held funds will not be available for any other transactions and will remain 
 &nbsp;
 
 &nbsp;
+
+# Payment Hub
+
+## Payment flows
+
+One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
+
+Only supports settleWithAuth=true
+For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate the success or failure of the transaction request without having to do a separate lookup on the specific settlement.
+
+**Payment Flow**
+![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Payment_Flow.png)
+
+**Auto Settlement Payment**
+![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Auto_Settlement_Payment_Flow.png)
+
 
 <a name="webhooks" title="Webhooks"></a>
 # Webhooks
