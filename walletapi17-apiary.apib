@@ -1,34 +1,23 @@
 FORMAT: 1A
 HOST: https://api2.test.paysafe.com/
 
-# Paysafe Wallet as a Service APIs
+# Paysafe Wallet as a Service API
 
 # Overview
 
-Paysafe's digital wallet offering caters to merchants that need to implement **embedded finance services** into their products, such as marketplaces, e-commerce, electronic goods, and more.
+Paysafe's digital wallet offering caters to merchants that need to implement **e-money financial services** into their products, such as marketplaces, e-commerce, electronic goods, and more.
 
 By leveraging Paysafe's capabilities - ledger, multiple currencies within the same wallet, multiple region coverage, risk, and AML monitoring, and a multitude of payment options, a product can be easily enhanced with an out-of-the-box, compliant e-money wallet.
-
-Built on top of Paysafe's solid payment processing API infrastructure, a digital wallet requires minimal enhancement in terms of integration, authentication, and monitoring.
 
 The service can easily and securely process payments & wallet requests from your customers using one single API – The **Payments & Wallets API**.
 
 Paysafe's all-in-one [Business Portal](https://merchant.paysafe.com/portal) allows the merchant to access transaction analytics and manage the merchant account.
 
-## Concepts in Paysafe's digital wallet
-
-The digital wallet is a stored-value financial service, and as such must adhere to certain regulations and data availability requirements.
-
-* **Customer** is the physical person, associated with a wallet, and is the legal owner of the e-money stored in the accounts' ledger. Regulations require Paysafe to collect and assess KYC information, PEP checks, and in some instances - carry out EDD verifications on the customer. A customer has a wallet associated with it.
-
-* A **Wallet Account** is a ledger for a single currency. The multicurrency capability requires multiple accounts to be associated with the wallet.
-
-* **Merchant** is a legal entity that provides services or goods to its customers. The merchant also has a wallet associated with it within the Paysafe Digital Wallet platform, and just like customers, KYB information must be collected and assessed.
-
-
 ## Digital Wallet as a Service
 
-On top of Paysafe regular wallet offering, the digital wallet can also be used purely as a backend service by operating a set of APIs.
+Paysafe Digital Wallet as a Service allows merchants to provides a e-money based financial services (deposits, withdraws, transactions) to end users.
+
+Operating e-money solution impose certain responsibilities split between merchants and Paysafe:
 
 Merchant's responsibilities:
 
@@ -45,9 +34,28 @@ Paysafe Digital Wallet responsibilities:
   * Integrate additional payment methods
   * Provide reporting capabilities
 
+## Concepts in Paysafe's digital wallet
+
+Here are the core terms of Paysafe Digital Wallets
+
+* A **Wallet** is a encapsulates all data and services provided to a single entity
+
+* A **Wallet account** is a ledger for a single currency. Each wallet account belongs to a single wallet - merchant, customer or legal entity.
+One wallet might have multiple accounts.
+
+* **Customer** is a physical person, associated with a wallet, and is the legal owner of the e-money stored in the accounts' ledger.
+
+* **Legal Entity Customer** is a customer which is a not a phisical person but a legal entity. Legal entities have extended compliance requirements and onboarding proccess.
+
+* **Merchant** is a legal entity that provides services or goods to its customers and manages the Wallet as a Service solution. The merchant also has a wallet associated with it within the Paysafe Digital Wallet platform, and just like customers, KYB information must be collected and assessed.
+
+* **Transaction** is a movement of money between any two accounts
+
+Regulations require Paysafe to collect and assess KYC information, PEP checks, and in some instances - carry out EDD verifications on the customer and legal entities.
+
 ### Customer Wallet
 
-Each customer is assigned a Customer Waller, and it accounts for all transactions for that customer - deposits, withdrawals, pay-in m pay-out, exchange, etc. As mentioned above, a wallet can contain multiple accounts in different currencies.
+Each customer is assigned a customer wallet, and it accounts for all transactions for that customer - deposits, withdrawals, pay-in m pay-out, exchange, etc. As mentioned above, a wallet can contain multiple accounts in different currencies.
 
 When the Merchant deems it necessary, a new Customer wallet is created. Usually, a customer wallet is created when the customer registers in the Merchant's system and passes the KYC verifications, as agreed between the Merchant and Paysafe.
 
@@ -73,25 +81,20 @@ The Merchant is required to pass in the data as received by ThreatMetrix, to avo
 
 ## Payment methods
 
-Payment Methods represent your customer's payment instruments. They are used to collect payments or store instrument details for future payments.
-The Payments API currently supports the following payment methods:
+Payment Methods represent the supported customer's payment instruments for deposit and withdraw operations.
+The supported payment methods are:
 
-- Cards - credit and debit
-- Rapid Transfer
+- Cards 
+- Rapid Transfer (only for Deposits)
 - Bank transfers
-
-> **Note:** Rapid Transfer is only supported for Payments.
 
 > **Note:** Bank transfers is only supported for Standalone Credits. For EUR, it should be through SEPA, and for GBP it should be through Faster Payments.
 
-
-## Transaction types supported
-Payments API supports the following transaction types:
+Deposits and withdraws are supported through the following transaction types:
 
   * [Payment Handles](#paymenthandlerequest)
   * [Payments](#paymentrequest)
   * [Standalone Credits](#standalonecreditrequest)
-
 
 ## Payment flows
 
