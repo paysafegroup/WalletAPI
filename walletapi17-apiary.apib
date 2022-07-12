@@ -45,7 +45,7 @@ One wallet might have multiple accounts.
 
 * **Customer** is a physical person, associated with a wallet, and is the legal owner of the e-money stored in the accounts' ledger.
 
-* **Corporate customer** is a customer which is a not a phisical person, but a legal entity. Legal entities have extended compliance requirements and onboarding proccess.
+* **Legal entity** is a customer who is a not a phisical person, but a legal entity. Legal entities have extended compliance requirements and onboarding proccess.
 
 * **Merchant** is a legal entity that provides services or goods to its customers and manages the Wallet as a Service solution. The merchant also has a wallet associated with it within the Paysafe Digital Wallet platform, and just like customers, KYB information must be collected and assessed.
 
@@ -96,7 +96,7 @@ Deposits and withdraws are supported through the following transaction types:
   * [Payments](#paymentrequest)
   * [Standalone Credits](#standalonecreditrequest)
 
-# Getting started
+# Getting Started
 
 ## API Basics
 
@@ -108,13 +108,13 @@ The API is constructed around REST and has following features:
 
 * **Message body**: This must contain valid Paysafe JSON objects as required for the type of request. Not all API calls require a message-body; for example, GET requests do not require a body.
 * **Resource ID**: Identifies the unique ID of a resource.
-![Structure of a Typical API Request](http://mweb1-paysafeio-foreign.fra.skrill.net/fileadmin/user_upload/authentication_example_payments.png)
 
 ## Authentication
 
 Paysafe's REST API uses API keys to authenticate your request in the following format:
-* Key Username – MerchantXYZ </li>
-* Key Password – B-tst1-0-51ed39e4-312d02345d3f123120881dff9bb4020a89e8ac44cdfdcecd702151182fdc952272661d290ab2e5849e31bb03deede7e 
+
+* **Key Username** – MerchantXYZ
+* **Key Password** – 20881dff9bb4020a89e8ac44
 
 
 The case-sensitive API key is sent using HTTP Basic Authentication. To use HTTP Basic Authentication, you must send the API key credentials 
@@ -122,40 +122,25 @@ using the Authorization header with every request.
 
 The Authorization header is constructed as follows:
 
-1. The Key Username and Key Password are combined into a string separated by a colon, e.g.,“Key Username:Key Password”.
+1. The **Key Username** and **Key Password** are combined into a string separated by a colon, e.g.,“**Key Username**:**Key Password**”.
 2. The resulting string literal is then encoded using Base64 (to allow sending of special characters).
 3. The authorization method and a space (i.e., “Basic”) are then put before the encoded string.
 
 For example, using the Key Username and Password examples above, the header is formed as follows:
 
-`Authorization: Basic TWVyY2hhbnRYWVo6Qi10c3QxLTAtNTFlZDM5ZTQtMzEyZDAyMzQ1ZDNmMTIzMTIwODgxZGZmOWJiNDAyMGE4OWU4YWM0NGNkZmRjZWNkNzAyMTUxMTgyZmRjOTU yMjcyNjYxZDI5MGFiMmU1ODQ5ZTMxYmIwM2RlZWRlN2U=`
+```http
+Authorization: Basic TWVyY2hhbnRYWVo6MjA4ODFkZmY5YmI0MDIwYTg5ZThhYzQ0
+```
 
 For additional details, please refer to http://en.wikipedia.org/wiki/Basic_access_authentication.
 
-Note: Your Production API key will be different from your Test API key. Contact your account manager for details. You must keep your API keys safe and ensure that it is used appropriately for your needs.
+> **Note:** Your Production API key will be different from your Test API key. Contact your account manager for details. You must keep your API keys safe and ensure that it is used appropriately for your needs.
 
 ## Get your secret API key
 
-The API uses a distinct API key:
+Please contact your business relationship manager or reach out to integrations@paysafe.com for API keys and Test/Production accounts.
 
-* The Secret Key – used for all server-to-server API requests.
-
-You can retrieve your Secret key for your account via the [Business Portal](https://merchant.paysafe.com/portal/login).
-
-#### Secret API Key
-You use the Secret API key in all your server-to-server API requests.
-
- > **Note:** You must Base64 Encode your Secret API key before using it in your API requests.
-
-To retrieve your Secret API key from the Business Portal:
- 1. Go to **Integrate>API Keys**.
- 2. Under **Secret Key**, click **Authenticate Now**.
- ![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/Secret_Key1.png)
- 3. Enter your Business Portal password and click **Authenticate**.
- 4. You can now access your Secret API key.
- ![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/Secret_Key2.png)
-
- > **Note:** All your APIs will use the same API key.
+> **Note:** All your APIs will use the same API key.
 
 ## Testing
 
@@ -173,6 +158,7 @@ For access to Test accounts and credentials, contact your account manager or rea
 Your Test account has access to the Test version of the Paysafe [Business Portal](https://merchant.test.paysafe.com/portal#/login), where you can view the status of your Test transactions.
 
 ###  Test URL
+
 To test your integration with Paysafe, use the following Test URLs:
 
 `https://api2.test.paysafe.com/paymenthub/v1/`
@@ -191,12 +177,14 @@ Once you are satisfied with your integration to the Test environment, you must r
 > **Note:** You cannot use your Test credentials to process transaction requests in the Production environment.
 
 ### Go Live Checklist
+
 1. You must have a production account and access to Business Portal.
 2. You must have a Secret API Key for the production environment.
 3. You must have Webhooks configured for all the events.
 4. You must use the Production URL for your API calls.
 
 ### Production URL
+
 To process live requests with Paysafe, use the following Production URL:
 
 * `https://api2.paysafe.com/paymenthub/v1/`
@@ -212,11 +200,12 @@ For example:
 To configure and test the API examples, first click on one of the API calls in the API Reference section and then click **Switch to Console** in the right-hand pane.
 Using the Console window you can update the headers, the request body, and parts of the API endpoint. For example, for many lookup requests you must update the endpoint to include your request ID (for example, payment_id), which you do by selecting **URI Parameters** and then updating the respective *id* value.
 
-![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/ApiaryConsole.png)
+![](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/images/ApiaryConsole.png)
 
 You must also update the Header to include your API Key by selecting **Headers** and then updating the **Authorization** value using the Base64 version of your API key.
 To get your Base64 encoded API key, sign in to the Business Portal and go to **Integrate>API Keys**.
-![](https://github.com/paysafegroup/paysafe_api_paymenthub_v1/raw/master/images/API_authorization.png)
+
+![](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/images/API_authorization.png)
 
 When you are ready to test your example, you can choose between the Production and Mock server environment:
 
@@ -244,31 +233,28 @@ Please refer [Miscellaneous](https://developer.paysafe.com/en/rest-apis/paysafe-
 
 ## Onboard a customer
 
-Onboarding a customer requires a new wallet to be created on the Paysafe side.
+Onboarding a new customer or a legal entity requires a new wallet to be created on the Paysafe side.
 
-Business requirements for creating a new wallet:
-
-* KYC verifications passed - a flag must be passed when creating a customer wallet that denotes that, and is the proof that Paysafe accepts that the customer was indeed verified. If the value of this flag is different than ``, the wallet creation will fail
-* Terms and conditions accepted - this flag is needed as proof that the Merchant has presented the Paysafe T&Cs to the customer, and the customer has accepted these T&Cs. If this flag has a value different than `true`, the wallet creation will fail.
-* Paysafe requires certain mandatory data points about the customer and identity metadata to be provided for a customer wallet account to be created. The details are documented in the API documentation.
-* Only end-consumers and not business (or business-like institutions) are being accepted for wallet account creation for the initial launch.
-* The currency of a wallet can only be created in EUR for the EEA and in GBP for the UK.
-
-Call **Onboard a customer**, with the following requirements for the data being passed in the body of the request:
+**Creating a new wallet for a customer** has the following requirements for the data being passed in the body of the request:
 
 * `customer` - all required fields must be fully populated - Paysafe needs this information for regulatory purposes.
-
-* `accounts` - at least one account object has to be populated; please refer to Merchant's agreement with Paysafe for a list of supported wallet currencies. If an unsupported currency is passed, or if two Account objects with the same currency are provided, creating the wallet will fail.
-    * when creating a new wallet, `totalBalance` and `availableBalance` must be equal
+* `customer.kyc.status` - This flag must passed, when creating a customer wallet. The flag denotes, that Paysafe accepts, that the customer passed the KYC verification process.
+  If the value of this flag is different from `COMPLETED`, then the wallet creation will fail.   
+* `accounts` - at least one account object has to be populated and it must contain a currency code.
+  Please refer to Merchant's agreement with Paysafe for a list of supported wallet currencies per country.
+  If an unsupported currency is passed, or if two Account objects with the same currency are provided, creating the wallet will fail.
+    * when creating a new wallet, `totalBalance` and `availableBalance` are disregarded
     * when `hasIban == true`, a new Virtual IBAN (vIBAN) will be allocated for this customer for that account and currency. The vIBAN will be provided to the Merchant in the API response.
-
+* `termsAndConditionsAccepted` - this flag is needed as proof that the Merchant has presented the Paysafe T&Cs to the customer, and the customer has accepted these T&Cs.
+  If this flag has a value different, than `true`, then the wallet creation will fail. 
 * `identityDocuments` - metadata about all documents, submitted by the Customer during the KYC & EDD process
 
-> NOTE: Assigning virtual IBAN may be different due to differences in the banks used. Paysafe will try to return the information as soon as possible.
-><br>
-> When creating a new customer, the response might include a virtual IBAN assigned to the account. This means that Paysafe managed to assign the virtual IBAN to the customer, and no subsequent webhooks will be sent.
-><br>
-> If the response DOES NOT contain a value for the account's `iban`, this means that the virtual IBAN will be assigned asynchronously. In this case the Merchant must wait for a webhook that will notify the availability of the virtual IBAN for this customer. When the webhook received, the Merchant must fetch the IBAN via the get Accounts API (due to information security requirements, Paysafe should not send the IBAN via a webhook).
+> **Note** The wallet account can only be created in EUR for the European Economic Area and in GBP for the United Kingdom.
+
+> **Note:** Assigning a virtual IBAN may be asynchronous due to differences in the banks that are used.
+> The Merchant will receive a webhook with `IBAN_ASSIGNED` event, when the vIBAN is assigned.
+>
+> When the vIBAN is created and assigned, the merchant might obtain it by using tje `iban` property from getAccounts API.
 
 &nbsp;
 
@@ -276,15 +262,104 @@ Call **Onboard a customer**, with the following requirements for the data being 
 
 &nbsp;
 
-When creating a wallet for an **newly signed-up customer**, the `totalBalance` and `availableBalance` fields for all `account` objects must be set to 0.
-
 To migrate the balance, Merchant calls an API endpoint to debit the amounts specified from the Merchant wallet, and credit these amounts into the customer's wallet effectively creating a starting balance.
 
-In case the email provided is not unique and a wallet is already created
-using this email address, the creation of a new wallet will fail.
+In case the provided email provided is not unique, and a wallet is already created with this email address, the creation of a new wallet will fail.
 
-After creating the wallet, the customer could be restricted on Paysafe side
+> **Note:** Providing an email for the customer during onboarding is a configurable option per Merchant. 
+> If the email is not provided, Paysafe would set an autogenerated email address (e.g. autogen.xxx.08891111@something.com). 
+> The email can be updated only once with another value using update API.
+
+After creating the wallet, the customer might be restricted on Paysafe side
 based on regulatory and risk checks.
+
+## Onboard a legal entity
+
+Onboarding a legal entity requires providing extended information, since extended due diligence is required. 
+
+---
+**PATCH** `https://api.paysafe.com/digitalwallets/v1/wallets`
+```json
+{
+    "legalEntity": {
+        "externalId": "6622429017",
+        "email": "companymail@company.com",
+        "mobile": "088634001917",
+        "registrationIp": "87.120.141.75",
+        "companyName": "companyName",
+        "companyIdentifier": "companyIdentifier",
+        "registrationAddress": {
+          "countryCode": "BG",
+          "stateProvince": "Sofia",
+          "city": "Sofia",
+          "postalCode": "1000",
+          "address1": "reg address 1",
+          "address2": "reg address 2"
+        },
+        "operatingAddress": {
+          "countryCode": "BG",
+          "stateProvince": "Sofia",
+          "city": "Sofia",
+          "postalCode": "1000",
+          "address1": "operating address 1",
+          "address2": "operating address 2"
+        },
+        "websiteUrl": "somecompany.com",
+        "representative": {
+          "firstName": "John",
+          "middleName": "Alexander",
+          "lastName": "Doe",
+          "dateOfBirth": "1961-11-11",
+          "countryCode": "BG",
+          "identificationNumber": "6111118787",
+          "identificationNumberIssuingCountryCode": "BG"
+        },
+        "directors": [
+            {
+              "firstName": "John",
+              "middleName": "A",
+              "lastName": "Doe",
+              "dateOfBirth": "1961-11-11",
+              "countryCode": "BG",
+              "identificationNumber": "6111118787",
+              "identificationNumberIssuingCountryCode": "BG"
+            }
+        ],
+        "ultimateBeneficialOwners": [
+            {
+              "firstName": "John",
+              "middleName": "Alexander",
+              "lastName": "Doe",
+              "dateOfBirth": "1961-11-11",
+              "countryCode": "BG",
+              "identificationNumber": "6111118787",
+              "identificationNumberIssuingCountryCode": "BG"
+            }
+        ],
+        "sourceOfFunding": "funding source",
+        "natureOfBusiness": "nature of business",
+        "reasonToApply": "application reason"
+    },
+    "deviceInfo": {
+        "appType": "WEB_APP"
+    },
+    "customerIp": "87.120.141.75",
+    "accounts": [
+        {
+            "currencyCode": "EUR",
+            "hasIban": true
+        }
+    ],
+    "risk": {
+        "customerRiskRating": "1",
+        "isScaPerformed": true,
+        "isCustomerIPTrusted": true,
+        "isBeneficiaryTrusted": true
+    },
+    "termsAndConditionsAccepted": true
+}
+```
+---
 
 ## Update customer details
 
@@ -294,23 +369,83 @@ Customer profile information can be updated by calling the respective APIs for u
 
 The following fields cannot be updated, and an attempt to do so will result in an error:
 
-* id
+* birthDate 
+* email - can be updated only once and only if not passed during initial onboarding
+* type - Might cause `404 Not Found` error if does not match the correct customer type
+
+The following fields are disregarded during update:
+
 * registrationIp
+* id
+* externalId
+
+## Update a legal entity
+
+TBD
 
 ## Deactivate a customer
 
 When a customer closes their account with the Merchant, the digital wallet on the Paysafe side must be deactivated.
+Deactivation on Paysafe side restricts all customer operations.
 
 The API [Deactivate Customer](#reference/customers/get-customer/deactivate-customer) must be used to achieve that.
 
-## Customer accounts
+## Customer Accounts
 
 Account information can be retrieved with the following APIs:
 
 * Get a list of all accounts for a customer - [Get Account List](#reference/wallets/get-account-list/get-account-list)
 * Get details and current balance for an account - [Get Account](#reference/wallets/get-account/get-account)
 
-Direct update and delete acounts is not supported via API.
+Direct update and delete accounts is not supported via API.
+
+## Change of customer country
+
+Changing of customer country requires to move the customer account from one country jurisdiction to another. 
+It impacts both accounting and compliance handling.
+
+> Legal entities can not change countries.
+
+The process of account migration has the following prerequisites.
+
+* Customer accounts must have zero balance
+* Customer must provide address located in the new country
+* Base account currency in the new country must be specified upon migration. 
+* One account must be provided for the initial migration. Additional accounts might be added using the Accounts API.
+* The customer accounts in old country would be deactivated
+* KYC address verification information must be passed for the new address. 
+  If not passed the account might be restricted, until the address verification is performed.
+
+> Customer transaction history and verified instruments remain after the account migration.
+
+For changing country you should use `customer-persons` **PATCH** request and pass all the required parameters for complying the requirements above.
+
+---
+**PATCH** `https://api.paysafe.com/digitalwallets/v1/customer-persons/{customerId}`
+```json
+{
+    "address1": "23 Four Str",
+    "city": "London",
+    "zip": "E17 033",
+    "countryCode": "GB",
+    "kyc": {
+        "status": "COMPLETED",
+        "addressVerification": {
+            "status": "COMPLETED",
+            "date": "2021-07-15T17:54:12Z",
+            "documentUrls": [
+                "https://documents-repository.com/images/doc3"
+            ]
+        }
+    },
+    "accounts": [{
+            "currencyCode": "GBP",
+            "hasIban": true
+        }
+    ]
+}
+```
+---
 
 ## Deposit with a card
 
