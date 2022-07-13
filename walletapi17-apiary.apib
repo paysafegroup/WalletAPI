@@ -1327,9 +1327,125 @@ You are responsible for ensuring its continued availability.
 + All endpoint URLs should use HTTPS/SSL to ensure security. Please note that only the default **HTTPS port 443** is supported.
 + In case you have received the same notification multiple times for an already processed event, we request you to ignore the duplicate notification. It is recommended to make the notification URL endpoints idempotent.
 
+# Incubator Features
+
+Incubator features are capabilities currently in development.
+Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
+
+These features:
+
+* might not get released in general availability for all customers
+* might get changed before being released in general availability
+* might be enabled in a test environment for selected Paysafe customers and partners
+* might require contract amendments to be accessible to your environment
+
+> **Note:** Parts of the API that are part of incubator feature would be annotated with `In Incubation` comment
+
+Contact your Paysafe account manager for more details on the product roadmap.
+
+## Manual bank account verification process for legal entities
+
+Customers are allowed withdrawals only to bank accounts, that are verified to be owned by them.
+
+The **verification** can happen in the following ways:
+
+* **deposit** from the same bank account - Paysafe checks deposit origin and performs a name matching to verify ownership
+* submit of bank account statement issued by the bank - **Bank account statement** is submitted through API and manually verified by Paysafe
+
+> **Note:** Manual bank account verification is supported only for legal entities.
+
+A new instrument management API is provided, that allows managing the payment instruments of a customer.
+A new webhook API is introduced allowing monitoring instrument status changes
+
+For supporting the manual bank account verification flow for legal entities the merchants should perform the following steps:
+
+1. Add the new instrument for the customer. The instruments added through the API are in **UNVERIFIED** state.
+2. Submit the bank account statement confirming ownership
+3. Receive a webhook for instrument status change to **VERIFIED** or poll for status using the instrument management API.
+
+> **Note:** Instruments might be **REJECTED** by Paysafe. In such cases contact Paysafe support for details.
+
+![Bank Account Verification](https://raw.githubusercontent.com/paysafegroup/WalletAPI/main/images/BankAccountVerification.svg "Manual Bank Account Verification Process")
+
+**API Examples**
+
+1. Add payment instrument to customer `5000001`.
+
+---
+**POST** `https://api.paysafe.com/digitalwallets/v1/customers/5000001/instruments/`
+```json
+{
+  "instrumentType": "SEPA_BANK_ACCOUNT",
+  "accountHolderName": "John Doe",
+  "iban": "NL94RABO7762494464",
+  "bic": "RABONL2U"
+}
+```
+**RESPONSE**
+```json
+{
+  "id": "2323213",
+  "customerId": "500001",
+  "instrumentType": "SEPA_BANK_ACCOUNT",
+  "accountHolderName": "John Doe",
+  "iban": "NL94RABO7762494464",
+  "bic": "RABONL2U",
+  "status": "UNVERIFIED"
+}
+```
+---
+2. Submit bank account statement document to Paysafe.
+
+---
+**POST** `https://api.paysafe.com/digitalwallets/v1/customer-legal-entities/{customerId}`
+```json
+{
+    "kybDocuments": [
+        {
+            "type": "COMPANY_BANK_STATEMENT",
+            "documentUrls": ["https://upload.wikimedia.org/wikipedia/commons/3/bank_statement.pdf"]
+        }]
+}
+```
+---
+
+3. Instrument verification webhook confirming **VERIFIED** state.
+
+---
+**POST** `https://www.merchantsite.com/instruments/events`
+```json
+{
+  "id": "98329382947",
+  "timestamp": "2021-07-15T17:54:12Z",
+  "operationType": "Update",
+  "instrument": {
+    "id": "2323213",
+    "customerId": "5000001",
+    "instrumentType": "SEPA_BANK_ACCOUNT",
+    "status": "VERIFIED"
+  }
+}
+```
+---
+
+4. Get the payment instrument details for instrument `2323213` of customer `5000001`.
+
+---
+**GET** `https://api.paysafe.com/digitalwallets/v1//customers/5000001/instruments/SEPA_BANK_ACCOUNT/2323213`
+```json
+{
+  "id": "2323213",
+  "customerId": "500001",
+  "instrumentType": "SEPA_BANK_ACCOUNT",
+  "accountHolderName": "John Doe",
+  "iban": "NL94RABO7762494464",
+  "bic": "RABONL2U",
+  "status": "UNVERIFIED"
+}
+```
+---
+
 # Common Objects
-
-
 
 <a name="authenticationobject" title="Authentications Object"></a>
 ## authentication
