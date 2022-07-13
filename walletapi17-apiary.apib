@@ -1431,7 +1431,7 @@ For supporting the manual bank account verification flow for legal entities the 
 4. Get the payment instrument details for instrument `2323213` of customer `5000001`.
 
 ---
-**GET** `https://api.paysafe.com/digitalwallets/v1//customers/5000001/instruments/SEPA_BANK_ACCOUNT/2323213`
+**GET** `https://api.paysafe.com/digitalwallets/v1/customers/5000001/instruments/SEPA_BANK_ACCOUNT/2323213`
 ```json
 {
   "id": "2323213",
@@ -1443,9 +1443,9 @@ For supporting the manual bank account verification flow for legal entities the 
   "status": "UNVERIFIED"
 }
 ```
----
 
-# Common Objects
+---
+# Payment objects
 
 <a name="authenticationobject" title="Authentications Object"></a>
 ## authentication
@@ -5836,7 +5836,7 @@ For bank accounts, the full IBAN/bank account number is returned.
 
 + Response 200 (application/json)
 
-    + Attributes (array[WalletPaymentInstrument])
+    + Attributes (array[PaymentInstrument])
 
     + Body
 
@@ -6037,6 +6037,120 @@ This endpoint required a signature.
 
     + Attributes (CustomerPartRestrictions)
 
+# Group Instruments
+
+**(In Incubation)**
+
+## Instruments [/customers/{customerId}/instruments]
+
+Instrument management API allows to manage instruments for customer or legal entity.
+
+### Get wallet payment instruments [GET]
+
+**(In Incubation)**
+
+Retrieve list of active instruments for the customer.
+
+For cards, the PAN will be returned masked in the format 5xxxxxxxxxxx2922.
+For bank accounts, the full IBAN/bank account number is returned.
+
++ Parameters
+    + customerId (string, required)
+        
+        Id of the customer to fetch instruments for
+
++ Request
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
++ Response 200 (application/json)
+
+    + Attributes (array[UkBankAccount,SepaBankAccount, CardPaymentInstrument])
+
+    + Body
+
+            [
+                {
+                    "id": "1100000000000006",
+                    "instrumentType": "UK_BANK_ACCOUNT",
+                    "externallyVerified": true,
+                    "accountHolderName": "John Doe",
+                    "accountNumber": "7762494464",
+                    "sortCode": "RABO"
+                },
+                {
+                    "id": "1100000000000007",
+                    "instrumentType": "SEPA_BANK_ACCOUNT",
+                    "externallyVerified": true,
+                    "accountHolderName": "John Doe",
+                    "iban": "NL94RABO7762494464",
+                    "bic": "RABONL2U"
+                },
+                {
+                    "id": "1100000000000009",
+                    "instrumentType": "CARD",
+                    "externallyVerified": false,
+                    "cardHolderName": "John Doe",
+                    "pan": "5xxxxxxxxxxx1012",
+                    "expiryDate": {
+                        "year": 2023,
+                        "month": 10
+                    }
+                }
+            ]
+
+### Add payment instrument to a wallet [POST]
+
+**(In Incubation)**
+
+Add Payment Instrument. 
+This operation has the following limitations:
+
+* Works only for Legal Entities. Regular customers can not add instuments
+* Supports UkBankAccount and SepaBankAccount
+* The instrument is created in status `UNVERIFIED` and can not be used for deposit or withdrawal until proper bank statement is submitted.
+* When the required bank statement are submitted through `PATCH /customer-legal-entities/{customerId}` and verified by Paysafe team, the instrument will be approved.
+
++ Parameters
+
+    + customerId (string, required)
+        
+        Id of the customer to fetch instruments for
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            
+    + Attributes (PaymentInstrument)
+
+    + Body
+
+            {
+                "instrumentType": "SEPA_BANK_ACCOUNT",
+                "accountHolderName": "John Doe",
+                "iban": "NL94RABO7762494464",
+                "bic": "RABONL2U"
+            }
+
++ Response 200 (application/json)
+
+    + Attributes (PaymentInstrument)
+
+    + Body
+
+            {
+                "id": "2323213",
+                "customerId": "500001",
+                "instrumentType": "SEPA_BANK_ACCOUNT",
+                "accountHolderName": "John Doe",
+                "iban": "NL94RABO7762494464",
+                "bic": "RABONL2U",
+                "status": "UNVERIFIED"
+            }    
 
 # Group Accounts
 
@@ -6128,7 +6242,6 @@ Retrieve the account with the provided id.
 + Response 404
 
         Account with the requested ID was not found.
-
 
 ## Transactions [/digitalwallets/v1/transactions{?accountId,merchantRefNum,limit,offset,startDate,endDate}]
 
@@ -7056,7 +7169,7 @@ When the deposit is pre-screened, Paysafe’s risk & compliance controls are app
 + Request (application/json)
 
     + Headers
-
+    
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
 
     + Body
@@ -7120,6 +7233,50 @@ When the deposit is pre-screened, Paysafe’s risk & compliance controls are app
                 "merchantRefNum": "8e8ab1e9-fd33-418b-b54e-a0073d5698f1"
             }
 
++ Request (application/json)
+
+    + Body
+
+            {
+                "customer": {
+                    "externalId": "8bc12a72-6910-4df8-96a3-432995181569",
+                    "id": "111204874873"
+                },
+                "transaction": {
+                    "reason": "DEPOSIT",
+                    "amount": 150024,
+                    "currencyCode": "EUR",
+                    "instrument": {
+                        "type": "CARD",
+                        "card": {
+                            "externalId": "851b680b-f50e-4c5f-b765-a76d4fb3777c",
+                            "addedDate": "2019-08-24T14:15:22Z",
+                            "holderName": "John Smith",
+                            "currencyCode": "GBP",
+                            "cardExpiry": {
+                                "year": 2026,
+                                "month": 1
+                            },
+                            "firstDigits": "45367598",
+                            "lastDigits": "8023"
+                        }
+                    },
+                    "processorName": "SOME-PROCESSOR"
+                },
+                "customerIp": "82.34.53.23",
+                "merchantRefNum": "8e8ab1e9-fd33-418b-b54e-a0073d5698f1",
+                "risk": {
+                    "customerRiskRating": 0,
+                    "isScaPerformed": true,
+                    "isCustomerIPTrusted": true,
+                    "isBeneficiaryTrusted": true
+                },
+                "deviceInfo": {
+                    "appType": "WEB_APP",
+                    "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+                    "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&..."
+                }
+            }
 
 + Response 200 (application/json)
 
@@ -7563,7 +7720,7 @@ When the deposit is pre-screened, Paysafe’s risk & compliance controls are app
     + Members
         + CARD
         + BANK_TRANSFER
-+ Include wallet (object)
++ Include wallet
 + One of
 
     + card (object) - These are the details of the [card](#cardobject) used for the request. Only one payment instrument object (for example, *card* or *paysafecash* or *sightline*) can be included in the request.
@@ -9064,183 +9221,7 @@ Model for facilitation of internal Wallet transfer of funds.
 + `screeningId`: `87165594-a4d2-418e-9ca6-b96979d901bf` (string, optional) - id of the transaction screening performed for deposits and withdrawals via 3rd party payment providers
     _length<=64_
 
-
-## PaymentInstrument (object)
-Represents Payment Instrument, used for Deposit or Withdrawal.
-There are two types of instruments:
-
-* BankAccountPaymentInstrument
-
-* CardPaymentInstrument
-
-### Properties
-+ `instrumentType` (string, optional)
-
-
-## Bank Account Payment Instrument (PaymentInstrument)
-Bank Account Payment Instrument
-
-### Properties
-+ `bankName` (string, optional) - Bank Name (Read Only).
-+ `accountHolderName` (string, optional) - This is the name of the customer or company that owns the bank account.
-+ `iban` (string, optional) - The International Bank Account Number (IBAN) of the account.
-+ `bic` (string, optional) - The Bank Acccount Bank Identifier Code (BIC) code. Also known as SWIFT code.
-+ `countryCode`: `GB` (string, optional) - ISO-3166 Alpha 2 country code
-
-
-## Card Payment Instrument (PaymentInstrument)
-Card Payment Instrument.
-
-### Properties
-+ `pan` (string, required) - Card Number
-+ `brand` (string, optional) - Card Brand (Read Only)
-+ `cardHolderName` (string, optional) - Card holder name.
-+ `expiryDate` (string, optional) - Expiry Date in "MM/YYYY" format.
-+ `cardType` (string, optional) - Card type (Read Only).
-+ `issuingCountry`: `GB` (string, optional) - ISO-3166 Alpha 2 country code
-+ `bankName` (string, optional) - Bank Name (Read Only).
-+ `cardCurrency`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
-+ `cvv` (string, optional) - Card CVV (Do not store)
-
-
-## Deposit Request Object (object)
-Structure for initiating Depost process.
-
-### Properties
-+ `customerId` (string, required) - Customer ID
-+ `amount` (number, required)
-+ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
-+ `fee` (number, optional)
-+ `paymentOption` (enum[string], required) - Enumeration of supported Payment Option Types
-    + `RAPID_TRANSFER`
-    + `SOFORT`
-    + `GIROPAY`
-    + `BANKWIRE`
-    + `CARD`
-+ `paymentInstrument` (PaymentInstrument, required)
-
-    Represents Payment Instrument, used for Deposit or Withdrawal.
-    There are two types of instruments:
-
-    * BankAccountPaymentInstrument
-
-    * CardPaymentInstrument
-
-+ `merchantRefNum` (string, optional) - External Reference ID, that allows to correlate to external operation.
-+ `internalReferenceId` (string, optional) - Internal Paysafe Reference Id required for tracking operation across systems. Must be unique identifier.
-+ `successURL` (string, optional)
-+ `failURL` (string, optional)
-+ `deviceInfo` (deviceInfoRequest, optional) - Provides information about the device that the end-customer uses to access the service.
-
-
-## Deposit Object (object)
-Deposit Response object.
-
-### Properties
-+ `id` (string, optional) - The Digital Wallet slip id.
-+ `customerId` (string, optional) - Customer id.
-+ `accountId` (string, optional) - The account money gets deposited in. It deduced based on the currency.
-+ `amount` (number, required) - Amount in minor currency units.
-+ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
-+ `fee`: `0` (number, optional) - Merchant fee to apply to deposit in minor currency units.
-+ `paymentOption` (enum[string], optional) - Enumeration of supported Payment Option Types
-    + `RAPID_TRANSFER`
-    + `SOFORT`
-    + `GIROPAY`
-    + `BANKWIRE`
-    + `CARD`
-+ `paymentInstrument` (PaymentInstrument, optional)
-
-    Represents Payment Instrument, used for Deposit or Withdrawal.
-    There are two types of instruments:
-
-    * BankAccountPaymentInstrument
-
-    * CardPaymentInstrument
-
-+ `merchantRefNum` (string, optional) - Merchant Reference Id. Passed from Single API.
-+ `internalReferenceId` (string, required)
-+ `externalTransactionId` (string, optional) - External transaction id. Will be set only for Cards and will contain Netbanx transaction id.
-+ `gatewayReconId` (string, optional) - Gateway reconciliation id. Will be set only for Cards and will contain Netbanx reconciliation id.
-+ `redirection` (Link, optional)
-+ `status` (enum[string], required)
-    + `PENDING`
-    + `PROCESSING`
-    + `COMPLETED`
-    + `FAILED`
-    + `CANCELLED`
-+ `customerSlip` (AccountSlip, optional) - Account specific view of the slip.
-+ `merchantSlip` (AccountSlip, optional) - Account specific view of the slip.
-
-
-## WithdrawalRequest (object)
-Request for Wallet withdrawal. The only supported options are CARD and BANKWIRE.
-
-### Properties
-+ `customerId` (string, required) - Customer ID
-+ `accountId` (string, required) - Account Id from where the money are withdrawn.
-+ `amount` (number, required)
-+ `currencyCode`: `EUR` (string, optional) - Currency alphabetic code as specified by ISO 4217
-+ `fee` (number, optional)
-+ `paymentOption` (enum[string], required) - Enumeration of supported Payment Option Types
-    + `RAPID_TRANSFER`
-    + `SOFORT`
-    + `GIROPAY`
-    + `BANKWIRE`
-    + `CARD`
-+ `paymentInstrument` (PaymentInstrument, required)
-
-    Represents Payment Instrument, used for Deposit or Withdrawal.
-    There are two types of instruments:
-
-    * BankAccountPaymentInstrument
-
-    * CardPaymentInstrument
-
-+ `internalReferenceId` (string, optional) - Internal Paysafe Reference Id required for tracking operation across systems. Must be unique identifier.
-+ `merchantRefNum` (string, optional) - External Reference ID, that allows to correlate to external operation.
-+ `deviceInfo` (deviceInfoRequest, optional) - Provides information about the device that the end-customer uses to access the service.
-
-
-## Withdrawal (object)
-Withdrawal object.
-
-Will return PENDING for CARD and PROCESSING for bankwire withdrawal.
-
-### Properties
-+ `id` (string, optional) - The Digital Wallet slip id.
-+ `accountId` (string, optional)
-+ `customerId` (string, optional)
-+ `merchantRefNum` (string, optional) - Reference Id
-+ `internalReferenceId` (string, required)
-+ `externalTransactionId` (string, optional)
-+ `status` (enum[string], required)
-    + `PENDING`
-    + `PROCESSING`
-    + `COMPLETED`
-    + `FAILED`
-    + `CANCELLED`
-+ `paymentOption` (enum[string], optional) - Enumeration of supported Payment Option Types
-    + `RAPID_TRANSFER`
-    + `SOFORT`
-    + `GIROPAY`
-    + `BANKWIRE`
-    + `CARD`
-+ `paymentInstrument` (PaymentInstrument, optional)
-
-    Represents Payment Instrument, used for Deposit or Withdrawal.
-    There are two types of instruments:
-
-    * BankAccountPaymentInstrument
-
-    * CardPaymentInstrument
-
-+ `customerSlip` (AccountSlip, optional) - Account specific view of the slip.
-+ `merchantSlip` (AccountSlip, optional) - Account specific view of the slip.
-
-
 ## KYC (object)
-
 
 ### Properties
 + `status` (enum[string], required) - KYC Status enumeration
@@ -9446,39 +9427,71 @@ Account specific view of the slip.
     + `CUSTOMER_RESTRICTED`
 + `merchantRefNum`: `abcd1234` (string, optional) - Merchant reference number associated witht the transaction.
 
+## PaymentInstrument (object)
 
-## WalletPaymentInstrument
+Represents Payment Instrument, used for Deposit or Withdrawal.
+Here are the valid instrumentType values:
+
+* SEPA_BANK_ACCOUNT - SepaBankAccountPaymentInstrument
+* UK_BANK_ACCOUNT - UkBankAccountPaymentInstrument
+* CARD - Represents CardPaymentInstrument
 
 ### Properties
-
-+ `id` (string)
-+ `instrumentType` (enum[string], required)
++ `id` (string) - The instrument id
++ `customerId` (string, optional) - Customer to which this instrument belongs.
++ `instrumentType` (enum[string], required) - Instrument type.
     + CARD
     + SEPA_BANK_ACCOUNT
     + UK_BANK_ACCOUNT
-+ Include WalletPaymentInstrumentBankAccount
-+ Include WalletPaymentInstrumentCard
++ `externallyVerified` (string, optional) - Is the instrument externally verified.    
++ `status` (enum[string], optional) - Instrument status.
+    + UNVERIFIED
+    + VERIFIED
+    + REJECTED
 
+## UkBankAccount (PaymentInstrument)
 
-## WalletPaymentInstrumentBankAccount
+UK Bank Account Payment, that might support BACS, FasterPayment of CHAPS
+
+Required Fields:
+
+ * accountNumber
+ * sortCode
+
+Account holder name might be required for name matching.
 
 ### Properties
++ `accountHolderName` (string, optional) - This is the name of the customer or company that owns the bank account.
++ `accountNumber` (string, required) - A bank account number.
++ `sortCode` (string, required) - Use our sort code checker to easily find and check UK sort codes.
 
-+ `bankName`
-+ `accountHolderName`
-+ `iban`
-+ `bic`
-+ `sortCode`
-+ `accountNumber`
+## SepaBankAccount (PaymentInstrument)
 
+SEPA Bank Account
 
-## WalletPaymentInstrumentCard
+Required Fields:
+
+ * iban
+ * bic
+
+Account holder name might be required for name matching.
 
 ### Properties
++ `accountHolderName` (string, optional) - This is the name of the customer or company that owns the bank account.
++ `iban` (string, required) - The International Bank Account Number (IBAN) of the account.
++ `bic` (string, required) - The Bank Acccount Bank Identifier Code (BIC) code. Also known as SWIFT code.
 
-+ `pan` (string)
-+ `cardHolderName` (string)
-+ `expiryDate`: `2023-08-31` (string)
+## CardPaymentInstrument (PaymentInstrument)
+
+Card Payment Instrument.
+
+### Properties
++ `cardHolderName` (string, optional) - Card holder name.
+    _length<=160_
++ `pan` (string, required) - Card Number
++ `expiryDate` - Card expiry date
+    + year (number, required)
+    + month (number, required)
 
 
 ## AccountUpdateWebhook
