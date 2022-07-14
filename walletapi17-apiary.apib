@@ -6041,9 +6041,12 @@ This endpoint required a signature.
 
 **(In Incubation)**
 
-## Instruments [/customers/{customerId}/instruments]
+> Incubator features are capabilities currently in development. 
+> Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
 
 Instrument management API allows to manage instruments for customer or legal entity.
+
+## Wallet instruments [/customers/{customerId}/instruments]
 
 ### Get wallet payment instruments [GET]
 
@@ -6151,6 +6154,62 @@ This operation has the following limitations:
                 "bic": "RABONL2U",
                 "status": "UNVERIFIED"
             }    
+
+## Single instrument [/customers/{customerId}/instruments/{instrumentType}/{instrumentId}]
+
+### Get payment instrument [GET]
+
+**(In Incubation)**
+
+Returns single instrument with specified identifier.
+
++ Parameters
+    + customerId (string, required)
+        
+        Id of the customer to fetch instruments for
+
++ Request
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
++ Response 200 (application/json)
+
+    + Attributes (array[UkBankAccount,SepaBankAccount, CardPaymentInstrument])
+
+    + Body
+
+            [
+                {
+                    "id": "1100000000000006",
+                    "instrumentType": "UK_BANK_ACCOUNT",
+                    "externallyVerified": true,
+                    "accountHolderName": "John Doe",
+                    "accountNumber": "7762494464",
+                    "sortCode": "RABO"
+                },
+                {
+                    "id": "1100000000000007",
+                    "instrumentType": "SEPA_BANK_ACCOUNT",
+                    "externallyVerified": true,
+                    "accountHolderName": "John Doe",
+                    "iban": "NL94RABO7762494464",
+                    "bic": "RABONL2U"
+                },
+                {
+                    "id": "1100000000000009",
+                    "instrumentType": "CARD",
+                    "externallyVerified": false,
+                    "cardHolderName": "John Doe",
+                    "pan": "5xxxxxxxxxxx1012",
+                    "expiryDate": {
+                        "year": 2023,
+                        "month": 10
+                    }
+                }
+            ]
+
 
 # Group Accounts
 
