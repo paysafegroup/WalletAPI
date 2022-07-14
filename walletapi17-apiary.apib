@@ -1445,6 +1445,119 @@ For supporting the manual bank account verification flow for legal entities the 
 }
 ```
 
+## Bank transfer refunds
+
+**(In Incubation)**
+
+> Incubator features are capabilities currently in development.
+> Incubator features allow Paysafe to evolve the product and collect customer feedback > > on future product direction.
+
+Offline bank transfer deposits allow customers to deposit funds using the vIBAN assigned to their accounts.
+
+Refunds are used in cases the merchant wants to return the deposit to the customer.
+
+> The main difference between **refund** and **withdrawal** is, that refund is triggered by 
+> the merchant, not by the customer.
+
+
+Prerequisities for bank transfer refund:
+
+* Transaction paymentType must be `BANK_TRANSFER`
+* Transaction state must be `COMPLETED`
+* Transaction type must be `DEPOSIT`
+* One refund per deposit is allowed
+* The wallet account funding the refund must have the required refund amount
+* Refund amount is up to the deposit amount (partial refund is possible)
+* Refund is only forwarded back to the payment instrument associated to the deposit
+* Refund currency is the same as the deposit currency
+* Refund must have a merchant reference number so double refunding is not possible.
+* Refund does not require usual RISK details from the customer, since the operation is not triggered by him, but by the Merchant
+
+### Refund Steps
+
+1. Get deposit transaction details from Transaction update event webhook or Transaction API
+
+---
+**GET** `https://api.paysafe.com/digitalwallets/v1/transactions/{transactionId}`
+
+```json
+{
+  "id": "5040057610",
+  "slipId": "5009964049",
+  "customerId": "5435323362",
+  "accountId": "5014567344",
+  "type": "DEPOSIT",
+  "amount": 900,
+  "currencyCode": "EUR",
+  "fee": 100,
+  "creationTime": "2021-07-15T17:54:12Z",
+  "lastChangeDate": "2021-07-15T17:54:12Z",
+  "direction": "DEBIT",
+  "instrumentId": "1100000000000009",
+  "paymentType": "BANK_TRANSFER",
+  "status": "COMPLETED"
+}
+```
+---
+
+> **Note:** The transaction does not have **merchantRedNum** since it was created by Paysafe and the merchant was notified through webhook. 
+
+For refund the **id** of the transaction, **customerId** and **accountId** are required.
+
+2. Call **create refund API** using the parameters.
+
+> **Note:** Merchant must provide merchangeRedNum for the new refund transaction.
+
+---
+**POST** `https://api2.test.paysafe.com/v1/settlements/{transactionId}/refunds`
+
+```json
+{
+  "merchantRefNum": "merchantRefNum-118",
+  "amount": 190,
+  "dupCheck": true,
+  "wallet": {
+    "customerId": "5435323362",
+    "customerAccount": {
+      "id": "5014567344"
+    }
+  }
+}
+```
+
+**RESPONSE**
+
+```json
+{
+  "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+  "merchantRefNum": "merchantRefNum-118",
+  "amount": 190,
+  "txnTime": "2018-12-11T16:33:49Z",
+  "status": "PENDING",
+  "wallet": {
+    "customerId": "5435323362",
+    "customerAccount": {
+      "id": "5014567344",
+      "transactions" : [ {
+              "id": "12321",
+              "slipId": "5009964049",
+              "type": "REFUND",
+              "amount": 190,
+              "currencyCode": "EUR",
+              "creationTime": "2018-12-11T16:33:49Z",
+              "direction": "DEBIT",
+              "paymentType": "BANK_TRANSFER",
+              "status": "PROCESSING",
+              "merchantRefNum": "merchantRefNum-118"
+      }]      
+    }
+  }  
+}
+```
+---
+
+3. The merchant can poll the transaction API for status or will receive a webhook for the status of the refund transaction with the corresponding **merchantRefNum**
+
 ---
 # Payment objects
 
@@ -4094,7 +4207,13 @@ Click **Process Refund** above to see two examples of how to process a Refund re
             {
               "merchantRefNum": "merchantRefNum-118",
               "amount": 190,
-              "dupCheck": true
+              "dupCheck": true,
+              "wallet": {
+                "customerId": "5435323362",
+                "customerAccount": {
+                  "id": "5014567344"
+                }
+              }
             }
                         
 + Response 200 (application/json)
@@ -4104,11 +4223,29 @@ Click **Process Refund** above to see two examples of how to process a Refund re
     + Body
 
             {
-                "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
-                "merchantRefNum": "merchantRefNum-118",
-                "amount": 190,
-                "txnTime": "2018-12-11T16:33:49Z",
-                "status": "PENDING"
+              "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+              "merchantRefNum": "merchantRefNum-118",
+              "amount": 190,
+              "txnTime": "2018-12-11T16:33:49Z",
+              "status": "PENDING",
+              "wallet": {
+                "customerId": "5435323362",
+                "customerAccount": {
+                  "id": "5014567344",
+                  "transactions" : [ {
+                          "id": "12321",
+                          "slipId": "5009964049",
+                          "type": "REFUND",
+                          "amount": 190,
+                          "currencyCode": "EUR",
+                          "creationTime": "2018-12-11T16:33:49Z",
+                          "direction": "DEBIT",
+                          "paymentType": "BANKWIRE",
+                          "status": "PROCESSING",
+                          "merchantRefNum": "merchantRefNum-118"
+                  }]      
+                }
+              }  
             }
             
 ### Cancel Refund [PUT /v1/refunds/{refund_id}]
