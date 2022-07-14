@@ -1394,6 +1394,7 @@ For supporting the manual bank account verification flow for legal entities the 
 }
 ```
 ---
+
 2. Submit bank account statement document to Paysafe.
 
 ---
@@ -6128,7 +6129,7 @@ This operation has the following limitations:
 
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
             
-    + Attributes (PaymentInstrument)
+    + Attributes (enum[UkBankAccount,SepaBankAccount])
 
     + Body
 
@@ -6141,7 +6142,7 @@ This operation has the following limitations:
 
 + Response 200 (application/json)
 
-    + Attributes (PaymentInstrument)
+    + Attributes (enum[UkBankAccount,SepaBankAccount])
 
     + Body
 
@@ -6188,7 +6189,7 @@ Returns single instrument with specified identifier.
 
 + Response 200 (application/json)
 
-    + Attributes (enum[UkBankAccount,SepaBankAccount,CardPaymentInstrument])
+    + Attributes (enum[UkBankAccount,SepaBankAccount])
 
     + Body
 
@@ -6232,7 +6233,7 @@ Deletes single instrument with specified identifier.
 
 + Response 200 (application/json)
 
-    + Attributes (enum[UkBankAccount,SepaBankAccount,CardPaymentInstrument])
+    + Attributes (enum[UkBankAccount,SepaBankAccount])
 
     + Body
 
