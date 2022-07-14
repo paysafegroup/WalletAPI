@@ -624,6 +624,7 @@ skinparam Sequence {
     LifeLineBorderColor #FBC9D6
 }
 
+
 title "Bank Account Verification"
 
 actor User
