@@ -4030,6 +4030,187 @@ Click **Get Payment Using Merchant Reference Number** above to look up a Payment
               ]
             }
 
+# Group Refunds
+
+**(In Incubation)**
+
+> Incubator features are capabilities currently in development. 
+> Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
+
+**At the moment only refunds on Bank Transfer deposits are supported by the API.**
+
+
+
+## Refund operations [/v1/settlements/{settlement_id}/refunds]
+
++ Parameter
+
+    + settlement_id : `d9bcfd85-8aa6-469d-80a3-e2ca196544da` - This is the ID returned in the response to the Settlement request or to the Payment request where the authorization was settled in the same request.
+
+### Process Refund [POST]
+
+**(In Incubation)**
+
+<a name="refundrequest" title="Process Refund"></a>
+
+Click **Process Refund** above to see two examples of how to process a Refund request:
+
+* A regular Refund
+* A Refund that is split into multiple merchant accounts. This is applicable for those merchants whose accounts are configured to do so
+
++ Request Process a Refund (application/json)
+
+    + Attributes (Refund)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+    
+    + Body
+
+            {
+              "merchantRefNum": "merchantRefNum-118",
+              "amount": 190,
+              "dupCheck": true
+            }
+                        
++ Response 200 (application/json)
+
+    + Attributes (Refund)
+
+    + Body
+
+            {
+                "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+                "merchantRefNum": "merchantRefNum-118",
+                "amount": 190,
+                "txnTime": "2018-12-11T16:33:49Z",
+                "status": "PENDING"
+            }
+            
+### Cancel Refund [PUT /v1/refunds/{refund_id}]
+
+**(In Incubation)**
+
+<a name="cancelrefund" title="Cancel a Refund"></a>
+
+Click **Cancel Refund** above to ancel a Refund. You must include the *status* parameter set to *CANCELLED*.
+
+> **Note:** You can cancel a Refund only if the payment type is CARD and the status is PENDING. 
+
++ Parameter
+
+    + refund_id : `c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725` - This is the ID returned in the response to the Refund request
+    
++ Request Cancel a Refund (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Attributes (Refund)
+    
+    + Body
+
+            {
+              "status": "CANCELLED"
+            }
+                        
++ Response 200 (application/json)
+
+    + Attributes (Refund)
+
+    + Body
+
+            {
+              "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+              "txnTime": "2018-12-10T11:19:51Z",
+              "status": "CANCELLED"
+            }
+            
+### Get Refund [GET /v1/refunds/{refund_id}]
+
+**(In Incubation)**
+
+<a name="getrefund" title="Look Up a Refund"></a>
+
+Click **Get Refund** above to look up a Refund using the ID returned in the response of the original request.
+
++ Parameter
+
+    + refund_id : `c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725` - This is the ID returned in the response to the Refund request
+
++ Request Look Up Refund (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+            
+    + Attributes (Refund)            
+
++ Response 200 (application/json)
+
+    + Attributes (Refund)
+
+    + Body
+
+            {
+              "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+              "merchantRefNum": "merchantRefNum-118",
+              "amount": 190,
+              "txnTime": "2018-12-11T16:33:49Z",
+              "status": "PENDING"
+            }
+            
+### Get Refunds Using Merchant Reference Number [GET /v1/refunds?merchantRefNum={merchant_ref_num}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+**(In Incubation)**
+<a name="getrefundmerchantrefnum" title="Look Up a Refund Using a Merchant Reference Number"></a>
+
+Click **Get Refunds Using Merchant Reference Number** above to look up a Refund using the merchant reference number used in the original request.
+
++ Parameter
+
+   + merchant_ref_num : `merchantRefNum-118` - This is the merchant reference number created by the merchant and submitted as part of the request.
+        _Mandatory_
+    + limit : `32` (number) - This is the total number of records to return. Default = 10.
+        _Optional_ _Max=50_
+    + offset: `0` (number) - This is the starting position, where 0 is the first record. Default = 0.
+        _Optional_ 
+    + startDate : `2019-01-26` (UTC Date) - This is the start date in UTC. Default = 30 days before the *endDate*.
+        _Optional_
+    + endDate : `2019-03-26` (UTC Date) - This is the end date in UTC. Default = current date and time.
+        _Optional_
+
++ Request Look Up Refund Using Merchant Reference Number (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            Simulator: "EXTERNAL"
+
++ Response 200 (application/json)
+    
+    + Attributes (refundArray)
+
+    + Body
+
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "refunds": [{
+                    "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+                    "merchantRefNum": "merchantRefNum-118",
+                    "amount": 190,
+                    "txnTime": "2018-12-11T16:33:49Z",
+                    "status": "PENDING"
+                }]
+            }
 
 # Group Standalone Credits
 
@@ -4451,6 +4632,7 @@ Click **Get Standalone Credit Using Merchant Reference Number** above to look up
                     "description": "Pay surplus"
                 }]
             }
+
 
 
 
@@ -8626,12 +8808,12 @@ This is applicable only for STANDALONE_CREDIT.
     + `accountNumber` - This is the account number of the recipient.
         _length<=25_
 
-## refundsArray
+## refundArray
 + Include Metadata Object
-+ `refunds` (array) - An array of Refunds.
++ `refunds` (array[Refund]) - An array of Refunds.
 
 
-## Refunds
+## Refund
 + `id`:`25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. You can use this ID for future associated requests.
     _Read Only, length<=36_
 + `merchantRefNum`:`P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
@@ -8660,7 +8842,6 @@ This is applicable only for STANDALONE_CREDIT.
 + `riskReasonCode`:`1001` (array) - An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
     _Read Only_
 + Include Gateway Response
-+ Include Metadata Object
 
 ## `customerAccount`
 
