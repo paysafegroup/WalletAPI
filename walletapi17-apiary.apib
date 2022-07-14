@@ -1995,6 +1995,28 @@ This is a read-only raw response returned by an acquirer.
     }
 ```
 
+<a name="refundsobject" title="refunds Object"></a>
+## refunds
+|Element            |Type                                   |Required|Description                        |
+|---                |---                                    |---|---                                |
+|id                 |string <br/>`length<=36`               |Read Only|This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum     |string <br/>`length<=255`              |Mandatory|This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount             |number<br>`max=99999999999`            |Optional|This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.|
+|dupCheck           |boolean                                |Optional|This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
+|childAccountNum    |string<br/>`length<=10`                |Optional|This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
+|txnTime            |UTC formatted date                     |Read Only|This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
+|status             |enum                                   |Read Only|This is the status of the transaction request. Possible values are:<ul><li>RECEIVED &ndash; Our system has received the request and is waiting for the downstream processor’s response.</li><li>COMPLETED &ndash; The transaction has been completed.</li><li>PENDING &ndash; Our system has received the request but it has not yet been batched.</li><li>FAILED &ndash; The transaction failed, due to either an error or being declined.</li><li>CANCELLED &ndash; The request has been fully voided (reversed).</li></ul>|
+|error              |[error](#errorobject)                  |Read Only|Details of the error.  |
+|riskReasonCode     |array                                  |Read Only|An array of integers is returned, displaying the detailed risk reason codes when your transaction was declined. It is returned only when your account is configured accordingly.
+|gatewayResponse    |[gatewayResponse](#gatewayresponseobject) |Read Only| This is the read-only raw response returned by an acquirer. It is returned only if your account is configured accordingly.|
+
+```apib
+{
+    "merchantRefNum":"refund_id:1231",
+    "amount":10098
+}
+```
+
 <a name="returnlinksobject" title="returnLinks Object"></a>
 ## returnLinks
 
