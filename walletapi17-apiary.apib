@@ -6155,7 +6155,7 @@ This operation has the following limitations:
                 "status": "UNVERIFIED"
             }    
 
-## Single instrument [/customers/{customerId}/instruments/{instrumentType}/{instrumentId}]
+## Single instrument operations [/customers/{customerId}/instruments/{instrumentType}/{instrumentId}]
 
 ### Get payment instrument [GET]
 
@@ -6164,9 +6164,21 @@ This operation has the following limitations:
 Returns single instrument with specified identifier.
 
 + Parameters
+
     + customerId (string, required)
         
         Id of the customer to fetch instruments for
+        
+    + instrumentType (string, required)
+    
+        The type of instrument
+        * UK_BANK_ACCOUNT
+        * SEPA_BANK_ACCOUNT
+        * CARD
+        
+    + instrumentId
+    
+        The id of the instrument
 
 + Request
 
@@ -6176,40 +6188,62 @@ Returns single instrument with specified identifier.
 
 + Response 200 (application/json)
 
-    + Attributes (array[UkBankAccount,SepaBankAccount, CardPaymentInstrument])
+    + Attributes (enum[UkBankAccount,SepaBankAccount,CardPaymentInstrument])
 
     + Body
 
-            [
-                {
-                    "id": "1100000000000006",
-                    "instrumentType": "UK_BANK_ACCOUNT",
-                    "externallyVerified": true,
-                    "accountHolderName": "John Doe",
-                    "accountNumber": "7762494464",
-                    "sortCode": "RABO"
-                },
-                {
-                    "id": "1100000000000007",
-                    "instrumentType": "SEPA_BANK_ACCOUNT",
-                    "externallyVerified": true,
-                    "accountHolderName": "John Doe",
-                    "iban": "NL94RABO7762494464",
-                    "bic": "RABONL2U"
-                },
-                {
-                    "id": "1100000000000009",
-                    "instrumentType": "CARD",
-                    "externallyVerified": false,
-                    "cardHolderName": "John Doe",
-                    "pan": "5xxxxxxxxxxx1012",
-                    "expiryDate": {
-                        "year": 2023,
-                        "month": 10
-                    }
-                }
-            ]
+            {
+                "id": "1100000000000007",
+                "instrumentType": "SEPA_BANK_ACCOUNT",
+                "externallyVerified": true,
+                "accountHolderName": "John Doe",
+                "iban": "NL94RABO7762494464",
+                "bic": "RABONL2U"
+            }
 
+### Delete payment instrument [DELETE]
+
+**(In Incubation)**
+
+Deletes single instrument with specified identifier.
+
++ Parameters
+
+    + customerId (string, required)
+        
+        Id of the customer to fetch instruments for
+        
+    + instrumentType (string, required)
+    
+        The type of instrument
+        * UK_BANK_ACCOUNT
+        * SEPA_BANK_ACCOUNT
+        * CARD
+        
+    + instrumentId
+    
+        The id of the instrument
+
++ Request
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
++ Response 200 (application/json)
+
+    + Attributes (enum[UkBankAccount,SepaBankAccount,CardPaymentInstrument])
+
+    + Body
+
+            {
+                "id": "1100000000000007",
+                "instrumentType": "SEPA_BANK_ACCOUNT",
+                "externallyVerified": true,
+                "accountHolderName": "John Doe",
+                "iban": "NL94RABO7762494464",
+                "bic": "RABONL2U"
+            }
 
 # Group Accounts
 
@@ -6945,7 +6979,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 * configure the webhook root URL with Paysafe
 * ensure the availability of the endpoints to receive the webhooks
 
-## Available webhooks [/webhook/path/at/merchant/system/customers/restrictions]
+## Restrictions [/webhook/path/at/merchant/system/customers/restrictions]
 
 ### Customer restrictions update [POST]
 
@@ -7039,8 +7073,9 @@ When applying restrictions to a customer, the system has two distinct behaviours
 
 + Response 200
 
+## Transactions [/webhook/path/at/merchant/system/transactions/events]
 
-### Transaction update [POST /webhook/path/at/merchant/system/transactions/events]
+### Transaction update [POST]
 
 This webhook will be sent when the status of all transaction types is updated - deposit, withdrawal or transfers
 
@@ -7107,8 +7142,9 @@ This webhook will be sent when the status of all transaction types is updated - 
 
 + Response 200
 
+## Accounts [/webhook/path/at/merchant/system/accounts/events]
 
-### Account update [POST /webhook/path/at/merchant/system/accounts/events]
+### Account update [POST]
 
 The webhook is sent when there's an update on the customer account. The `operationType` signifies the change that occurred.
 
@@ -7136,7 +7172,9 @@ The webhook is sent when there's an update on the customer account. The `operati
 
 + Response 200
 
-### Payment Handle update [POST /webhook/path/at/merchant/system/paymenthandles/events]
+## Payment Handles [/webhook/path/at/merchant/system/paymenthandles/events]
+
+### Payment Handle update [POST]
 
 The webhook is sent when there's an update on the Payment Handle. The `eventType` signifies the change that occurred.
 
@@ -7207,6 +7245,49 @@ The webhook is sent when there's an update on the Payment Handle. The `eventType
                 "timeToLiveSeconds": 899,
                 "transactionType": "PAYMENT"
               }
+            }
+
++ Response 200
+
+## Instruments [/webhook/path/at/merchant/system/instruments/events]
+
+**(In Incubation)**
+
+> Incubator features are capabilities currently in development. 
+> Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
+
+### Instrument status update [POST]
+
+**(In Incubation)**
+
+Instrument status update event. Due to confidentiality reasons the instrument data is not sent in the event.
+So you will receive only base instrument data:
+
+* id - instrument id
+* instrumentType - instrument type
+* customerId - customer Id
+* status - instrument status
+
++ Attributes (InstrumentEvent)
+
++ Request Payment Handle change (application/json)
+
+    + Headers
+
+            Signature: <<Paysafe's HMAC signature>>
+
+    + Body
+
+            {
+                "id": "98329382947",
+                "timestamp": "2021-07-15T17:54:12Z",
+                "operationType": "Update",
+                "instrument": {
+                    "id": "2323213",
+                    "customerId": "5000001",
+                    "instrumentType": "SEPA_BANK_ACCOUNT",
+                    "status": "VERIFIED"
+                }
             }
 
 + Response 200
@@ -9552,6 +9633,18 @@ Card Payment Instrument.
     + year (number, required)
     + month (number, required)
 
+## InstrumentEvent
+
+Instrument status change event.
+
+### Properties
++ `id` (string, required)
++ `timestamp` `2021-07-15T17:54:12Z`  (string, required) - ISO timestamp
++ `operationType` (enum[string], required)
+    + Update - Instrument status was changed
+    + Create - Instrument was created
+    + Delete - Instrument was deleted
++ instrument (PaymentInstrument, required)
 
 ## AccountUpdateWebhook
 
