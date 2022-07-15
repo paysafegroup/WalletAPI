@@ -1450,13 +1450,13 @@ For supporting the manual bank account verification flow for legal entities the 
 **(In Incubation)**
 
 > Incubator features are capabilities currently in development.
-> Incubator features allow Paysafe to evolve the product and collect customer feedback > > on future product direction.
+> Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
 
 Offline bank transfer deposits allow customers to deposit funds using the vIBAN assigned to their accounts.
 
 Refunds are used in cases the merchant wants to return the deposit to the customer.
 
-> The main difference between **refund** and **withdrawal** is, that refund is triggered by 
+> The main difference between **refund** and **withdrawal** is that refund is triggered by 
 > the merchant, not by the customer.
 
 
@@ -1500,13 +1500,13 @@ Prerequisities for bank transfer refund:
 ```
 ---
 
-> **Note:** The transaction does not have **merchantRedNum** since it was created by Paysafe and the merchant was notified through webhook. 
+> **Note:** The transaction does not have **merchantRefNum** since it was created by Paysafe and the merchant was notified through webhook. 
 
 For refund the **id** of the transaction, **customerId** and **accountId** are required.
 
 2. Call **create refund API** using the parameters.
 
-> **Note:** Merchant must provide merchangeRedNum for the new refund transaction.
+> **Note:** Merchant must provide merchangeRefNum for the new refund transaction.
 
 ---
 **POST** `https://api2.test.paysafe.com/v1/settlements/{transactionId}/refunds`
