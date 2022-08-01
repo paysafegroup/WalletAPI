@@ -1492,7 +1492,7 @@ Prerequisities for bank transfer refund:
   "fee": 100,
   "creationTime": "2021-07-15T17:54:12Z",
   "lastChangeDate": "2021-07-15T17:54:12Z",
-  "direction": "DEBIT",
+  "direction": "CREDIT",
   "instrumentId": "1100000000000009",
   "paymentType": "BANK_TRANSFER",
   "status": "COMPLETED"
@@ -1531,11 +1531,12 @@ For refund the **id** of the transaction, **customerId** and **accountId** are r
 ```json
 {
   "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+  "paymentType": "OFFLINE_BANK_TRANSFER",
   "merchantRefNum": "merchantRefNum-118",
   "amount": 190,
   "currencyCode": "EUR",
   "txnTime": "2018-12-11T16:33:49Z",
-  "status": "PENDING",
+  "status": "PROCESSING",
   "wallet": {
     "customerId": "5435323362",
     "customerAccount": {
@@ -1553,7 +1554,12 @@ For refund the **id** of the transaction, **customerId** and **accountId** are r
               "merchantRefNum": "merchantRefNum-118"
       }]      
     }
-  }  
+  },
+  "gatewayReconciliationId": "2c8bc14c-8efd-4195-a7c9-15e371a30601",
+  "gatewayResponse": {
+        "processor": "WALLET"
+  },
+  "settlementId": "1c0d156c-445a-4171-8ddb-ef8fb4f01a74"  
 }
 ```
 ---
@@ -4229,11 +4235,12 @@ Click **Process Refund** above to see two examples of how to process a Refund re
 
             {
               "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+              "paymentType": "OFFLINE_BANK_TRANSFER",
               "merchantRefNum": "merchantRefNum-118",
               "amount": 190,
-              "currencyCode" : "EUR",
+              "currencyCode": "EUR",
               "txnTime": "2018-12-11T16:33:49Z",
-              "status": "PENDING",
+              "status": "PROCESSING",
               "wallet": {
                 "customerId": "5435323362",
                 "customerAccount": {
@@ -4246,12 +4253,17 @@ Click **Process Refund** above to see two examples of how to process a Refund re
                           "currencyCode": "EUR",
                           "creationTime": "2018-12-11T16:33:49Z",
                           "direction": "DEBIT",
-                          "paymentType": "BANKWIRE",
+                          "paymentType": "BANK_TRANSFER",
                           "status": "PROCESSING",
                           "merchantRefNum": "merchantRefNum-118"
                   }]      
                 }
-              }  
+              },
+              "gatewayReconciliationId": "2c8bc14c-8efd-4195-a7c9-15e371a30601",
+              "gatewayResponse": {
+                    "processor": "WALLET"
+              },
+              "settlementId": "1c0d156c-445a-4171-8ddb-ef8fb4f01a74"  
             }
             
 ### Cancel Refund [PUT /v1/refunds/{refund_id}]
@@ -4322,11 +4334,35 @@ Click **Get Refund** above to look up a Refund using the ID returned in the resp
 
             {
               "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+              "paymentType": "OFFLINE_BANK_TRANSFER",
               "merchantRefNum": "merchantRefNum-118",
               "amount": 190,
-              "currencyCode" : "EUR",
+              "currencyCode": "EUR",
               "txnTime": "2018-12-11T16:33:49Z",
-              "status": "PENDING"
+              "status": "PROCESSING",
+              "wallet": {
+                "customerId": "5435323362",
+                "customerAccount": {
+                  "id": "5014567344",
+                  "transactions" : [ {
+                          "id": "12321",
+                          "slipId": "5009964049",
+                          "type": "REFUND",
+                          "amount": 190,
+                          "currencyCode": "EUR",
+                          "creationTime": "2018-12-11T16:33:49Z",
+                          "direction": "DEBIT",
+                          "paymentType": "BANK_TRANSFER",
+                          "status": "PROCESSING",
+                          "merchantRefNum": "merchantRefNum-118"
+                  }]      
+                }
+              },
+              "gatewayReconciliationId": "2c8bc14c-8efd-4195-a7c9-15e371a30601",
+              "gatewayResponse": {
+                    "processor": "WALLET"
+              },
+              "settlementId": "1c0d156c-445a-4171-8ddb-ef8fb4f01a74"  
             }
             
 ### Get Refunds Using Merchant Reference Number [GET /v1/refunds?merchantRefNum={merchant_ref_num}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
@@ -4369,12 +4405,36 @@ Click **Get Refunds Using Merchant Reference Number** above to look up a Refund 
                 },
                 "refunds": [{
                     "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
+                    "paymentType": "OFFLINE_BANK_TRANSFER",
                     "merchantRefNum": "merchantRefNum-118",
                     "amount": 190,
-                    "currencyCode" : "EUR",
+                    "currencyCode": "EUR",
                     "txnTime": "2018-12-11T16:33:49Z",
-                    "status": "PENDING"
-                }]
+                    "status": "PROCESSING",
+                    "wallet": {
+                    "customerId": "5435323362",
+                    "customerAccount": {
+                      "id": "5014567344",
+                      "transactions" : [ {
+                              "id": "12321",
+                              "slipId": "5009964049",
+                              "type": "REFUND",
+                              "amount": 190,
+                              "currencyCode": "EUR",
+                              "creationTime": "2018-12-11T16:33:49Z",
+                              "direction": "DEBIT",
+                              "paymentType": "BANK_TRANSFER",
+                              "status": "PROCESSING",
+                              "merchantRefNum": "merchantRefNum-118"
+                      }]      
+                    }
+                    },
+                    "gatewayReconciliationId": "2c8bc14c-8efd-4195-a7c9-15e371a30601",
+                    "gatewayResponse": {
+                        "processor": "WALLET"
+                    },
+                    "settlementId": "1c0d156c-445a-4171-8ddb-ef8fb4f01a74"  
+            }]
             }
 
 # Group Standalone Credits
