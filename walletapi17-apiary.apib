@@ -1515,6 +1515,7 @@ For refund the **id** of the transaction, **customerId** and **accountId** are r
 {
   "merchantRefNum": "merchantRefNum-118",
   "amount": 190,
+  "currencyCode": "EUR",
   "dupCheck": true,
   "wallet": {
     "customerId": "5435323362",
@@ -1532,6 +1533,7 @@ For refund the **id** of the transaction, **customerId** and **accountId** are r
   "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
   "merchantRefNum": "merchantRefNum-118",
   "amount": 190,
+  "currencyCode": "EUR",
   "txnTime": "2018-12-11T16:33:49Z",
   "status": "PENDING",
   "wallet": {
@@ -2115,6 +2117,7 @@ This is a read-only raw response returned by an acquirer.
 |id                 |string <br/>`length<=36`               |Read Only|This is the ID returned in the response. This ID can be used for future associated requests.|
 |merchantRefNum     |string <br/>`length<=255`              |Mandatory|This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
 |amount             |number<br>`max=99999999999`            |Optional|This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099.|
+|currencyCode       |string <br/>`length=3`                 |Mandatory| This is the currency of the merchant account, for example, USD or CAD. See [Currency Codes](#currencycodes). <br/>The *currencyCode* specified in the Refund request must match the currencyCode of settlement transaction.|
 |dupCheck           |boolean                                |Optional|This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.<br/>**Note:** This value defaults to *true*.|
 |childAccountNum    |string<br/>`length<=10`                |Optional|This is the child merchant account number. It is returned only if the transaction was processed via a master account.|
 |txnTime            |UTC formatted date                     |Read Only|This is the date and time the request was processed. For example:<br/>2014-01-26T10:32:28Z|
@@ -2126,7 +2129,8 @@ This is a read-only raw response returned by an acquirer.
 ```apib
 {
     "merchantRefNum":"refund_id:1231",
-    "amount":10098
+    "amount":10098,
+    "currencyCode" : "EUR"
 }
 ```
 
@@ -4207,6 +4211,7 @@ Click **Process Refund** above to see two examples of how to process a Refund re
             {
               "merchantRefNum": "merchantRefNum-118",
               "amount": 190,
+              "currencyCode" : "EUR",
               "dupCheck": true,
               "wallet": {
                 "customerId": "5435323362",
@@ -4226,6 +4231,7 @@ Click **Process Refund** above to see two examples of how to process a Refund re
               "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
               "merchantRefNum": "merchantRefNum-118",
               "amount": 190,
+              "currencyCode" : "EUR",
               "txnTime": "2018-12-11T16:33:49Z",
               "status": "PENDING",
               "wallet": {
@@ -4307,8 +4313,6 @@ Click **Get Refund** above to look up a Refund using the ID returned in the resp
 
             Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
             Simulator: "EXTERNAL"
-            
-    + Attributes (Refund)            
 
 + Response 200 (application/json)
 
@@ -4320,6 +4324,7 @@ Click **Get Refund** above to look up a Refund using the ID returned in the resp
               "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
               "merchantRefNum": "merchantRefNum-118",
               "amount": 190,
+              "currencyCode" : "EUR",
               "txnTime": "2018-12-11T16:33:49Z",
               "status": "PENDING"
             }
@@ -4366,6 +4371,7 @@ Click **Get Refunds Using Merchant Reference Number** above to look up a Refund 
                     "id": "c7ef07b2-0069-4f58-b9e2-0f4cdbc6c725",
                     "merchantRefNum": "merchantRefNum-118",
                     "amount": 190,
+                    "currencyCode" : "EUR",
                     "txnTime": "2018-12-11T16:33:49Z",
                     "status": "PENDING"
                 }]
@@ -8978,7 +8984,9 @@ This is applicable only for STANDALONE_CREDIT.
 + `merchantRefNum`:`P1234` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
     _Mandatory, length<=255_
 + `amount`:`100` (number) - This is the amount of the request, in minor units. If this value is not provided, the full remaining amount on the Settlement will be refunded.
-    _Optional, max=99999999999_
+    _Mandatory, max=99999999999_
++ `currencyCode`:`EUR` (string) - This is the currency of the merchant account, for example, USD or CAD. See [Currency Codes](#currencycodes). <br/>The *currencyCode* specified in the Refund request must match the currencyCode of settlement transaction.
+    _Mandatory, length=3_
 + `dupCheck`:`true` (boolean) - This validates that this request is not a duplicate. A duplicate request is when the *merchantRefNum* has already been used in a previous request within the past 90 days.
     _Optional_
     + Default: true
