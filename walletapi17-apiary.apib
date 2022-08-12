@@ -238,8 +238,18 @@ Onboarding a new customer or a legal entity requires a new wallet to be created 
 **Creating a new wallet for a customer** has the following requirements for the data being passed in the body of the request:
 
 * `customer` - all required fields must be fully populated - Paysafe needs this information for regulatory purposes.
-* `customer.kyc.status` - This flag must be passed, when creating a customer wallet. The flag denotes, that Paysafe accepts the customer has passed the KYC verification process.
-  If the value of this flag is different from `COMPLETED`, then the wallet creation will fail.
+* `custoomer.kyc` - property tracks the customer KYC process status and data
+  * `kyc.status` - This flag must be passed, when creating a customer wallet. The flag denotes, that Paysafe accepts only customers, that have passed the KYC verification process. If the value of this flag is different from `COMPLETED`, then the wallet creation will fail.
+  * `customer.kyc.idVerification`, `customer.kyc.addressVerification`, `customer.kyc.faceMatch`, `customer.kyc.EDD` - optional objects
+    * `status` - Mandatory property if object is present. Accepted value on onboarding is `"COMPLETED"`.
+    * `date` - Optional property. Date of KYC verification completion. Current date is used if the value is not passed.
+    * `electronicallyVerified` - Property that shows if customer has been KYC verified by external vendor. Mandatory if 
+      `documentUrls` is empty.
+    * `vendor` - Name of vendor that has done the KYC verification. Mandatory if `documentUrls` is empty.
+    * `documentUrls` - List of URLs of documents that customer has provided during KYC verification. Merchant is obligated 
+      to provide them or provide `electronicallyVerified` and `vendor` to guarantee that customer has gone through KYC
+      verification.
+  * `EDD.date` - Mandatory property if `EDD.status` is `"COMPLETED"`, otherwise optional.
 * `accounts` - at least one account object has to be populated and it must contain a currency code.
   Please refer to Merchant's agreement with Paysafe for a list of supported wallet currencies per country.
   If an unsupported currency is passed, or if two Account objects with the same currency are provided, creating the wallet will fail.
@@ -273,17 +283,160 @@ In case the provided email provided is not unique, and a wallet is already creat
 After creating the wallet, the customer might be restricted on Paysafe side
 based on regulatory and risk checks.
 
+---
+**POST** `https://api.paysafe.com/digitalwallets/v1/wallets`
+```json
+{
+    "customer": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "title": "Mr",
+        "email": "john.doe@example.com",
+        "type" : "PERSON",
+        "mobile": "+443452555151",
+        "address1": "23 Four Str",
+        "city": "London",
+        "zip": "E17 033",
+        "countryCode": "GB",
+        "birthDate": "1999-08-24",
+        "registrationIp": "115.148.82.143",
+        "nationality": "GB",
+        "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+        "kyc": {
+            "status": "COMPLETED",
+            "idVerification": {
+              "status": "COMPLETED",
+              "date": "2021-03-12T13:27:41Z",
+              "electronicallyVerified": true,
+              "vendor": "Vendor",
+              "documentUrls": [
+                "https://documents.com/document1.png",
+                "https://documents.com/document2.png"
+              ]
+            },
+            "addressVerification": {
+              "status": "COMPLETED",
+              "date": "2021-03-12T13:27:41Z",
+              "electronicallyVerified": true,
+              "vendor": "Vendor",
+              "documentUrls": [
+                "https://documents.com/document1.png",
+                "https://documents.com/document2.png"
+              ]
+            },
+            "faceMatch": {
+              "status": "COMPLETED",
+              "date": "2021-07-21T13:27:41Z",
+              "electronicallyVerified": true,
+              "vendor": "Vendor",
+              "documentUrls": [
+                "https://documents.com/document1.png",
+                "https://documents.com/document2.png"
+              ]
+            },
+            "EDD": {
+                "status": "COMPLETED",
+                "date": "2021-03-12T13:27:41Z",
+                "electronicallyVerified": true,
+                "vendor": "Vendor",
+                "documentUrls": [
+                    "https://documents.com/document1.png",
+                    "https://documents.com/document2.png"
+                ]
+            },
+            "addressVerificationDocumentsReceived": [
+                "BANK_STATEMENT",
+                "CREDIT_CARD",
+                "TAX_RETURN",
+                "PENSION_DOCUMENT",
+                "PHONE_BILL",
+                "UNKNOWN_DOC"
+            ]
+        },
+          "pep": {
+            "status": "MATCH",
+            "lastScreenDate": "2021-07-19T13:35:41Z",
+            "reason": "Matched"
+          },
+          "sanctions": {
+            "status": "NO_MATCH",
+            "lastScreenDate": "2021-07-19T13:35:41Z",
+            "reason": "Incorrect data"
+          }
+        },
+        "type": "PERSON"
+    },
+    "accounts": [
+    {
+        "currencyCode": "GBP",
+        "hasIban": true
+    }
+    ],
+    "risk": {
+        "customerRiskRating": 1,
+        "isScaPerformed": true,
+        "isCustomerIPTrusted": true,
+        "isBeneficiaryTrusted": true
+    },  
+    "termsAndConditionsAccepted": true,
+    "deviceInfo": {
+        "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+        "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+        "appType": "WEB_APP"
+    },
+    "customerIp": "73.82.192.17"
+}
+```
+---
+
 ## Onboard a legal entity
 
 Onboarding a legal entity requires providing extended information since extended due diligence is required.
 
+List of required fields for onboarding
+
+* `legalEntity` - all required fields must be fully populated - Paysafe needs this information for regulatory purposes. List of required fields
+  * `externalId` - customer unique identifier at merchant site
+  * `type` - should be `LEGAL_ENTITY`
+  * `email` - The field is required for legal entities
+  * `registrationIp` - registration ip address
+  * `registrationDate` - registration date
+  * `accounts` - see onbording regular customer for details
+  * `companyName` - company name
+  * `companyIdentifier` - company registration identifier as per local law
+  * `registrationAddress` - registration address
+  * `operatingAddress` - operating address
+  * `websiteUrl` - web site URL
+  * `representative` - main company representative
+  * `sourceOfFunding` - source of funding
+  * `natureOfBusiness` - nature of business
+  * `reasonToApply` - reasons to apply
+
+### KYC field in `representative`, `representatives`, `directors` and `ultimateBeneficialOwners`
+
+For `representative.kyc.status` the value must be present and set to either `COMPLETED` or `NOT_COMPLETED` depending on the KYC model used for legal entities.
+  * `COMPLETED` - must be used if KYC process is managed by the merchant
+  * `NOT_COMPLETED` - must be used if KYC process is managed by Paysafe
+
+The KYC model used depends on the contract between Paysafe and the merchant. The API will reject requests with invalid parameter value.
+
+### Fields in KYC object
+
+For simplicity `idVerification`, `addressVerification` and `faceMatch` in `kyc` field will be referred to as `<verification>` as they have the same structure and rules applied.
+
+* The structure of Legal Entity KYC object is the same as Customer KYC object. The KYC object structure for 
+  `representative`, `directors`, `ultimateBeneficialOwners`, `representatives` is the same. The `kybDocuments` array represents Business documents while `kyc.<verification>.documentUrls` represent Personal documents. 
+* `kyc.status` and `kyc.<verification>.status` are still mandatory but are not taken into consideration by Paysafe.
+* `kyc` and `kybDocuments` are optional properties but merchant is obligated to provide KYC verification documents.
+
 ---
-**PATCH** `https://api.paysafe.com/digitalwallets/v1/wallets`
+**POST** `https://api.paysafe.com/digitalwallets/v1/wallets`
 ```json
 {
     "legalEntity": {
         "externalId": "6622429017",
         "email": "companymail@company.com",
+        "type" : "LEGAL_ENTITY",
         "mobile": "088634001917",
         "registrationIp": "87.120.141.75",
         "companyName": "companyName",
@@ -312,7 +465,30 @@ Onboarding a legal entity requires providing extended information since extended
           "dateOfBirth": "1961-11-11",
           "countryCode": "BG",
           "identificationNumber": "6111118787",
-          "identificationNumberIssuingCountryCode": "BG"
+          "identificationNumberIssuingCountryCode": "BG",
+          "kyc": {
+            "status": "COMPLETED",
+            "idVerification": {
+              "status": "COMPLETED",
+              "documentUrls": [
+                "https://documents.com/document.png"
+              ]
+            }
+          },
+          "kybDocuments": [
+            {
+              "type": "OWNERSHIP_STRUCTURE",
+              "documentUrls": [
+                "https://documents.com/document.png"
+              ]
+            },
+            {
+              "type": "STATEMENT_OF_WORK",
+              "documentUrls": [
+                "https://documents.com/document.png"
+              ]
+            }
+          ]          
         },
         "directors": [
             {
@@ -322,7 +498,16 @@ Onboarding a legal entity requires providing extended information since extended
               "dateOfBirth": "1961-11-11",
               "countryCode": "BG",
               "identificationNumber": "6111118787",
-              "identificationNumberIssuingCountryCode": "BG"
+              "identificationNumberIssuingCountryCode": "BG",
+              "kyc": {
+                "status": "COMPLETED",
+                "idVerification": {
+                  "status": "COMPLETED",
+                  "documentUrls": [
+                    "https://documents.com/document.png"
+                  ]
+                }
+              }              
             }
         ],
         "ultimateBeneficialOwners": [
@@ -333,7 +518,16 @@ Onboarding a legal entity requires providing extended information since extended
               "dateOfBirth": "1961-11-11",
               "countryCode": "BG",
               "identificationNumber": "6111118787",
-              "identificationNumberIssuingCountryCode": "BG"
+              "identificationNumberIssuingCountryCode": "BG",
+              "kyc": {
+                "status": "COMPLETED",
+                "idVerification": {
+                  "status": "COMPLETED",
+                  "documentUrls": [
+                    "https://documents.com/document.png"
+                  ]
+                }
+              }
             }
         ],
         "sourceOfFunding": "funding source",
@@ -351,12 +545,26 @@ Onboarding a legal entity requires providing extended information since extended
         }
     ],
     "risk": {
-        "customerRiskRating": "1",
+        "customerRiskRating": 1,
         "isScaPerformed": true,
         "isCustomerIPTrusted": true,
         "isBeneficiaryTrusted": true
     },
-    "termsAndConditionsAccepted": true
+    "termsAndConditionsAccepted": true,
+    "kybDocuments": [
+      {
+        "type": "ARTICLES_OF_ASSOCIATION",
+        "documentUrls": [
+          "https://documents.com/document.png"
+        ]
+      },
+      {
+        "type": "CERTIFICATE_OF_INCORPORATION",
+        "documentUrls": [
+          "https://documents.com/document.png"
+        ]
+      }
+    ]    
 }
 ```
 ---
