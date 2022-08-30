@@ -238,7 +238,7 @@ Onboarding a new customer or a legal entity requires a new wallet to be created 
 **Creating a new wallet for a customer** has the following requirements for the data being passed in the body of the request:
 
 * `customer` - all required fields must be fully populated - Paysafe needs this information for regulatory purposes.
-* `custoomer.kyc` - property tracks the customer KYC process status and data
+* `customer.kyc` - property tracks the customer KYC process status and data
   * `kyc.status` - This flag must be passed, when creating a customer wallet. The flag denotes, that Paysafe accepts only customers, that have passed the KYC verification process. If the value of this flag is different from `COMPLETED`, then the wallet creation will fail.
   * `customer.kyc.idVerification`, `customer.kyc.addressVerification`, `customer.kyc.faceMatch`, `customer.kyc.EDD` - optional objects
     * `status` - Mandatory property if object is present. Accepted value on onboarding is `"COMPLETED"`.
@@ -292,7 +292,6 @@ based on regulatory and risk checks.
         "lastName": "Doe",
         "title": "Mr",
         "email": "john.doe@example.com",
-        "type" : "PERSON",
         "mobile": "+443452555151",
         "address1": "23 Four Str",
         "city": "London",
@@ -308,17 +307,11 @@ based on regulatory and risk checks.
               "status": "COMPLETED",
               "date": "2021-03-12T13:27:41Z",
               "electronicallyVerified": true,
-              "vendor": "Vendor",
-              "documentUrls": [
-                "https://documents.com/document1.png",
-                "https://documents.com/document2.png"
-              ]
+              "vendor": "Vendor"
             },
             "addressVerification": {
               "status": "COMPLETED",
               "date": "2021-03-12T13:27:41Z",
-              "electronicallyVerified": true,
-              "vendor": "Vendor",
               "documentUrls": [
                 "https://documents.com/document1.png",
                 "https://documents.com/document2.png"
@@ -328,11 +321,7 @@ based on regulatory and risk checks.
               "status": "COMPLETED",
               "date": "2021-07-21T13:27:41Z",
               "electronicallyVerified": true,
-              "vendor": "Vendor",
-              "documentUrls": [
-                "https://documents.com/document1.png",
-                "https://documents.com/document2.png"
-              ]
+              "vendor": "Vendor"
             },
             "EDD": {
                 "status": "COMPLETED",
@@ -363,8 +352,7 @@ based on regulatory and risk checks.
             "lastScreenDate": "2021-07-19T13:35:41Z",
             "reason": "Incorrect data"
           }
-        },
-        "type": "PERSON"
+        }
     },
     "accounts": [
     {
@@ -397,20 +385,35 @@ List of required fields for onboarding
 
 * `legalEntity` - all required fields must be fully populated - Paysafe needs this information for regulatory purposes. List of required fields
   * `externalId` - customer unique identifier at merchant site
-  * `type` - should be `LEGAL_ENTITY`
   * `email` - The field is required for legal entities
   * `registrationIp` - registration ip address
   * `registrationDate` - registration date
-  * `accounts` - see onbording regular customer for details
+  * `accounts` - at least one account object has to be populated and it must contain a currency code.
+      Please refer to Merchant's agreement with Paysafe for a list of supported wallet currencies per country.
+      If an unsupported currency is passed, or if two Account objects with the same currency are provided, creating the wallet will fail.
   * `companyName` - company name
   * `companyIdentifier` - company registration identifier as per local law
   * `registrationAddress` - registration address
   * `operatingAddress` - operating address
   * `websiteUrl` - web site URL
   * `representative` - main company representative
+  * `directors` - at least one director needs to be specified
+  * `ultimateBeneficialOwners` - at least one owner must be specified
   * `sourceOfFunding` - source of funding
   * `natureOfBusiness` - nature of business
   * `reasonToApply` - reasons to apply
+
+
+### Expected transaction volume for legal entities
+
+**In Incubation**
+
+New optional field will be introduced for legal entities upon onboarding. At some point in the future the field will be promoted to required for all legal entities.
+
+ * `expectedTransactionVolume` - Expected transaction volume of the legal entity for a rolling period of 1 year. The field contains the following properties:
+    * `amount` - the amount in minor units
+    * `currencyCode` - the amount currency code for example `EUR`. Use the same currency as the main account currency used during onboarding.
+
 
 ### KYC field in `representative`, `representatives`, `directors` and `ultimateBeneficialOwners`
 
@@ -435,7 +438,6 @@ For simplicity `idVerification`, `addressVerification` and `faceMatch` in `kyc` 
     "legalEntity": {
         "externalId": "6622429017",
         "email": "companymail@company.com",
-        "type" : "LEGAL_ENTITY",
         "mobile": "088634001917",
         "registrationIp": "87.120.141.75",
         "companyName": "companyName",
@@ -457,6 +459,10 @@ For simplicity `idVerification`, `addressVerification` and `faceMatch` in `kyc` 
           "address2": "operating address 2"
         },
         "websiteUrl": "somecompany.com",
+        "expectedTransactionVolume": {
+          "amount": 100200300400,
+          "currencyCode": "EUR"
+        },
         "representative": {
           "firstName": "John",
           "middleName": "Alexander",
@@ -586,9 +592,48 @@ The following fields are disregarded during the update:
 * id
 * externalId
 
+## Update KYC
+
+All properties are optional with the exception of `EDD.date`. `EDD.date` would be mandatory if `EDD.status` is
+`"COMPLETED"`.
+Providing `kyc.status` would change values of `idVerification.status`, `addressVerification.status` and `faceMatch.
+status` unless they are provided.
+
+Example:
+```json
+{
+  "kyc": {
+    "status": "NOT_COMPLETED",
+    "idVerification": {
+      "status": "COMPLETED"
+    }
+  }
+}
+```
+In the above example `addressVerification.status` and `faceMatch.status` would change to `"NOT_COMPLETED"` and
+`idVerification.status` to `"COMPLETED"`.
+
 ## Update a legal entity
 
-TBD
+The following specifics are valid for updating legal entities.
+
+* partial update of `representatives`, `directors` and `ultimateBeneficialOwners` is not possible. Full list must be provided upon update. The operation replaces the existing `representatives`, `directors` and `ultimateBeneficialOwners`. Pass empty list to delete all record of specific type.
+* `registrationAddress` - can be updated as long as country is not changed. Legal entities can not change country.
+
+Main represetative can not have the same identification number as one of the additional representatives. To promote additional representative to main representative, you must remove it from the representative list and set it as main representative.
+
+Two representatives, directors and ultimate beneficial owners can not have the same identification numbers.
+
+The following fields can not be updated
+
+  * `email` - email is a required field for onboarding legal entities
+  * `type` - can not be changed from `LEGAL_ENTITY` to `PERSON`
+  * `id` - customer id can not be changed
+  * `externalId` - external customer id can not be changed
+  * `registrationIp`
+  * `restrictions` - are disregarded. Restrictions are placed using dedicated restrictions API.
+  * `accounts` - accounts can not be updated through this API.
+  * `registrationDate` - can not be updated
 
 ## Deactivate a customer
 
