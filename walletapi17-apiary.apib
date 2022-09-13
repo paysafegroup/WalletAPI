@@ -2943,6 +2943,7 @@ This is a read-only raw response returned by an acquirer.
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 13 Sept 2022| - Add expected transaction volume for legal entities                                                        |
 | V1      | 12 Aug 2022 | - Update API documentation for onboarding legal customers                                                   |
 | V1      | 12 Jul 2022 | - Major API Restructuring and clarifications to Overview, Getting Started and Wallet operations sections    |
 | V1      | 12 Jul 2022 | - Adding [Change customer country] functionality in the Wallet Operations documentation                     |
@@ -9599,11 +9600,17 @@ Wallet composite model
 + `kyc` (KYC, required)
 
 
+## ExpectedTransactionVolume (object)
+
+### Properties
++ `amount`: `1000000` (number, required) - Amount in minor units
++ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
 
 ## CustomerLegalEntity (Customer)
 
 ### Properties
 + `type`: `LEGAL_ENTITY` (enum[string], required) - Type of Customer
+    + `LEGAL_ENTITY`
     + `PERSON`
 + `companyName`: `Example Corp` (string, required) - Name of the company
     _length<=100_
@@ -9613,6 +9620,7 @@ Wallet composite model
 + `operatingAddress` (Address, required)
 + `websiteUrl`: `https://example.com` (string, required)
     _length<=500_
++ `expectedTransactionVolume` (ExpectedTransactionVolume, optional) - Expected transaction volume of the legal entity for a rolling period of 1 year
 + `representative` (LegalEntityPerson, required)
 + `directors` (array[LegalEntityPerson], required)
 + `ultimateBeneficialOwners` (array[LegalEntityPerson], required)
