@@ -9599,11 +9599,17 @@ Wallet composite model
 + `kyc` (KYC, required)
 
 
+## ExpectedTransactionVolume (object)
+
+### Properties
++ `amount`: `1000000` (number, required) - Amount in minor units
++ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
 
 ## CustomerLegalEntity (Customer)
 
 ### Properties
 + `type`: `LEGAL_ENTITY` (enum[string], required) - Type of Customer
+    + `LEGAL_ENTITY`
     + `PERSON`
 + `companyName`: `Example Corp` (string, required) - Name of the company
     _length<=100_
@@ -9613,6 +9619,7 @@ Wallet composite model
 + `operatingAddress` (Address, required)
 + `websiteUrl`: `https://example.com` (string, required)
     _length<=500_
++ `expectedTransactionVolume` (ExpectedTransactionVolume, optional) - Expected transaction volume of the legal entity for a rolling period of 1 year
 + `representative` (LegalEntityPerson, required)
 + `directors` (array[LegalEntityPerson], required)
 + `ultimateBeneficialOwners` (array[LegalEntityPerson], required)
