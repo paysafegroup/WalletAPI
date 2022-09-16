@@ -1558,9 +1558,8 @@ For these integrations, corresponding Payment and Settlement resources are creat
 **Auto Settlement Payment**
 ![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Auto_Settlement_Payment_Flow.png)
 
-
-<a name="webhooks" title="Webhooks"></a>
 # Webhooks
+<a name="webhooks" title="Webhooks"></a>
 
 A Webhook is an HTTP callback that is triggered when an event takes place.
 To configure webhooks, you need to [open a service request](https://merchant.paysafe.com/portal/login) with Paysafe in the Business Portal.
@@ -1821,8 +1820,8 @@ For refund the **id** of the transaction, **customerId** and **accountId** are r
 ---
 # Payment objects
 
-<a name="authenticationobject" title="Authentications Object"></a>
 ## authentication
+<a name="authenticationobject" title="Authentications Object"></a>
 
 | Element          | Type                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 |------------------|--------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1864,8 +1863,9 @@ The following is an example of the 3D Secure 2 authentication object:
         }
     }
 ```
-<a name="bacsobject" title="bacs Object"></a>
+
 ## bacs
+<a name="bacsobject" title="bacs Object"></a>
 
 | Element           | Type                     | Required  | Description                                                             |
 |-------------------|--------------------------|-----------|-------------------------------------------------------------------------|
@@ -1886,8 +1886,8 @@ The following is an example of the 3D Secure 2 authentication object:
 ```
 
 
-<a name="billingdetailsobject" title="Billing Details Object"></a>
 ## billingDetails
+<a name="billingdetailsobject" title="Billing Details Object"></a>
 
 | Element  | Type                    | Required  | Description                                                                                                                                                                                                   |
 |----------|-------------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1914,8 +1914,8 @@ The following is an example of the 3D Secure 2 authentication object:
 }
 ```
 
-<a name="customerAccount" title="Customer Account Object"></a>
 ## customerAccount
+<a name="customerAccount" title="Customer Account Object"></a>
 
 | Element      | Type                                       | Required   | Description                                           |
 |--------------|--------------------------------------------|------------|-------------------------------------------------------|
@@ -1945,8 +1945,8 @@ The following is an example of the 3D Secure 2 authentication object:
 ```
 
 
-<a name="cardobject" title="card Object"></a>
 ## card
+<a name="cardobject" title="card Object"></a>
 
 | Element    | Type                            | Required    | Description                                                                                 |
 |------------|---------------------------------|-------------|---------------------------------------------------------------------------------------------|
@@ -1972,8 +1972,8 @@ The following is an example of the 3D Secure 2 authentication object:
 ```
 
 
-<a name="cardexpiryobject" title="cardExpiry Object"></a>
 ## cardExpiry
+<a name="cardexpiryobject" title="cardExpiry Object"></a>
 
 | Element | Type                  | Required  | Description                    |
 |---------|-----------------------|-----------|--------------------------------|
@@ -1989,8 +1989,9 @@ The following is an example of the 3D Secure 2 authentication object:
     }
 ```
 
-<a name="dateofbirthobject" title="Date of Birth Object"></a>
 ## dateOfBirth
+<a name="dateofbirthobject" title="Date of Birth Object"></a>
+
 | Element | Type                           | Required  | Description                 |
 |---------|--------------------------------|-----------|-----------------------------|
 | year    | number<br/>`length=4 min=1900` | Mandatory | This is the year of birth.  |
@@ -2007,8 +2008,9 @@ The following is an example of the 3D Secure 2 authentication object:
             }
 ```
 
-<a name="deviceinfoobject" title="Device Info Object"></a>
 ## deviceInfo
+<a name="deviceinfoobject" title="Device Info Object"></a>
+
 | Element               | Type                 | Required | Description                           |
 |-----------------------|----------------------|----------|---------------------------------------|
 | threatMetrixSessionId | String<br/>`max=100` | Optional | This is the Threat Metrix session id. |
@@ -2023,10 +2025,9 @@ The following is an example of the 3D Secure 2 authentication object:
     }
 ```
 
-
-
-<a name="errorobject" title="error Object"></a>
 ## error
+<a name="errorobject" title="error Object"></a>
+
 | Element     | Type   | Required  | Description                                                                  |
 |-------------|--------|-----------|------------------------------------------------------------------------------|
 | code        | string | Read Only | The error code. Also shown in the X-Application-Status-Code response header. |
@@ -2052,8 +2053,8 @@ The following is an example of the 3D Secure 2 authentication object:
    }
 ```
 
-<a name="fasterpaymentsobject" title="fasterpayments Object"></a>
 ## fasterPayments
+<a name="fasterpaymentsobject" title="fasterpayments Object"></a>
 
 | Element           | Type                     | Required  | Description                                                             |
 |-------------------|--------------------------|-----------|-------------------------------------------------------------------------|
@@ -2072,8 +2073,8 @@ The following is an example of the 3D Secure 2 authentication object:
     }
 ```
 
-<a name="fieldErrorobject" title= "Field Error Object"></a>
 ## fieldError
+<a name="fieldErrorobject" title= "Field Error Object"></a>
 
 | Element | Type   | Required  | Description                            |
 |---------|--------|-----------|----------------------------------------|
@@ -2087,8 +2088,8 @@ The following is an example of the 3D Secure 2 authentication object:
         }
 ```
 
-<a name="gatewayresponseobject" title= "Gateway Response Object"></a>
 ## gatewayResponse
+<a name="gatewayresponseobject" title= "Gateway Response Object"></a>
 
 This is a read-only raw response returned by an acquirer.
 
@@ -2105,8 +2106,8 @@ This is a read-only raw response returned by an acquirer.
 | cvv2Result      | string | Read Only | This is the raw cvv2 result code.                                                                                                                                                                            |
 
 
-<a name="linksobject" title="links Object"></a>
 ## links
+<a name="linksobject" title="links Object"></a>
 
 | Element | Type   | Description                                                                                                                                                                                                                                     |
 |---------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2128,8 +2129,8 @@ This is a read-only raw response returned by an acquirer.
 }
 ```
 
-<a name="merchantAccount" title="Merchant Account Object"></a>
 ## merchantAccount
+<a name="merchantAccount" title="Merchant Account Object"></a>
 
 | Element      | Type                                       | Required   | Description                                           |
 |--------------|--------------------------------------------|------------|-------------------------------------------------------|
@@ -2159,8 +2160,8 @@ This is a read-only raw response returned by an acquirer.
 ```
 
 
-<a name="metaobject" title="meta Object"></a>
 ## meta
+<a name="metaobject" title="meta Object"></a>
 
 | Element         | Type   | Required  | Description                                             |
 |-----------------|--------|-----------|---------------------------------------------------------|
@@ -2179,8 +2180,8 @@ This is a read-only raw response returned by an acquirer.
 ```
 
 
-<a name="metadataobject" title="metadata Object"></a>
 ## metadata
+<a name="metadataobject" title="metadata Object"></a>
 
 | Element | Type                      | Required  | Description                                           |
 |---------|---------------------------|-----------|-------------------------------------------------------|
@@ -2188,8 +2189,8 @@ This is a read-only raw response returned by an acquirer.
 | value   | string <br/>`length<=100` | Read Only | This is the value for the key/value pair.             |
 
 
-<a name="paymenthandleobject" title="Payment Handle Object"></a>
 ## Payment Handle
+<a name="paymenthandleobject" title="Payment Handle Object"></a>
 
 | Element                                                                                                                        | Type                                            | Required                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |--------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2281,8 +2282,8 @@ This is a read-only raw response returned by an acquirer.
 }
 ```
 
-<a name="paymentsobject" title="Payments Object"></a>
 ## Payment
+<a name="paymentsobject" title="Payments Object"></a>
 
 | Element            | Type                                      | Required  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 |--------------------|-------------------------------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2324,8 +2325,8 @@ This is a read-only raw response returned by an acquirer.
 }
 ```
 
-<a name="profileobject" title="Profile Object"></a>
 ## profile
+<a name="profileobject" title="Profile Object"></a>
 
 | Element     | Type                              | Required | Description                                                                                                         |
 |-------------|-----------------------------------|----------|---------------------------------------------------------------------------------------------------------------------|
@@ -2347,8 +2348,8 @@ This is a read-only raw response returned by an acquirer.
              }
 ```
 
-<a name="rapidtransferobject" title="rapidTransfer Object"></a>
 ## rapidTransfer
+<a name="rapidtransferobject" title="rapidTransfer Object"></a>
 
 | Element | Type                | Required  | Description        |
 |---------|---------------------|-----------|--------------------|
@@ -2368,8 +2369,9 @@ This is a read-only raw response returned by an acquirer.
     }
 ```
 
-<a name="refundsobject" title="refunds Object"></a>
 ## refunds
+<a name="refundsobject" title="refunds Object"></a>
+
 |Element            |Type                                   |Required|Description                        |
 |---                |---                                    |---|---                                |
 |id                 |string <br/>`length<=36`               |Read Only|This is the ID returned in the response. This ID can be used for future associated requests.|
@@ -2392,8 +2394,8 @@ This is a read-only raw response returned by an acquirer.
 }
 ```
 
-<a name="returnlinksobject" title="returnLinks Object"></a>
 ## returnLinks
+<a name="returnlinksobject" title="returnLinks Object"></a>
 
 | Element | Type   | Required  | Description                                                                                                                                                                                                                                                                                                                                                                                                        |
 |---------|--------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2417,8 +2419,8 @@ This is a read-only raw response returned by an acquirer.
 }
 ```
 
-<a name="sepaobject" title="sepa Object"></a>
 ## sepa
+<a name="sepaobject" title="sepa Object"></a>
 
 | Element           | Type                     | Required  | Description                                                                    |
 |-------------------|--------------------------|-----------|--------------------------------------------------------------------------------|
@@ -2439,8 +2441,9 @@ This is a read-only raw response returned by an acquirer.
     }
 ```
 
-<a name="settlementsobject" title="settlements Object"></a>
 ## settlement
+<a name="settlementsobject" title="settlements Object"></a>
+
 | Element           | Type                         | Required  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 |-------------------|------------------------------|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | id                | string <br/>`length<=36`     | Read Only | This is the ID returned in the response. This ID can be used for future associated requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -2462,9 +2465,8 @@ This is a read-only raw response returned by an acquirer.
 }
 ```
 
-
-<a name="standalonecreditsobject" title="standalonecredits Object"></a>
 ## Standalone Credit
+<a name="standalonecreditsobject" title="standalonecredits Object"></a>
 
 | Element                                                                               | Type                                    | Required  | Description                                                                                                                                                                                                                                                                                                                          |
 |---------------------------------------------------------------------------------------|-----------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2489,8 +2491,8 @@ This is a read-only raw response returned by an acquirer.
 }
 ```
 
-<a name="threeDsobject" title= "threeDs Object"></a>
 ## threeDs
+<a name="threeDsobject" title= "threeDs Object"></a>
 
 |Element            |Type                      |Required  | Description                       |
 |---                |---                       |--------  |---                                |
@@ -2507,8 +2509,9 @@ This is a read-only raw response returned by an acquirer.
      },
 }
 ```
-<a name="transaction" title="Transaction Object"></a>
+
 ## transaction
+<a name="transaction" title="Transaction Object"></a>
 
 | Element        | Type                   | Required  | Description                                                                                                                                                                                                                                                                                                              |
 |----------------|------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2541,10 +2544,8 @@ This is a read-only raw response returned by an acquirer.
     }
 ```
 
-
-
-<a name="wallet" title="Wallet Object"></a>
 ## wallet
+<a name="wallet" title="Wallet Object"></a>
 
 | Element         | Type                                | Required   | Description                                           |
 |-----------------|-------------------------------------|------------|-------------------------------------------------------|
@@ -3006,7 +3007,7 @@ This is a read-only raw response returned by an acquirer.
 </ul>
 
 # Verify That the Service Is Accessible [GET /paymenthub/v1/monitor]
-<a name="verifyservice" title="Verify Service"></a>
+<a name="verifyservice" title="Verify That the Service Is Accessible"></a>
 
 This call returns a status of READY if the API is available.
 
@@ -3024,7 +3025,7 @@ This call returns a status of READY if the API is available.
 ## Payment Handle [/paymenthub/v1/paymenthandles]
 
 A Payment Handle represents tokenized information about the payment method that you set up for your customer. Once the Payment Handle is created, you can then include the *paymentHandleToken* returned in the Payment Handle request response in a new [payment request](#paymentrequest).
-<br>
+<br/>
 > **Note:** A Payment Handle can be used in a [Payment request](#paymentrequest) only if it has the status of **PAYABLE**.
 
 ### Create a Payment Handle [POST]
@@ -3885,10 +3886,8 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
                 "transactionType": "STANDALONE_CREDIT"
             }
 
-
-
 ### Get Payment Handle [GET /paymenthub/v1/paymenthandles/{paymenthandle_id}]
-<a name="getpaymenthandle" title="Look Up a Payment Handle"></a>
+<a name="getpaymenthandle" title="Get Payment Handle"></a>
 
     Click **Get Payment Handle** above to look up a Payment Handle using the ID returned in the response of the original request.
 
@@ -3963,7 +3962,7 @@ Click **Create a Payment Handle** above to see the examples of how to create a P
             }
 
 ### Get Payment Handle Using Merchant Reference Number [GET /paymenthub/v1/paymenthandles?merchantRefNum={merchant_ref_num}&{limit}&{offset}&{startDate}&{endDate}]
-<a name="getpaymenthandlemerchantrefnum" title="Look Up a Payment Handle Using a Merchant Reference Number"></a>
+<a name="getpaymenthandlemerchantrefnum" title="Get Payment Handle Using Merchant Reference Number"></a>
 
 Click **Get Payment Handle Using Merchant Reference Number** above to look up a Payment Handle using the ID returned in the response of the original request.
 
@@ -4064,7 +4063,7 @@ Click **Get Payment Handle Using Merchant Reference Number** above to look up a 
 Payment requests allow you to process a payment using the *paymentHandleToken*.  The examples below include a *paymentHandleToken* created for a credit card.
 
 ### Process Payment [POST]
-<a name="paymentrequest" title="Post Payment Using Payment Handle Token"></a>
+<a name="processpayment" title="Process Payment"></a>
 
 Click **Process Payment** above to create a Payment request using a Payment Handle token for:
 
@@ -4278,10 +4277,8 @@ Click **Process Payment** above to create a Payment request using a Payment Hand
             }
 
 
-
-
 ### Get Payments [GET /paymenthub/v1/payments/{payment_id}]
-<a name="getpayment" title="Look Up a Payment"></a>
+<a name="getpayments" title="Get Payments"></a>
 
 Click **Get Payments** above to look up a Payment using the ID returned in the response of the original request.
 
@@ -4447,10 +4444,9 @@ Click **Get Payment Using Merchant Reference Number** above to look up a Payment
     + settlement_id : `d9bcfd85-8aa6-469d-80a3-e2ca196544da` - This is the ID returned in the response to the Settlement request or to the Payment request where the authorization was settled in the same request.
 
 ### Process Refund [POST]
+<a name="refundrequest" title="Process Refund"></a>
 
 **(In Incubation)**
-
-<a name="refundrequest" title="Process Refund"></a>
 
 Click **Process Refund** above to see two examples of how to process a Refund request:
 
@@ -4520,12 +4516,11 @@ Click **Process Refund** above to see two examples of how to process a Refund re
               },
               "settlementId": "1c0d156c-445a-4171-8ddb-ef8fb4f01a74"  
             }
-            
+
 ### Cancel Refund [PUT /v1/refunds/{refund_id}]
+<a name="cancelrefund" title="Cancel a Refund"></a>
 
 **(In Incubation)**
-
-<a name="cancelrefund" title="Cancel a Refund"></a>
 
 Click **Cancel Refund** above to ancel a Refund. You must include the *status* parameter set to *CANCELLED*.
 
@@ -4562,11 +4557,12 @@ Click **Cancel Refund** above to ancel a Refund. You must include the *status* p
               "status": "CANCELLED"
             }
             
+
 ### Get Refund [GET /v1/refunds/{refund_id}]
+<a name="getrefund" title="Look Up a Refund"></a>
 
 **(In Incubation)**
 
-<a name="getrefund" title="Look Up a Refund"></a>
 
 Click **Get Refund** above to look up a Refund using the ID returned in the response of the original request.
 
@@ -4621,9 +4617,11 @@ Click **Get Refund** above to look up a Refund using the ID returned in the resp
               "settlementId": "1c0d156c-445a-4171-8ddb-ef8fb4f01a74"  
             }
             
+            
 ### Get Refunds Using Merchant Reference Number [GET /v1/refunds?merchantRefNum={merchant_ref_num}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+<a name="getrefundmerchantrefnum" title="Get Refunds Using Merchant Reference Number"></a>
+
 **(In Incubation)**
-<a name="getrefundmerchantrefnum" title="Look Up a Refund Using a Merchant Reference Number"></a>
 
 Click **Get Refunds Using Merchant Reference Number** above to look up a Refund using the merchant reference number used in the original request.
 
@@ -4701,7 +4699,6 @@ Click **Get Refunds Using Merchant Reference Number** above to look up a Refund 
 Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Payment/Settlement.
 
 **Note:** If your merchant category code (MCC) is listed to [process Original Credits](#originalcreditrequest), you must not use Standalone Credits.
-
 
 ### Process Standalone Credit [POST]
 <a name="standalonecreditrequest" title="Process Standalone Credit"></a>
@@ -4980,7 +4977,6 @@ Click **Process Standalone Credit** above to see how to process a Standalone Cre
 
             }
 
-
 ### Get Standalone Credit [GET /paymenthub/v1/standalonecredits/{standalone_credit_id}]
 <a name="getstandalonecredit" title="Look Up a Standalone Credit"></a>
 
@@ -5065,7 +5061,7 @@ Click **Get Standalone Credit** above to look up a Standalone Credit using the I
             }
 
 ### Get Standalone Credit Using Merchant Reference Number  [GET /paymenthub/v1/standalonecredits?{merchantRefNum}&{limit}&{offset}&{startDate}&{endDate}]
-<a name="getstandalonecreditmerchantrefnum" title="Look Up a Standalone Credit Using a Merchant Reference Number"></a>
+<a name="getstandalonecreditmerchantrefnum" title="Get Standalone Credit Using Merchant Reference Number"></a>
 
 Click **Get Standalone Credit Using Merchant Reference Number** above to look up a Standalone Credit using the merchant reference number used in the original request.
 
