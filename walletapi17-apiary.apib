@@ -1760,7 +1760,7 @@ For refund the **id** of the transaction, **customerId** and **accountId** are r
 > **Note:** Merchant must provide merchangeRefNum for the new refund transaction.
 
 ---
-**POST** `https://api2.test.paysafe.com/v1/settlements/{transactionId}/refunds`
+**POST** `https://api2.test.paysafe.com/paymenthub/v1/settlements/{transactionId}/refunds`
 
 ```json
 {
@@ -2944,6 +2944,7 @@ This is a read-only raw response returned by an acquirer.
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 04 Oct 2022 | - Fix refund examples url                                                                                   |
 | V1      | 13 Sept 2022| - Add expected transaction volume for legal entities                                                        |
 | V1      | 12 Aug 2022 | - Update API documentation for onboarding legal customers                                                   |
 | V1      | 12 Jul 2022 | - Major API Restructuring and clarifications to Overview, Getting Started and Wallet operations sections    |
@@ -4437,7 +4438,7 @@ Click **Get Payment Using Merchant Reference Number** above to look up a Payment
 
 
 
-## Refund operations [/v1/settlements/{settlement_id}/refunds]
+## Refund operations [/paymenthub/v1/settlements/{settlement_id}/refunds]
 
 + Parameter
 
@@ -4517,7 +4518,7 @@ Click **Process Refund** above to see two examples of how to process a Refund re
               "settlementId": "1c0d156c-445a-4171-8ddb-ef8fb4f01a74"  
             }
 
-### Cancel Refund [PUT /v1/refunds/{refund_id}]
+### Cancel Refund [PUT /paymenthub/v1/refunds/{refund_id}]
 <a name="cancelrefund" title="Cancel a Refund"></a>
 
 **(In Incubation)**
@@ -4558,7 +4559,7 @@ Click **Cancel Refund** above to ancel a Refund. You must include the *status* p
             }
             
 
-### Get Refund [GET /v1/refunds/{refund_id}]
+### Get Refund [GET /paymenthub/v1/refunds/{refund_id}]
 <a name="getrefund" title="Look Up a Refund"></a>
 
 **(In Incubation)**
@@ -4618,7 +4619,7 @@ Click **Get Refund** above to look up a Refund using the ID returned in the resp
             }
             
             
-### Get Refunds Using Merchant Reference Number [GET /v1/refunds?merchantRefNum={merchant_ref_num}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
+### Get Refunds Using Merchant Reference Number [GET /paymenthub/v1/refunds?merchantRefNum={merchant_ref_num}&limit={limit}&offset={offset}&startDate={startDate}&endDate={endDate}]
 <a name="getrefundmerchantrefnum" title="Get Refunds Using Merchant Reference Number"></a>
 
 **(In Incubation)**
