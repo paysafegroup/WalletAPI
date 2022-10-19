@@ -2923,27 +2923,46 @@ This is a read-only raw response returned by an acquirer.
 |              400 | DW-NOTIFICATION-RESEND-TASK-TOO-MANY-FILTERS-APPLIED    | There are too many filters specified. Only one should be applied.                                  |
 
 
-### Transfer webhook errors
+## FAILED transaction status reason
+
+For `FAILED` wallet transactions additional `statusReason` property allows to determine the failure reason.
 
 |              Error Code              |                                                 Message                                                 |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------|
-| TRANSFER_NOT_ENOUGH_BALANCE          | The sending customer has insufficient balance for the transaction                                       |
-| TRANSFER_AUTH_HOLD_AMOUNT_MISMATCH   | The provided authorization hold blocks a lower amount than the requested for the transfer               |
-| TRANSFER_AUTH_HOLD_NOT_FOUND         | The requested authorization hold was not found                                                          |
-| TRANSFER_AUTH_HOLD_STATUS_MISMATCH   | The requested authorization hold has either been released or used                                       |
-| TRANSFER_AUTH_HOLD_CURRENCY_MISMATCH | The requested authorization hold blocks an amount in a different currency from the one requested        |
-| TRANSFER_NOT_ALLOWED                 | Either the sender or recipient are restricted for transfers                                             |
-| TRANSFER_LIMIT_EXCEEDED              | The sending customer exceeds/has exceeded their transfer limit for the transaction/for a period of time |
-| TRANSFER_PARTY_NOT_FOUND             | Either the sender or recipient was not found                                                            |
-| TRANSFER_REQUEST_INVALID_CURRENCY    | The transfer was requested for a currency different that of the sender                                  |
-| TRANSFER_GENERAL_ERROR               | Error during processing the transfer. Transaction was not created.                                      |
-| TRANSFER_DUPLICATE_MERCHANT_REF      | Duplicate merchant reference provided. Transfer was failed.                                             |
-
+| BANK-DEPOSIT-FAILED-INSTRUMENT | The deposit used unacceptable payment instrument. |
+| BANK-DEPOSIT-NAME-MISMATCH | The sender name does not match wallet owner. |
+| DW-BANK-DECLINE | Declined by the processing bank. |
+| DW-DEPOSIT-NOT-CONFIRMED | The deposit has not been confirmed. |
+| TRANSFER_NOT_ENOUGH_BALANCE | The sending customer has insufficient balance for the transaction |
+| TRANSFER_AUTH_HOLD_AMOUNT_MISMATCH | The provided authorization hold blocks a lower amount than the requested for the transfer |
+| TRANSFER_AUTH_HOLD_CURRENCY_MISMATCH | The requested authorization hold blocks an amount in a different currency from the one requested |
+| TRANSFER_PARTY_NOT_FOUND | Either the sender or recipient was not found |
+| TRANSFER_DUPLICATE_MERCHANT_REF | Merchant reference is already in use |
+| TRANSFER_REQUEST_INVALID_CURRENCY | Transfer request currency is different from sender account currency |
+| TRANSFER_LIMIT_EXCEEDED |  The sending customer exceeds/has exceeded their transfer limit for the transaction/for a period of time |
+| TRANSFER_GENERAL_ERROR | Error during processing the transfer. Transaction was not created. |
+| TRANSFER_NOT_ALLOWED | Either the sender or recipient are restricted for transfers |
+| RISK_ENGINE_DECLINE | Fraud suspected |
+| CUSTOMER_RESTRICTED | Customer is restricted |
+| INSUFFICIENT_FUNDS |  Customer has insufficient funds for the operation |
+| OTHER | Some other unidentified reason. |
+| DW-DEPOSIT-PROVIDER-ERROR | Payment provider error while processing the transaction |
+| DW-DEPOSIT-BANK-CHANGE-NOT-ALLOWED | Customer tried to change the payment bank |
+| DW-DEPOSIT-AUTH-FAILED | Customer authentication at provider have failed |
+| DW-DEPOSIT-BANK-UNAVAILABLE | Payment bank was not available |
+| DW-DEPOSIT-ACCOUNT-MISMATCH | Account mismatch at payment provider |
+| DW-DEPOSIT-ACCOUNT-NOT-FOUND | Payment provider did not found customer account |
+| DW-DEPOSIT-INVALID-USER-INPUT | Customer provided invalid input |
+| DW-DEPOSIT-PENDING-CONFIRMATION | Customer did not confirm the deposit |
+| DW-DEPOSIT-ATTEMPT-LIMIT-EXCEEDED | Customer achieved deposit attempt limits |
+| DW-DEPOSIT-LIMIT-EXCEEDED | Deposit limits reached |
+| EXTERNAL_PROCESSING_GATEWAY_SYSTEM_ERROR | The external processing gateway has reported a system error. |
 
 # Change Log
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 18 Oct 2022 | - Add additional statusReason codes for FAILED wallet transactions                                          |
 | V1      | 04 Oct 2022 | - Fix refund examples url                                                                                   |
 | V1      | 13 Sept 2022| - Add expected transaction volume for legal entities                                                        |
 | V1      | 12 Aug 2022 | - Update API documentation for onboarding legal customers                                                   |
