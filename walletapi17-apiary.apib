@@ -1641,7 +1641,8 @@ For supporting the manual bank account verification flow for legal entities the 
   "accountHolderName": "John Doe",
   "iban": "NL94RABO7762494464",
   "bic": "RABONL2U",
-  "status": "UNVERIFIED"
+  "status": "UNVERIFIED",
+  "bankName": "RABOBANK NEDERLAND"
 }
 ```
 ---
@@ -1692,7 +1693,8 @@ For supporting the manual bank account verification flow for legal entities the 
   "accountHolderName": "John Doe",
   "iban": "NL94RABO7762494464",
   "bic": "RABONL2U",
-  "status": "UNVERIFIED"
+  "status": "UNVERIFIED",
+  "bankName": "RABOBANK NEDERLAND"
 }
 ```
 
@@ -2962,6 +2964,7 @@ For `FAILED` wallet transactions additional `statusReason` property allows to de
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 25 Nov 2022 | - Add additional bank name for Wallet Payment Instruments                                                   |
 | V1      | 18 Oct 2022 | - Add additional statusReason codes for FAILED wallet transactions                                          |
 | V1      | 04 Oct 2022 | - Fix refund examples url                                                                                   |
 | V1      | 13 Sept 2022| - Add expected transaction volume for legal entities                                                        |
@@ -6498,7 +6501,7 @@ Get a person-customer by ID.
         Customer Legal Entity with the requested ID was not found.
 
 
-### Get customer instruments [GET /digitalwallets/v1/instruments?{customerId}]
+### Get customer payment instruments [GET /digitalwallets/v1/instruments?{customerId}]
 
 Retrieve list of active instruments for the customer.
 
@@ -6526,21 +6529,24 @@ For bank accounts, the full IBAN/bank account number is returned.
                     "id": "1100000000000006",
                     "instrumentType": "UK_BANK_ACCOUNT",
                     "accountHolderName": "John Doe",
-                    "accountNumber": "7762494464",
-                    "sortCode": "RABO"
+                    "accountNumber": "29823529",
+                    "sortCode": "902127",
+                    "bankName": "Bank of Ireland"
                 },
                 {
                     "id": "1100000000000007",
                     "instrumentType": "SEPA_BANK_ACCOUNT",
                     "accountHolderName": "John Doe",
                     "iban": "NL94RABO7762494464",
-                    "bic": "RABONL2U"
+                    "bic": "RABONL2U",
+                    "bankName": "RABOBANK NEDERLAND"
                 },
                 {
                     "id": "1100000000000009",
                     "instrumentType": "CARD",
                     "cardHolderName": "John Doe",
                     "pan": "5xxxxxxxxxxx1012",
+                    "bankName": "RABOBANK NEDERLAND",
                     "expiryDate": {
                         "year": 2023,
                         "month": 10
@@ -6728,8 +6734,6 @@ Instrument management API allows to manage instruments for customer or legal ent
 
 ### Get wallet payment instruments [GET]
 
-**(In Incubation)**
-
 Retrieve list of active instruments for the customer.
 
 For cards, the PAN will be returned masked in the format 5xxxxxxxxxxx2922.
@@ -6758,20 +6762,23 @@ For bank accounts, the full IBAN/bank account number is returned.
                     "instrumentType": "UK_BANK_ACCOUNT",
                     "accountHolderName": "John Doe",
                     "accountNumber": "7762494464",
-                    "sortCode": "RABO"
+                    "sortCode": "RABO",
+                    "bankName": "RABOBANK NEDERLAND"
                 },
                 {
                     "id": "1100000000000007",
                     "instrumentType": "SEPA_BANK_ACCOUNT",
                     "accountHolderName": "John Doe",
                     "iban": "NL94RABO7762494464",
-                    "bic": "RABONL2U"
+                    "bic": "RABONL2U",
+                    "bankName": "RABOBANK NEDERLAND"
                 },
                 {
                     "id": "1100000000000009",
                     "instrumentType": "CARD",
                     "cardHolderName": "John Doe",
                     "pan": "5xxxxxxxxxxx1012",
+                    "bankName": "RABOBANK NEDERLAND",
                     "expiryDate": {
                         "year": 2023,
                         "month": 10
@@ -6827,7 +6834,8 @@ This operation has the following limitations:
                 "accountHolderName": "John Doe",
                 "iban": "NL94RABO7762494464",
                 "bic": "RABONL2U",
-                "status": "UNVERIFIED"
+                "status": "UNVERIFIED",
+                "bankName": "RABOBANK NEDERLAND"
             }    
 
 ## Single instrument operations [/customers/{customerId}/instruments/{instrumentType}/{instrumentId}]
@@ -6872,7 +6880,8 @@ Returns single instrument with specified identifier.
                 "instrumentType": "SEPA_BANK_ACCOUNT",
                 "accountHolderName": "John Doe",
                 "iban": "NL94RABO7762494464",
-                "bic": "RABONL2U"
+                "bic": "RABONL2U",
+                "bankName": "RABOBANK NEDERLAND"
             }
 
 ### Delete payment instrument [DELETE]
@@ -6915,7 +6924,8 @@ Deletes single instrument with specified identifier.
                 "instrumentType": "SEPA_BANK_ACCOUNT",
                 "accountHolderName": "John Doe",
                 "iban": "NL94RABO7762494464",
-                "bic": "RABONL2U"
+                "bic": "RABONL2U",
+                "bankName": "RABOBANK NEDERLAND"
             }
 
 # Group Accounts
@@ -10291,6 +10301,7 @@ Account holder name might be required for name matching.
 + `accountHolderName` (string, optional) - This is the name of the customer or company that owns the bank account.
 + `accountNumber` (string, required) - A bank account number.
 + `sortCode` (string, required) - Use our sort code checker to easily find and check UK sort codes.
++ `bankName` (string, optional) - The bank name.
 
 ## SepaBankAccount (PaymentInstrument)
 
@@ -10307,6 +10318,7 @@ Account holder name might be required for name matching.
 + `accountHolderName` (string, optional) - This is the name of the customer or company that owns the bank account.
 + `iban` (string, required) - The International Bank Account Number (IBAN) of the account.
 + `bic` (string, required) - The Bank Acccount Bank Identifier Code (BIC) code. Also known as SWIFT code.
++ `bankName` (string, optional) - The bank name.
 
 ## CardPaymentInstrument (PaymentInstrument)
 
@@ -10319,6 +10331,7 @@ Card Payment Instrument.
 + `expiryDate` - Card expiry date
     + year (number, required)
     + month (number, required)
++ `bankName` (string, optional) - The bank name.    
 
 ## InstrumentEvent
 
