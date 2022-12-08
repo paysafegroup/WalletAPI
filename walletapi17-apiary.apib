@@ -2964,6 +2964,7 @@ For `FAILED` wallet transactions additional `statusReason` property allows to de
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 09 Dec 2022 | - Add webhook for upcoming restriction                                                                      |
 | V1      | 25 Nov 2022 | - Add additional bank name for Wallet Payment Instruments                                                   |
 | V1      | 18 Oct 2022 | - Add additional statusReason codes for FAILED wallet transactions                                          |
 | V1      | 04 Oct 2022 | - Fix refund examples url                                                                                   |
@@ -7673,7 +7674,8 @@ When applying restrictions to a customer, the system has two distinct behaviours
     * Paysafe will first send a webhook with `operationType == 'SYNC'`; the restriction is not yet applied on Paysafe's side
     * Merchant must confirm the restriction by calling the restriction confirmation API; if the restriction is not confirmed within a time frame (e.g. 60sec), the restriction will be applied automatically;
     * When the restriction is applied on Paysafe side, a new webhook will be sent, where `operationType == 'UPDATE'`.
-
+* Webhooks with `operationType='NOTIFY'` can be sent to the Merchant with `dueDate` set to a date which defines when the restriction will be applied to the Merchant's customer. 
+  The Merchant needs to take the appropriate actions to prevent the restriction from applying to the customer until `dueDate`.
 
 + Attributes (CustomerRestrictionWebhook)
 
@@ -7738,6 +7740,35 @@ When applying restrictions to a customer, the system has two distinct behaviours
 
 + Response 200
 
++ Request Customer Restrictions Notification (application/jbson)
+
+    + Headers
+
+            Signature: <<Paysafe's HMAC signature>>
+
+    + Body
+
+            {
+                "id": "00000003630052156546",
+                "timestamp": "2022-12-15T17:54:12Z",
+                "operationType": "NOTIFY",
+                "customer": {
+                    "id": "2342352",
+                    "externalId": "4b70695-3ffb-4f58-97ad-b61e8631a3e2",
+                    "restrictions": [
+                        {
+                            "id": "55bf6494-17fa-467f-b3f0-3d93c87f76d0",
+                            "name": "ALL_TRANSACTIONS",
+                            "reason": "COMPLIANCE_PEP",
+                            "requiredActions": "MANUAL_REVIEW",
+                            "dueDate": "2022-12-17T15:23:11Z",
+                            "lastChangeDate": "2022-12-17T15:23:11Z"
+                        }
+                    ]
+                }
+            }
+
++ Response 200
 
 + Request Customer Restrictions Lifted (application/json)
 
@@ -9744,6 +9775,7 @@ Wallet composite model
         + WAITING_FOR_DOCUMENTS
         + OTHER
 + `lastChangeDate`: `2021-09-12T17:18:31Z` (string, required)
++ `dueDate`: `2022-12-15T00:00:00Z` (string)
 
 ## RestrictionRequest (object)
 
@@ -10193,6 +10225,7 @@ Account specific view of the slip.
 + `operationType` (enum[string], required)
     + SYNC
     + UPDATE
+    + NOTIFY
 + `customer` (CustomerPartRestrictions)
 
 
