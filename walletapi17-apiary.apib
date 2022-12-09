@@ -7669,7 +7669,7 @@ Webhooks allow for the Merchant to track certain events in the wallet. It's the 
 
 When applying restrictions to a customer, the system has two distinct behaviours, depending on the type of restriction being placed:
 
-* All regulatory restrictions are applied immediately, such as PEP or Sanctions; for these type of restrictions, the Merchant will receive just the one webhook with `operationType == 'UPDATE'`.
+* All regulatory restrictions are applied immediately, e.g. Sanctions; for these type of restrictions, the Merchant will receive just the one webhook with `operationType == 'UPDATE'`.
 * Fraud related restrictions are synchronized between Paysafe and Merchant, as the customer could have pending operations on the Merchant's system. In this case:
     * Paysafe will first send a webhook with `operationType == 'SYNC'`; the restriction is not yet applied on Paysafe's side
     * Merchant must confirm the restriction by calling the restriction confirmation API; if the restriction is not confirmed within a time frame (e.g. 60sec), the restriction will be applied automatically;
