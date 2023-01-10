@@ -1,4 +1,4 @@
-FORMAT: 1A
+неFORMAT: 1A
 HOST: https://api2.test.paysafe.com/
 
 # Paysafe Wallet as a Service API
@@ -1543,57 +1543,6 @@ Any held funds will not be available for any other transactions and will remain 
 
 &nbsp;
 
-# Payment Hub
-
-## Payment flows
-
-One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
-
-Only supports settleWithAuth=true
-For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate the success or failure of the transaction request without having to do a separate lookup on the specific settlement.
-
-**Payment Flow**
-![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Payment_Flow.png)
-
-**Auto Settlement Payment**
-![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Auto_Settlement_Payment_Flow.png)
-
-# Webhooks
-<a name="webhooks" title="Webhooks"></a>
-
-A Webhook is an HTTP callback that is triggered when an event takes place.
-To configure webhooks, you need to [open a service request](https://merchant.paysafe.com/portal/login) with Paysafe in the Business Portal.
-
-For more information on Webhooks, click [here](https://developer.paysafe.com/en/rest-apis/paysafe-payments-api/payments-api/webhooks/).
-
-> **Note:** To receive webhooks from Paysafe, you must create a callback URL to receive the webhook that is triggered.
-You are responsible for ensuring its continued availability.
-
-## Notes on Webhooks
-
-+ When the status of one of your transaction request changes, Paysafe immediately sends a callback to your webhook's endpoint URL to inform you of the status change.
-+ To acknowledge the receipt of the webhook, Paysafe expects an HTTP status of 200 OK or 202 ACCEPTED from your endpoint. In case we receive any other HTTP status code, we assume that you have not received the webhook, and we attempt to resend it.
-+ If Paysafe does not get an acknowledgment of receipt with an HTTP Status Code of 200 or 202, it makes a maximum of 2 additional attempts (total 3 attempts) to send a callback to that URL.
-+ As Paysafe does not have a notification method to alert you when callbacks are not reaching your endpoint URL, you should make sure that there is continued availability of your endpoint.
-+ All endpoint URLs should use HTTPS/SSL to ensure security. Please note that only the default **HTTPS port 443** is supported.
-+ In case you have received the same notification multiple times for an already processed event, we request you to ignore the duplicate notification. It is recommended to make the notification URL endpoints idempotent.
-
-# Incubator Features
-
-Incubator features are capabilities currently in development.
-Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
-
-These features:
-
-* might not get released in general availability for all customers
-* might get changed before being released in general availability
-* might be enabled in a test environment for selected Paysafe customers and partners
-* might require contract amendments to be accessible to your environment
-
-> **Note:** Parts of the API that are part of incubator feature would be annotated with `In Incubation` comment
-
-Contact your Paysafe account manager for more details on the product roadmap.
-
 ## Manual bank account verification process for legal entities
 
 Customers are allowed withdrawals only to bank accounts, that are verified to be owned by them.
@@ -1699,11 +1648,6 @@ For supporting the manual bank account verification flow for legal entities the 
 ```
 
 ## Bank transfer refunds
-
-**(In Incubation)**
-
-> Incubator features are capabilities currently in development.
-> Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
 
 Offline bank transfer deposits allow customers to deposit funds using the vIBAN assigned to their accounts.
 
@@ -1819,7 +1763,585 @@ For refund the **id** of the transaction, **customerId** and **accountId** are r
 
 3. The merchant can poll the transaction API for status or will receive a webhook for the status of the refund transaction with the corresponding **merchantRefNum**
 
+# Payment Hub
+
+## Payment flows
+
+One-step payment gateway refers to payment integrations where authorization/capture of funds occurs at the same time. This is relatively common for many alternative payment methods where the customer authenticates and authorizes the payment through a channel provided by the PSP. Typically, once the customer has authorized the payment, funds are immediately allocated and confirmed by the PSP.
+
+Only supports settleWithAuth=true
+For these integrations, corresponding Payment and Settlement resources are created simultaneously to represent the transaction. Both resources utilize the same unique GUID as are created from the same request. For these integrations, the Payment should reflect the same status as the Settlement and can be used to indicate the success or failure of the transaction request without having to do a separate lookup on the specific settlement.
+
+**Payment Flow**
+![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Payment_Flow.png)
+
+**Auto Settlement Payment**
+![](https://raw.githubusercontent.com/SwathiBirlangi/Paysafegroup-images/main/Auto_Settlement_Payment_Flow.png)
+
+# Webhooks
+<a name="webhooks" title="Webhooks"></a>
+
+A Webhook is an HTTP callback that is triggered when an event takes place.
+To configure webhooks, you need to [open a service request](https://merchant.paysafe.com/portal/login) with Paysafe in the Business Portal.
+
+For more information on Webhooks, click [here](https://developer.paysafe.com/en/rest-apis/paysafe-payments-api/payments-api/webhooks/).
+
+> **Note:** To receive webhooks from Paysafe, you must create a callback URL to receive the webhook that is triggered.
+You are responsible for ensuring its continued availability.
+
+## Notes on Webhooks
+
++ When the status of one of your transaction request changes, Paysafe immediately sends a callback to your webhook's endpoint URL to inform you of the status change.
++ To acknowledge the receipt of the webhook, Paysafe expects an HTTP status of 200 OK or 202 ACCEPTED from your endpoint. In case we receive any other HTTP status code, we assume that you have not received the webhook, and we attempt to resend it.
++ If Paysafe does not get an acknowledgment of receipt with an HTTP Status Code of 200 or 202, it makes a maximum of 2 additional attempts (total 3 attempts) to send a callback to that URL.
++ As Paysafe does not have a notification method to alert you when callbacks are not reaching your endpoint URL, you should make sure that there is continued availability of your endpoint.
++ All endpoint URLs should use HTTPS/SSL to ensure security. Please note that only the default **HTTPS port 443** is supported.
++ In case you have received the same notification multiple times for an already processed event, we request you to ignore the duplicate notification. It is recommended to make the notification URL endpoints idempotent.
+
+# Incubator Features
+
+Incubator features are capabilities currently in development.
+Incubator features allow Paysafe to evolve the product and collect customer feedback on future product direction.
+
+These features:
+
+* might not get released in general availability for all customers
+* might get changed before being released in general availability
+* might be enabled in a test environment for selected Paysafe customers and partners
+* might require contract amendments to be accessible to your environment
+
+> **Note:** Parts of the API that are part of incubator feature would be annotated with `In Incubation` comment
+
+Contact your Paysafe account manager for more details on the product roadmap.
+
+## Currency handling
+
+**(In Development)**
+
+Paysafe digital wallet solution supports customers to hold balances in different currencies.
+
+> Note! Multiple currency support is contract specific feature. Contact Paysafe for more details.
+
+For holding the balance for each currency, the customer needs to have a dedicated wallet account in the corresponding currency.
+Each account handles the balance for a specific currency.
+It is important to take into account the account currency when doing wallet operations.
+
+* When doing a deposit the deposit account currency must match the deposit amount currency
+* When doing withdrawal the withdrawal amount currency must match the withdrawal account currency
+* When doing transfers the source account currency must match the transfer currency
+
+### Setup multiple currencies during onboarding
+
+At least one `accounts` parameter specifying account currency is required during customer onboarding.
+For enabling more than one currency, the required currencies need to be passed in the list of desired accounts during onboarding.
+
+> Requesting virtual IBAN is allowed only for specific currency depending on the customer's country.
+> Contact Paysafe for details on supported virtual IBAN currencies for specific countries.
 ---
+**POST** `https://api.paysafe.com/digitalwallets/v1/wallets`
+```json
+{
+    "customer": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "title": "Mr",
+        "email": "john.doe@example.com",
+        "mobile": "+443452555151",
+        "address1": "23 Four Str",
+        "city": "London",
+        "zip": "E17 033",
+        "countryCode": "GB",
+        "birthDate": "1999-08-24",
+        "registrationIp": "115.148.82.143",
+        "nationality": "GB",
+        "externalId": "d6f475fe-57c9-4865-9316-0c3b8e8128d4",
+        "kyc": {
+            "status": "COMPLETED",
+            "idVerification": {
+              "status": "COMPLETED",
+              "date": "2021-03-12T13:27:41Z",
+              "electronicallyVerified": true,
+              "vendor": "Vendor"
+            },
+            "addressVerification": {
+              "status": "COMPLETED",
+              "date": "2021-03-12T13:27:41Z",
+              "documentUrls": [
+                "https://documents.com/document1.png",
+                "https://documents.com/document2.png"
+              ]
+            },
+            "faceMatch": {
+              "status": "COMPLETED",
+              "date": "2021-07-21T13:27:41Z",
+              "electronicallyVerified": true,
+              "vendor": "Vendor"
+            },
+            "EDD": {
+                "status": "COMPLETED",
+                "date": "2021-03-12T13:27:41Z",
+                "electronicallyVerified": true,
+                "vendor": "Vendor",
+                "documentUrls": [
+                    "https://documents.com/document1.png",
+                    "https://documents.com/document2.png"
+                ]
+            },
+            "addressVerificationDocumentsReceived": [
+                "BANK_STATEMENT",
+                "CREDIT_CARD",
+                "TAX_RETURN",
+                "PENSION_DOCUMENT",
+                "PHONE_BILL",
+                "UNKNOWN_DOC"
+            ]
+        },
+          "pep": {
+            "status": "MATCH",
+            "lastScreenDate": "2021-07-19T13:35:41Z",
+            "reason": "Matched"
+          },
+          "sanctions": {
+            "status": "NO_MATCH",
+            "lastScreenDate": "2021-07-19T13:35:41Z",
+            "reason": "Incorrect data"
+          }
+        }
+    },
+    "accounts": [
+    {
+        "currencyCode": "GBP",
+        "hasIban": true
+    },
+    {
+        "currencyCode": "EUR",
+        "hasIban": false
+    }
+    ],
+    "risk": {
+        "customerRiskRating": 1,
+        "isScaPerformed": true,
+        "isCustomerIPTrusted": true,
+        "isBeneficiaryTrusted": true
+    },  
+    "termsAndConditionsAccepted": true,
+    "deviceInfo": {
+        "threatMetrixSessionId": "a71a475b-1956-4814-9c92-7faa8226b218",
+        "threatMetrixData": "true_ip=87%2e120%2e141%2e75&true_ip_assert_history=NEGATIVE_HISTORY&true_ip_attributes=_CHALLENGED&true_ip_attributes=_CHALLENGE_PASSED&true_ip_attributes=_TRUSTED&true_ip_attributes=_TRUSTED_CONF&...",
+        "appType": "WEB_APP"
+    },
+    "customerIp": "73.82.192.17"
+}
+```
+---
+
+### Add additional currency for existing cusomer
+
+Additional currency support can be added to an existing customer by creating an account for the desired currency.
+
+---
+**POST** `https://api.paysafe.com/digitalwallets/v1/accounts`
+```json
+{
+  "customerId": "5435323362",
+  "currencyCode": "GBP",
+  "hasIban": true
+}
+```
+---
+
+### Getting account for specific currency
+
+The `currency` and `customerId` query parameters can be used to get the account for the specific currency of a customer.
+
+---
+**GET** `https://api.paysafe.com/digitalwallets/v1/accounts?customerId=12345&currency=GBP`
+```json
+[
+  {
+    "id": "509876034",
+    "customerId": "5435323362",
+    "currencyCode": "GBP",
+    "totalBalance": 55000,
+    "availableBalance": 50000,
+    "iban": "NL74ABNA1231242344",
+    "creationTime": "2019-08-24T14:15:22Z",
+    "hasIban": true,
+    "bic": "ABNANL2A"
+  }
+]
+```
+---
+
+### Currency conversion during deposits
+
+The deposit currency and deposit account currency must match.
+If an account in the deposit currency does not exist, the deposit will fail.
+
+Currency conversion might happen outside of the wallet with the following instrument specifics:
+
+* CARD deposit - Requested deposit amount and currency is requested from the card provider.
+  Any currency conversion (if applicable) and additional fees are applied to customer funding amounts outside of the digital wallet.
+* RAPID TRANSFER deposit - The bank account currency must match the deposit currency.
+* BANK TRANSFER deposit - Deposit currency will match the IBAN currency. Currency conversion will happen at the BANK level.
+
+### Currency conversion for withdrawals
+
+The requested withdrawal amount must be present in the customer account matching the withdrawal currency.
+
+Depending on the used instrument currency conversion might happen:
+
+* bank account withdrawal - if the requested withdrawal currency matches а currency
+  supported by Paysafe banking partners no FX will be applied in digital wallet.
+  If no outbound channel matching the requested currency is available, the withdrawal will fail.
+  Currency conversion and fees might additionally apply at receiving bank level.
+* credit card withdrawal - the requested amount and currency is passed over to the card provider.
+  Currency conversion and fees might additionally apply at receiving bank level.
+  
+
+### Obtaining exchange rate quote
+
+For predictable currency conversion, digital wallets offer exchange rate quote services.
+The service allows merchants to implement predictable currency exchanges for their customers
+in the following scenarios:
+
+* Currency exchange between customer accounts
+* Currency exchange during peer-to-peer transfers (when sender and receiver currencies do not match)
+
+To obtain an exchange rate quote you should call the exchange rate API.
+
+For quote creation the important parameters are:
+
+* **sourceCurrency** - source conversion currency
+* **targetCurrency** - target conversion currency
+* **requester** - the customer id requesting the conversion. Rates might differ for a different types of customers.
+* **receiver** - the receiver of the exchange. Optional for local currency exchanges.
+
+Example:
+
+---
+**POST** `https://api.paysafe.com/digitalwallets/v1/fxrate`
+```json
+{
+  "sourceCurrency": "EUR",
+  "targetCurrency": "GBP",
+  "sender": "6755433",
+  "recipient": "328738"
+}
+```
+**Response:**
+```json
+{
+  "id": "404679be-ccbf-4528-b880-e14cc5041753",
+  "sourceCurrency": "EUR",
+  "targetCurrency": "GBP",
+  "timestamp": 1663076670,
+  "expiration": 1663066046,
+  "fxRate": 0.87,
+  "sender": "6755433",
+  "recipient": "328738"
+}
+```
+---
+
+
+The response would contain the suggested Paysafe exchange rate for the operation in `fxRate` field,
+valid for the time outlined in `expiration`.
+
+Merchants can use the quote for the preview of exchange operations and must pass the quote `id` as a parameter during exchange operations
+if they want to leverage the rate offered.
+
+### Local currency conversion
+
+Currency exchange between two currencies inside a customer account is provided as an internal transfer.
+You will need the two accounts between which the exchange will happen:
+
+* `sender.customerId` and `recipient.customerId` have the id of the customer performing the exchange
+* `reason` is `CURRENCY_EXCHANGE`
+* `sender.accountId` is the source customer account holding the exchange amount
+* `recipient.accountId` is the target account for the exchange operation
+* `fxQuote` is valid (non expired) exchange rate quote
+    * `fxQuote.sender` must be the same as `sender.customerId`
+    * `fxQuote.recipient` must be the same as `recipient.customerId`
+    * Both accounts currencies must match the quote currencies
+* If `fxQuote` is not passed, a new quote will be automatically obtained and used for the exchange
+* `merchantRefNum` - unique client-side identifier associated with the transfer
+* `fee` - is merchant fee in source currency taken from the amount before conversion
+
+The transfer is executed asynchronously, you can poll for status using `merchantRefNum` parameter
+or wait for Web Hook for the status of the transaction.
+
+---
+**POST** `https://api.paysafe.com/digitalwallets/v1/transfers`
+```json
+{
+  "amount": 1000,
+  "fee": 100,
+  "currencyCode": "EUR",
+  "sender": {
+    "accountId": "5014567344",
+    "customerId": "500014306996"
+  },
+  "recipient": {
+    "accountId": "5014567345",
+    "customerId": "500014306996"
+  },
+  "merchantRefNum": "5040452805",
+  "customerIp": "192.168.0.1",
+  "risk": {
+    "customerRiskRating": 0,
+    "isScaPerformed": true,
+    "isCustomerIPTrusted": true,
+    "isBeneficiaryTrusted": true
+  },
+  "reason": "CURRENCY_EXCHANGE",
+  "fxQuote": "7b28ce27-c036-498c-91a7-5cc87a2e59d3"
+}
+```
+**Response:**
+```json
+{
+  "amount": 1000,
+  "fee": 100,
+  "currencyCode": "EUR",
+  "sender": {
+    "accountId": "5014567344",
+    "customerId": "500014306996"
+  },
+  "recipient": {
+    "accountId": "5014567345",
+    "customerId": "500014306996"
+  },
+  "merchantRefNum": "5040452805",
+  "customerIp": "192.168.0.1",
+  "risk": {
+    "customerRiskRating": 0,
+    "isScaPerformed": true,
+    "isCustomerIPTrusted": true,
+    "isBeneficiaryTrusted": true
+  },
+  "reason": "CURRENCY_EXCHANGE",
+  "status": "PENDING",
+  "fxQuote": "7b28ce27-c036-498c-91a7-5cc87a2e59d3"
+}
+```
+---
+
+### Currency conversion during transfers
+
+Currency exchange during transfers between customers happens when the sender and recipient
+accounts have different currencies.
+
+You will need the two accounts between which the exchange will happen:
+
+* `sender.customerId` and `recipient.customerId` have the id of the customers performing the exchange
+* `sender.accountId` is the source customer account holding the exchange amount
+* `reason` is `PEER_TRANSFER`
+* `recipient.accountId` is the target account for the exchange operation
+* `fxQuote` is valid (non expired) exchange rate quote
+    * `fxQuote.sender` must be the same as `sender.customerId`
+    * `fxQuote.recipient` must be the same as `recipient.customerId`
+    * Both accounts currencies must match the quote currencies
+* If `fxQuote` is not passed, a new quote will be automatically obtained and used for the exchange
+* `merchantRefNum` - unique client-side identifier associated with the transfer
+* `fee` - is merchant fee in source currency taken from the amount before conversion
+
+---
+**POST** `https://api.paysafe.com/digitalwallets/v1/transfers`
+```json
+{
+  "amount": 1000,
+  "fee": 100,
+  "currencyCode": "EUR",
+  "sender": {
+    "accountId": "5014567344",
+    "customerId": "500014306996"
+  },
+  "recipient": {
+    "accountId": "5014567345",
+    "customerId": "500014306997"
+  },
+  "merchantRefNum": "5040452805",
+  "customerIp": "192.168.0.1",
+  "risk": {
+    "customerRiskRating": 0,
+    "isScaPerformed": true,
+    "isCustomerIPTrusted": true,
+    "isBeneficiaryTrusted": true
+  },
+  "reason": "PEER_TRANSFER",
+  "fxQuote": "7b28ce27-c036-498c-91a7-5cc87a2e59d3"
+}
+```
+**Response:**
+```json
+{
+  "amount": 1000,
+  "fee": 100,
+  "currencyCode": "EUR",
+  "sender": {
+    "accountId": "5014567344",
+    "customerId": "500014306996"
+  },
+  "recipient": {
+    "accountId": "5014567345",
+    "customerId": "500014306996"
+  },
+  "merchantRefNum": "5040452805",
+  "customerIp": "192.168.0.1",
+  "risk": {
+    "customerRiskRating": 0,
+    "isScaPerformed": true,
+    "isCustomerIPTrusted": true,
+    "isBeneficiaryTrusted": true
+  },
+  "reason": "PEER_TRANSFER",
+  "status": "PENDING",
+  "fxQuote": "7b28ce27-c036-498c-91a7-5cc87a2e59d3"
+}
+```
+---
+
+### Get currency conversion status from Transfer object
+
+To get the transfer status the merchant application should use Web Hooks or can poll for status from Transfer
+using the merchantRefNum.
+
+---
+**GET** `https://api.paysafe.com/digitalwallets/v1/transfers?merchantRefNum=5040452805`
+```json
+{
+  "amount": 1000,
+  "fee": 100,
+  "currencyCode": "EUR",
+  "sender": {
+    "accountId": "5014567344",
+    "customerId": "500014306996"
+  },
+  "recipient": {
+    "accountId": "5014567345",
+    "customerId": "500014306996"
+  },
+  "merchantRefNum": "5040452805",
+  "customerIp": "192.168.0.1",
+  "risk": {
+    "customerRiskRating": 0,
+    "isScaPerformed": true,
+    "isCustomerIPTrusted": true,
+    "isBeneficiaryTrusted": true
+  },
+  "reason": "PEER_TRANSFER",
+  "status": "COMPLETED",
+  "fxQuote": "7b28ce27-c036-498c-91a7-5cc87a2e59d3"
+}
+```
+---
+
+### Get currency conversion information from transaction history
+
+For transactions, where currency conversion is performed, additional `fxAmount` property
+will be present in the `Transaction` object.
+
+The `fxAmount` object will contain:
+
+* `amount` - converted amount
+* `rate` - currency conversion rate
+* `currency` - the conversion currency
+
+The merchant fee is taken from the transfer amount before the FX
+
+Example of the transaction containing exchange where:
+* 10 GBP are sent from customer `5435323362` to customer `5435323363`
+* 1 GBP is sent to merchant account as merchant fees
+* Customer `5435323363` receiving account is in `EUR` so an exchange rate of `1.15` is applied to match the target account currency
+* The exchanged amount is evident in `fxAmount` field as in `TRANSFER_IN` amount in the incoming transaction of the receiving side.
+---
+**GET** `https://api.paysafe.com/digitalwallets/v1/transactions?merchantRefNum=5040452805`
+```json
+{
+  "transactions": [
+    {
+        "id": "5040057610",
+        "slipId": "5009964049",
+        "customerId": "5435323362",
+        "accountId": "5014567344",
+        "type": "TRANSFER_OUT",
+        "amount": 900,
+        "currencyCode": "GBP",
+        "fee": 100,
+        "creationTime": "2021-07-15T17:54:12Z",
+        "lastChangeDate": "2021-07-15T17:54:12Z",
+        "direction": "DEBIT",
+        "instrumentId": "1100000000000009",
+        "paymentType": "TRANSFER",
+        "status": "COMPLETED",
+        "merchantRefNum": "5040452805",
+        "fxAmount": {
+          "amount" :  1035,
+          "rate" : 1.15,
+          "currency": "EUR"
+        }
+    },
+    {
+        "id": "5040057611",
+        "slipId": "5009964049",
+        "customerId": "5435323362",
+        "accountId": "5014567344",
+        "type": "MERCHANT_FEE",
+        "amount": 100,
+        "currencyCode": "GBP",
+        "creationTime": "2021-07-15T17:54:12Z",
+        "lastChangeDate": "2021-07-15T17:54:12Z",
+        "direction": "DEBIT",
+        "instrumentId": "1100000000000009",
+        "fee": 0,
+        "paymentType": "TRANSFER",
+        "status": "COMPLETED",
+        "merchantRefNum": "5040452805"
+    }, 
+    {
+        "id": "5040057612",
+        "slipId": "5009964049",
+        "customerId": "5435323363",
+        "accountId": "5014567344",
+        "type": "TRANSFER_IN",
+        "amount": 1035,
+        "currencyCode": "EUR",
+        "fee": 0,
+        "creationTime": "2021-07-15T17:54:12Z",
+        "lastChangeDate": "2021-07-15T17:54:12Z",
+        "direction": "CREDIT",
+        "paymentType": "TRANSFER",
+        "status": "COMPLETED",
+        "merchantRefNum": "5040452805"
+    },
+    {
+        "id": "5040057613",
+        "slipId": "5009964049",
+        "customerId": "6666666",
+        "accountId": "222222",
+        "type": "MERCHANT_FEE",
+        "amount": 100,
+        "currencyCode": "GBP",
+        "creationTime": "2021-07-15T17:54:12Z",
+        "lastChangeDate": "2021-07-15T17:54:12Z",
+        "direction": "CREDIT",
+        "fee": 0,
+        "paymentType": "TRANSFER",
+        "status": "COMPLETED",
+        "merchantRefNum": "5040452805"
+    }  
+  ],
+  "meta": {
+    "numberOfRecords": 4,
+    "limit": 4,
+    "page": 1
+  }
+}
+```
+---
+
+
 # Payment objects
 
 ## authentication
@@ -2964,6 +3486,9 @@ For `FAILED` wallet transactions additional `statusReason` property allows to de
 
 | Version | Date        | Details                                                                                                     |
 |---------|-------------|-------------------------------------------------------------------------------------------------------------|
+| V1      | 10 Jan 2022 | - Added multiple currency support in incubator features                                                     |
+| V1      | 10 Jan 2022 | - Moved Bank Deposit Refunds out of incubator                                                               |
+| V1      | 10 Jan 2022 | - Moved Manual Bank Account Verification out of incubator                                                   |
 | V1      | 09 Dec 2022 | - Add webhook for upcoming restriction                                                                      |
 | V1      | 25 Nov 2022 | - Add additional bank name for Wallet Payment Instruments                                                   |
 | V1      | 18 Oct 2022 | - Add additional statusReason codes for FAILED wallet transactions                                          |
