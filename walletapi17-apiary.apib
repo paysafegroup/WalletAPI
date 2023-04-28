@@ -7460,7 +7460,7 @@ Every wallet has one or more accounts associated with it - one for every currenc
 
 ## Account information [/digitalwallets/v1/accounts]
 
-### Get accounts for a customer [GET /digitalwallets/v1/accounts{?customerId}]
+### Get accounts for a customer [GET /digitalwallets/v1/accounts{?customerId,currency}]
 
 Get all accounts for a customer.
 
@@ -7468,6 +7468,10 @@ Get all accounts for a customer.
     + customerId (string, required)
 
         Filter by customer
+    + currency (string, optional)
+
+        Get account for specific currency
+        
 
 + Request
 
@@ -7544,6 +7548,52 @@ Retrieve the account with the provided id.
 + Response 404
 
         Account with the requested ID was not found.
+        
+### Create new account [POST /digitalwallets/v1/accounts]
+
+Create new account for a customer. 
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+
+    + Attributes (AccountCreateRequest)
+
+
+    + Body
+
+            {
+                "customerId": "5435323362",
+                "hasIban": true,
+                "currencyCode": "DKK",
+            }
+
++ Response 200 (application/json)
+
+        OK
+
+    + Body
+
+            {
+              "id": "509876034",
+              "externalId": "42342355",
+              "customerId": "5435323362",
+              "currencyCode": "DKK",
+              "totalBalance": 0,
+              "availableBalance": 0,
+              "iban": "DK8150513876943217",
+              "creationTime": "2019-08-24T14:15:22Z",
+              "hasIban": true,
+              "bic": "JYBADKKK"
+            }
+
+
++ Response 400
+
+        Bad request
+        
 
 # Group Transactions
 
@@ -10408,6 +10458,15 @@ Wallet composite model
 + `iban` (string, optional) - IBAN associated with this account.
 + `creationTime`: `2019-08-24T14:15:22Z` (string, optional)
 + `hasIban` (boolean, optional)
+
+## AccountCreateRequest (object)
+
+### Properties
++ `customerId` (string, required) - Customer Id
++ `currencyCode`: `EUR` (string, required) - Currency alphabetic code as specified by ISO 4217
+    _length==3_
++ `hasIban` (boolean, required)
+
 
 ## AccountRequest (object)
 
